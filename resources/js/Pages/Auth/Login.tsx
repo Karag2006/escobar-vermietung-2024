@@ -1,24 +1,17 @@
 import { useEffect, FormEventHandler } from "react";
+import { Head, useForm } from "@inertiajs/react";
+
 import GuestLayout from "@/Layouts/GuestLayout";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import TextInput from "@/Components/TextInput";
-import { Head, Link, useForm } from "@inertiajs/react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 
-export default function Login({
-    status,
-    canResetPassword,
-}: {
-    status?: string;
-    canResetPassword: boolean;
-}) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        username: "",
-        password: "",
-        remember: false,
-    });
+const Login = ({ status }: { status?: string }) => {
+    const { data, setData, post, processing, errors, reset, clearErrors } =
+        useForm({
+            username: "",
+            password: "",
+            remember: false,
+        });
 
     useEffect(() => {
         return () => {
@@ -50,26 +43,11 @@ export default function Login({
                     type="text"
                     name="username"
                     className="my-4 w-full"
+                    disabled={processing}
                     autoComplete="username"
                     onChange={(e) => setData("username", e.target.value)}
+                    onFocus={() => clearErrors("username")}
                 />
-
-                {/* <div>
-                    <InputLabel htmlFor="username" value="Benutzer Name" />
-
-                    <TextInput
-                        id="username"
-                        type="text"
-                        name="username"
-                        value={data.username}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData("username", e.target.value)}
-                    />
-
-                    <InputError message={errors.username} className="mt-2" />
-                </div> */}
 
                 <Input
                     label="Passwort"
@@ -77,26 +55,12 @@ export default function Login({
                     id="password"
                     type="password"
                     name="password"
+                    disabled={processing}
                     className="my-4 w-full"
                     autoComplete="password"
                     onChange={(e) => setData("password", e.target.value)}
+                    onFocus={() => clearErrors("password")}
                 />
-
-                {/* <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData("password", e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div> */}
 
                 <div className="flex items-center justify-end mt-8">
                     <Button variant="primary" size="sm" disabled={processing}>
@@ -106,4 +70,6 @@ export default function Login({
             </form>
         </GuestLayout>
     );
-}
+};
+
+export default Login;
