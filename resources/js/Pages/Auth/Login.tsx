@@ -2,10 +2,10 @@ import { useEffect, FormEventHandler } from "react";
 import GuestLayout from "@/Layouts/GuestLayout";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
 
 export default function Login({
     status,
@@ -43,7 +43,18 @@ export default function Login({
             )}
 
             <form onSubmit={submit}>
-                <div>
+                <Input
+                    label="Benutzer Name"
+                    error={errors.username}
+                    id="username"
+                    type="text"
+                    name="username"
+                    className="my-4 w-full"
+                    autoComplete="username"
+                    onChange={(e) => setData("username", e.target.value)}
+                />
+
+                {/* <div>
                     <InputLabel htmlFor="username" value="Benutzer Name" />
 
                     <TextInput
@@ -58,9 +69,20 @@ export default function Login({
                     />
 
                     <InputError message={errors.username} className="mt-2" />
-                </div>
+                </div> */}
 
-                <div className="mt-4">
+                <Input
+                    label="Passwort"
+                    error={errors.password}
+                    id="password"
+                    type="password"
+                    name="password"
+                    className="my-4 w-full"
+                    autoComplete="password"
+                    onChange={(e) => setData("password", e.target.value)}
+                />
+
+                {/* <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 
                     <TextInput
@@ -74,7 +96,7 @@ export default function Login({
                     />
 
                     <InputError message={errors.password} className="mt-2" />
-                </div>
+                </div> */}
 
                 <div className="flex items-center justify-end mt-8">
                     <Button variant="primary" size="sm" disabled={processing}>
