@@ -6,9 +6,7 @@ import { PropsWithChildren } from "react";
 export default function Guest({ children }: PropsWithChildren) {
     const header = (
         <div className="p-4">
-            <Link href="/">
-                <ApplicationLogo />
-            </Link>
+            <ApplicationLogo />
         </div>
     );
     return (
