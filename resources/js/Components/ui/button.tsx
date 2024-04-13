@@ -21,16 +21,20 @@ const buttonVariants = cva(
                 link: "text-primary underline-offset-4 hover:underline",
 
                 accent: "bg-accent text-gray-100 hover:text-grey-300",
+                success: "bg-green-600 text-gray-100 hover:bg-green-600/80",
                 navLink:
                     "bg-primary hover:bg-white/10 text-gray-100 w-full font-bold",
                 primary:
                     "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-xs text-white uppercase tracking-widest rounded-md",
+                icon: "bg-transparent text-current hover:text-current/80 focus:text-current/80",
             },
             size: {
                 default: "h-10 px-4 py-2",
                 sm: "h-9 px-3",
                 lg: "h-11 px-8",
                 icon: "h-10 w-10",
+
+                content: "p-0",
             },
         },
         defaultVariants: {

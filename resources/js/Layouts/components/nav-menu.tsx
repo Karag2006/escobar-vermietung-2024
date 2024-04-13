@@ -1,10 +1,10 @@
-import { CircleGauge, KeyRound, Power } from "lucide-react";
+import { KeyRound, Power } from "lucide-react";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
 import NavLink from "@/Components/NavLink";
 import { Separator } from "@/Components/ui/separator";
-import ApplicationLogo from "@/Components/ApplicationLogo";
+import { ApplicationLogo } from "@/Components/ApplicationLogo";
 import { useNavMenu } from "@/hooks/useNavMenu";
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState } from "react";
 import Icon from "@/Components/icon";
 
 type NavMenuProps = {

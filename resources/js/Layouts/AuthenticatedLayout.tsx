@@ -1,5 +1,5 @@
 import { useState, PropsWithChildren, useEffect } from "react";
-import ApplicationLogo from "@/Components/ApplicationLogo";
+import { ApplicationLogo } from "@/Components/ApplicationLogo";
 import { Link } from "@inertiajs/react";
 import { User } from "@/types";
 import { Button } from "@/Components/ui/button";
@@ -21,28 +21,35 @@ import { NavMenu } from "./components/nav-menu";
 import { CardWrapper } from "@/Components/wrapper/card-wrapper";
 import { PageTitle } from "@/Components/page-title";
 
+interface AuthenticatedLayoutProps extends PropsWithChildren {
+    user: User;
+    header?: string;
+    headerAction?: React.ReactNode;
+}
+
 export default function Authenticated({
     user,
     header,
     children,
-}: PropsWithChildren<{ user: User; header?: string }>) {
+    headerAction,
+}: AuthenticatedLayoutProps) {
     // For content changes based on current window width
-    const getWindowWidth = () => {
-        return window.innerWidth;
-    };
-    const [windowWidth, setWindowWidth] = useState(getWindowWidth());
+    // const getWindowWidth = () => {
+    //     return window.innerWidth;
+    // };
+    // const [windowWidth, setWindowWidth] = useState(getWindowWidth());
 
-    useEffect(() => {
-        const handleWindowResize = () => {
-            setWindowWidth(getWindowWidth());
-        };
+    // useEffect(() => {
+    //     const handleWindowResize = () => {
+    //         setWindowWidth(getWindowWidth());
+    //     };
 
-        window.addEventListener("resize", handleWindowResize);
+    //     window.addEventListener("resize", handleWindowResize);
 
-        return () => {
-            window.removeEventListener("resize", handleWindowResize);
-        };
-    }, []);
+    //     return () => {
+    //         window.removeEventListener("resize", handleWindowResize);
+    //     };
+    // }, []);
 
     return (
         <div className="min-h-screen w-full">
@@ -101,7 +108,15 @@ export default function Authenticated({
                             </DropdownMenu>
                         </div>
                         <CardWrapper
-                            header={<PageTitle title={header} />}
+                            header={
+                                headerAction ? (
+                                    <PageTitle title={header}>
+                                        {headerAction}
+                                    </PageTitle>
+                                ) : (
+                                    <PageTitle title={header} />
+                                )
+                            }
                             showHeader={header ? true : false}
                         >
                             <main>{children}</main>
