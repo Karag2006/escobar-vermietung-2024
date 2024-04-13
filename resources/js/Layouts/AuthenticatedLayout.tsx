@@ -1,25 +1,9 @@
-import {
-    useState,
-    PropsWithChildren,
-    ReactNode,
-    useRef,
-    useEffect,
-} from "react";
+import { useState, PropsWithChildren, useEffect } from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import NavLink from "@/Components/NavLink";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import { User } from "@/types";
 import { Button } from "@/Components/ui/button";
-import {
-    ChevronLeft,
-    CircleGauge,
-    KeyRound,
-    Menu,
-    Power,
-    UserIcon,
-    X,
-} from "lucide-react";
+import { ChevronLeft, KeyRound, Menu, Power, UserIcon } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -34,7 +18,6 @@ import {
 } from "@/Components/ui/drawer";
 import { Separator } from "@/Components/ui/separator";
 import { NavMenu } from "./components/nav-menu";
-import { Card } from "@/Components/ui/card";
 import { CardWrapper } from "@/Components/wrapper/card-wrapper";
 import { PageTitle } from "@/Components/page-title";
 
@@ -43,9 +26,6 @@ export default function Authenticated({
     header,
     children,
 }: PropsWithChildren<{ user: User; header?: string }>) {
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
-
     // For content changes based on current window width
     const getWindowWidth = () => {
         return window.innerWidth;
@@ -67,7 +47,7 @@ export default function Authenticated({
     return (
         <div className="min-h-screen w-full">
             <Drawer direction="left">
-                <div className="flex w-full overflow-clip">
+                <div className="flex w-full">
                     <div className="min-h-screen hidden sm:block bg-accent">
                         <NavMenu className="w-full max-w-[350px]" />
                     </div>
@@ -82,7 +62,7 @@ export default function Authenticated({
                             </p>
 
                             <DropdownMenu>
-                                <DropdownMenuTrigger>
+                                <DropdownMenuTrigger asChild>
                                     <Button
                                         variant="primary"
                                         size="sm"

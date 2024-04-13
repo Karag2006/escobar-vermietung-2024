@@ -1,27 +1,51 @@
 import { CircleGauge, KeyRound, Power } from "lucide-react";
+import dynamicIconImports from "lucide-react/dynamicIconImports";
 import NavLink from "@/Components/NavLink";
 import { Separator } from "@/Components/ui/separator";
 import ApplicationLogo from "@/Components/ApplicationLogo";
+import { useNavMenu } from "@/hooks/useNavMenu";
+import { useEffect, useState, lazy, Suspense } from "react";
+import Icon from "@/Components/icon";
 
-interface NavMenuProps {
+type NavMenuProps = {
     className?: string;
-}
+};
+
+type NavItem = {
+    id: number;
+    link: string;
+    name: string;
+    icon: keyof typeof dynamicIconImports;
+};
 
 export const NavMenu = ({ className }: NavMenuProps) => {
+    const [navItems, setNavItems] = useState([]);
+    useEffect(() => {
+        async function getNavMenu() {
+            const navMenu = await useNavMenu();
+            setNavItems(navMenu);
+        }
+        getNavMenu();
+    }, []);
     return (
         <div className={className}>
             <ApplicationLogo />
             <Separator className="w-full my-2" />
             <nav className="block h-full w-full">
                 <div className="flex flex-col gap-1">
-                    <NavLink
-                        href={route("dashboard")}
-                        active={route().current("dashboard")}
-                        className="flex gap-4"
-                    >
-                        <CircleGauge className="h-6 w-6" />
-                        <span>Dashboard</span>
-                    </NavLink>
+                    {navItems?.map((item: NavItem) => {
+                        return (
+                            <NavLink
+                                key={item?.id}
+                                href={route(item?.link)}
+                                active={route().current(item?.link)}
+                                className="flex gap-4 items-center"
+                            >
+                                <Icon className="h-6 w-6" name={item.icon} />
+                                <span>{item?.name}</span>
+                            </NavLink>
+                        );
+                    })}
 
                     <Separator className="w-full" />
 

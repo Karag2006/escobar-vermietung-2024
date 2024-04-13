@@ -1,7 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { PageProps } from "@/types";
-import { PageTitle } from "@/Components/page-title";
 
 export default function Dashboard({ auth }: PageProps) {
     const pageTitle = "Dashboard";
