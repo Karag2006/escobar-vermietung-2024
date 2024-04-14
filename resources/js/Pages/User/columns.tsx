@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { UserItem } from "@/Pages/User/types/user";
+import { UserItem } from "@/types/user";
 
 import { Actions } from "./components/actions";
 

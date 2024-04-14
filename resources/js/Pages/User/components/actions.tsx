@@ -2,7 +2,7 @@ import { Button } from "@/Components/ui/button";
 import { Row } from "@tanstack/react-table";
 import { Pencil, Trash2 } from "lucide-react";
 
-import { userSchema } from "../types/user";
+import { userSchema } from "@/types/user";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
