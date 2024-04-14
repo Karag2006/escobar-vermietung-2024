@@ -1,11 +1,14 @@
 import { PageProps } from "@/types";
+import { z } from "zod";
 
-export type UserItem = {
-    id: number;
-    name: string;
-    email: string;
-    username: string;
-};
+export const userSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    username: z.string(),
+    email: z.string(),
+});
+
+export type UserItem = z.infer<typeof userSchema>;
 
 export type UserProps = {
     userList: UserItem[];

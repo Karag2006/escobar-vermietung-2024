@@ -25,13 +25,15 @@ interface AuthenticatedLayoutProps extends PropsWithChildren {
     user: User;
     header?: string;
     headerAction?: React.ReactNode;
+    footer?: React.ReactNode;
 }
 
 export default function Authenticated({
+    children,
     user,
     header,
-    children,
     headerAction,
+    footer,
 }: AuthenticatedLayoutProps) {
     // For content changes based on current window width
     // const getWindowWidth = () => {
@@ -118,6 +120,7 @@ export default function Authenticated({
                                 )
                             }
                             showHeader={header ? true : false}
+                            footer={footer}
                         >
                             <main>{children}</main>
                         </CardWrapper>

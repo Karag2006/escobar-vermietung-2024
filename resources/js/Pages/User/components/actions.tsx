@@ -1,9 +1,18 @@
 import { Button } from "@/Components/ui/button";
+import { Row } from "@tanstack/react-table";
 import { Pencil, Trash2 } from "lucide-react";
 
-export const Actions = () => {
+import { userSchema } from "../types/user";
+
+interface ActionsProps<TData> {
+    row: Row<TData>;
+}
+
+export function Actions<TData>({ row }: ActionsProps<TData>) {
+    const user = userSchema.parse(row.original);
+
     const handleEdit = () => {
-        console.log("edit");
+        console.log({ edit: user.email });
     };
 
     const handleDelete = () => {
@@ -11,7 +20,7 @@ export const Actions = () => {
     };
     return (
         <div className="flex justify-end gap-4">
-            <div className=" text-yellow-600">
+            <div className=" text-green-600">
                 <Button variant="icon" size="content" onClick={handleEdit}>
                     <Pencil className="h-5 w-5" />
                     <span className="sr-only">Benutzer bearbeiten</span>
@@ -25,4 +34,4 @@ export const Actions = () => {
             </div>
         </div>
     );
-};
+}

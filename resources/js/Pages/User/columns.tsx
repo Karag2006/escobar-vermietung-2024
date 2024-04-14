@@ -18,8 +18,8 @@ export const columns: ColumnDef<UserItem>[] = [
     },
     {
         id: "actions",
-        cell: () => {
-            return <Actions />;
+        cell: ({ row }) => {
+            return <Actions row={row} />;
         },
     },
 ];

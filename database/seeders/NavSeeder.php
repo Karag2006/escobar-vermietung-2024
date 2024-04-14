@@ -22,12 +22,12 @@ class NavSeeder extends Seeder
                 'icon'              => 'circle-gauge',
                 'link'              => 'dashboard',
             ],
-            [
-                'id'                => 2,
-                'name'              => 'Kunden',
-                'icon'              => 'users-round',
-                'link'              =>  'dashboard',
-            ],
+            // [
+            //     'id'                => 2,
+            //     'name'              => 'Kunden',
+            //     'icon'              => 'users-round',
+            //     'link'              =>  'dashboard',
+            // ],
             // [
             //     'id'                => 3,
             //     'name'              => 'Angebote',
@@ -46,26 +46,12 @@ class NavSeeder extends Seeder
             //     'icon'              => 'fas fa-file-signature',
             //     'link'              => '/contracts',
             // ],
-            // [
-            //     'id'                => 6,
-            //     'name'              => 'Benutzerverwaltung',
-            //     'icon'              => 'fas fa-users',
-            //     'children'          => '7;8'
-            // ],
-            // [
-            //     'id'                => 7,
-            //     'name'              => 'Rollen',
-            //     'icon'              => 'fas fa-user-tag',
-            //     'link'              => '/roles',
-            //     'isChild'           => true
-            // ],
-            // [
-            //     'id'                => 8,
-            //     'name'              => 'Benutzer',
-            //     'icon'              => 'fas fa-users-cog',
-            //     'link'              => '/users',
-            //     'isChild'           => true
-            // ],
+            [
+                'id'                => 6,
+                'name'              => 'Benutzerverwaltung',
+                'icon'              => 'users-round',
+                'link'              =>  'user',
+            ],
             // [
             //     'id'                => 9,
             //     'name'              => 'Anhängerverwaltung',
