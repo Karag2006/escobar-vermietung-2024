@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
-import { UserProps } from "@/Pages/User/types/user";
+import { UserProps } from "@/types/user";
 import { DataTable } from "@/Components/data-table";
 import { columns } from "./columns";
 import { ActionButton } from "../../Components/action-button";

@@ -1,6 +1,6 @@
 import { Table } from "@tanstack/react-table";
 
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 
 interface DataTableToolbarProps<TData> {
