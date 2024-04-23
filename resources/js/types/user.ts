@@ -2,7 +2,7 @@ import { PageProps } from "@/types";
 import { z } from "zod";
 
 export const userSchema = z.object({
-    id: z.number(),
+    id: z.number().optional(),
     name: z.string(),
     username: z.string(),
     email: z.string(),

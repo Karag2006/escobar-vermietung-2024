@@ -1,9 +1,9 @@
+import { Column } from "@tanstack/react-table";
 import {
     ArrowDownZAIcon,
     ArrowUpAZIcon,
     ChevronsUpDownIcon,
 } from "lucide-react";
-import { Column } from "@tanstack/react-table";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/Components/ui/button";
@@ -11,7 +11,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 
@@ -37,7 +36,7 @@ export function DataTableColumnHeader<TData, TValue>({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="-ml-3 h-8 data-[state=open]:bg-accent"
+                        className="-ml-3 h-8 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
                     >
                         <span>{title}</span>
                         {column.getIsSorted() === "desc" ? (

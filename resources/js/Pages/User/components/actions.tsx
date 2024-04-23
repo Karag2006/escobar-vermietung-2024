@@ -3,16 +3,19 @@ import { Row } from "@tanstack/react-table";
 import { Pencil, Trash2 } from "lucide-react";
 
 import { userSchema } from "@/types/user";
+import { useModalStore } from "@/stores/modalStore";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
 }
 
 export function Actions<TData>({ row }: ActionsProps<TData>) {
+    const { switchOpen, open } = useModalStore((state) => state);
     const user = userSchema.parse(row.original);
 
     const handleEdit = () => {
         console.log({ edit: user.email });
+        switchOpen(true, "user");
     };
 
     const handleDelete = () => {
