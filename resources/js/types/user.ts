@@ -6,6 +6,8 @@ export const userSchema = z.object({
     name: z.string(),
     username: z.string(),
     email: z.string(),
+    password: z.string().optional(),
+    password_confirmation: z.string().optional(),
 });
 
 export type UserItem = z.infer<typeof userSchema>;

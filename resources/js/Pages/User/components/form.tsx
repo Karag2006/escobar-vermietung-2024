@@ -15,6 +15,8 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
         username: "",
         name: "",
         email: "",
+        password: "",
+        password_confirmation: "",
     });
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -28,8 +30,8 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(values);
-        // router.post("");
+        router.post("/user", values);
+        router.reload({ only: ["userList"] });
         close();
     };
     return (
@@ -51,6 +53,20 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                     label="E-Mail"
                     id="email"
                     value={values.email}
+                    onChange={handleChange}
+                />
+                <Input
+                    label="Passwort"
+                    id="password"
+                    type="password"
+                    value={values.password}
+                    onChange={handleChange}
+                />
+                <Input
+                    label="Passwort Wiederholen"
+                    id="password_confirmation"
+                    type="password"
+                    value={values.password_confirmation}
                     onChange={handleChange}
                 />
 
