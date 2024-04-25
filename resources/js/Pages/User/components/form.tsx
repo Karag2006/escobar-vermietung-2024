@@ -11,7 +11,7 @@ interface UserFormProps {
 
 export const UserForm = ({ currentID, close }: UserFormProps) => {
     const [values, setValues] = useState<UserItem>({
-        id: 0,
+        id: currentID,
         username: "",
         name: "",
         email: "",
@@ -70,9 +70,14 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                     onChange={handleChange}
                 />
 
-                <Button type="submit" variant="success">
-                    Senden
-                </Button>
+                <div className="formActions flex gap-2">
+                    <Button type="submit" variant="success">
+                        Senden
+                    </Button>
+                    <Button type="reset" variant="destructive" onClick={close}>
+                        Abbrechen
+                    </Button>
+                </div>
             </form>
         </div>
     );
