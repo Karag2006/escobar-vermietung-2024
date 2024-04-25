@@ -11,14 +11,15 @@ import { UserForm } from "./components/form";
 import { useState } from "react";
 
 export default function User({ auth, userList }: UserProps) {
+    let currentID = 0;
+
     const pageTitle = "Benutzerverwaltung";
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalStyle, setModalStyle] = useState("addUser");
 
     const addUserModal = () => {
+        currentID = 0;
         setModalOpen(true);
-        setModalStyle("addUser");
     };
 
     return (
@@ -37,7 +38,10 @@ export default function User({ auth, userList }: UserProps) {
 
             <DataTable columns={columns} data={userList} />
             <Modal modalOpen={modalOpen} openChange={setModalOpen}>
-                <UserForm />
+                <UserForm
+                    currentID={currentID}
+                    close={() => setModalOpen(false)}
+                />
             </Modal>
         </AuthenticatedLayout>
     );
