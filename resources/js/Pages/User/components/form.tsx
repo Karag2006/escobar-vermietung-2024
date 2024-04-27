@@ -1,5 +1,4 @@
 import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { UserItem } from "@/types/user";
 import { router } from "@inertiajs/react";

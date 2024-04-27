@@ -1,7 +1,8 @@
 import { Table } from "@tanstack/react-table";
 
-import { Input } from "../ui/input";
 import { Search } from "lucide-react";
+
+import { InputTP24 } from "@/Components/ui/input-tp24";
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;
@@ -12,8 +13,8 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
     return (
         <div className="flex items-center py-4 gap-2">
-            <Input
-                placeholder="Filter ..."
+            <InputTP24
+                label="Filter"
                 value={(table.getState().globalFilter as string) ?? ""}
                 onChange={(event) => table.setGlobalFilter(event.target.value)}
                 className="max-w-sm"

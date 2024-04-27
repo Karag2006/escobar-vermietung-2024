@@ -3,7 +3,7 @@ import { Head, useForm } from "@inertiajs/react";
 
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
+import { InputTP24 } from "@/Components/ui/input-tp24";
 
 const Login = ({ status }: { status?: string }) => {
     const { data, setData, post, processing, errors, reset, clearErrors } =
@@ -36,7 +36,7 @@ const Login = ({ status }: { status?: string }) => {
             )}
 
             <form onSubmit={submit}>
-                <Input
+                <InputTP24
                     label="Benutzer Name"
                     error={errors.username}
                     id="username"
@@ -49,7 +49,7 @@ const Login = ({ status }: { status?: string }) => {
                     onFocus={() => clearErrors("username")}
                 />
 
-                <Input
+                <InputTP24
                     label="Passwort"
                     error={errors.password}
                     id="password"
