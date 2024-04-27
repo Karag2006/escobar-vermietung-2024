@@ -1,5 +1,6 @@
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
+import { InputTP24 } from "@/Components/ui/input-tp24";
 import { UserItem } from "@/types/user";
 import { router } from "@inertiajs/react";
 import { useState } from "react";
@@ -35,42 +36,48 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
         close();
     };
     return (
-        <div>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <Input
-                    label="Benutzername"
-                    id="username"
-                    value={values.username}
-                    onChange={handleChange}
-                />
-                <Input
-                    label="Name"
-                    id="name"
-                    value={values.name}
-                    onChange={handleChange}
-                />
-                <Input
-                    label="E-Mail"
-                    id="email"
-                    value={values.email}
-                    onChange={handleChange}
-                />
-                <Input
-                    label="Passwort"
-                    id="password"
-                    type="password"
-                    value={values.password}
-                    onChange={handleChange}
-                />
-                <Input
-                    label="Passwort Wiederholen"
-                    id="password_confirmation"
-                    type="password"
-                    value={values.password_confirmation}
-                    onChange={handleChange}
-                />
+        <div className="p-4">
+            <form onSubmit={handleSubmit}>
+                <div className="flex gap-10 flex-col md:flex-row">
+                    <div className="flex flex-col gap-10 w-full">
+                        <InputTP24
+                            label="Benutzername (Name fürs Einloggen)*"
+                            id="username"
+                            value={values.username}
+                            onChange={handleChange}
+                        />
+                        <InputTP24
+                            label="Name*"
+                            id="name"
+                            value={values.name}
+                            onChange={handleChange}
+                        />
+                        <InputTP24
+                            label="E-Mail Addresse*"
+                            id="email"
+                            value={values.email}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-10 w-full">
+                        <InputTP24
+                            label="Passwort"
+                            id="password"
+                            type="password"
+                            value={values.password}
+                            onChange={handleChange}
+                        />
+                        <InputTP24
+                            label="Passwort Wiederholen"
+                            id="password_confirmation"
+                            type="password"
+                            value={values.password_confirmation}
+                            onChange={handleChange}
+                        />
+                    </div>
+                </div>
 
-                <div className="formActions flex gap-2">
+                <div className="formActions flex gap-2 mt-8">
                     <Button type="submit" variant="success">
                         Senden
                     </Button>

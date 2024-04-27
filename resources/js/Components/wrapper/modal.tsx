@@ -9,7 +9,9 @@ interface ModalProps {
 export const Modal = ({ children, modalOpen, openChange }: ModalProps) => {
     return (
         <Dialog open={modalOpen} onOpenChange={(open) => openChange(open)}>
-            <DialogContent>{children}</DialogContent>
+            <DialogContent className=" max-w-full xl:max-w-[1200px] p-10 max-h-[90%] overflow-y-auto">
+                {children}
+            </DialogContent>
         </Dialog>
     );
 };
