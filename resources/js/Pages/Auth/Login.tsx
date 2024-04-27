@@ -45,6 +45,7 @@ const Login = ({ status }: { status?: string }) => {
                     className="my-4 w-full"
                     disabled={processing}
                     autoComplete="username"
+                    value={data.username}
                     onChange={(e) => setData("username", e.target.value)}
                     onFocus={() => clearErrors("username")}
                 />
@@ -58,6 +59,7 @@ const Login = ({ status }: { status?: string }) => {
                     disabled={processing}
                     className="my-4 w-full"
                     autoComplete="password"
+                    value={data.password}
                     onChange={(e) => setData("password", e.target.value)}
                     onFocus={() => clearErrors("password")}
                 />
