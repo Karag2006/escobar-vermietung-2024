@@ -11,15 +11,23 @@ interface UserFormProps {
 }
 
 export const UserForm = ({ currentID, close }: UserFormProps) => {
-    const { data, setData, post, processing, errors, reset, clearErrors } =
-        useForm({
-            id: currentID,
-            username: "",
-            name: "",
-            email: "",
-            password: "",
-            password_confirmation: "",
-        });
+    const {
+        data,
+        setData,
+        post,
+        patch,
+        processing,
+        errors,
+        reset,
+        clearErrors,
+    } = useForm({
+        id: currentID,
+        username: "",
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+    });
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const key = e.currentTarget.id;
@@ -32,16 +40,27 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post("/user", {
-            only: ["userList", "errors"],
-            onSuccess: (page) => {
-                close();
-            },
-            onError: (errors) => {
-                console.log(errors);
-            },
-        });
-        // router.reload({ only: ["userList"] });
+        if (!currentID) {
+            post("/user", {
+                only: ["userList", "errors"],
+                onSuccess: (page) => {
+                    close();
+                },
+                onError: (errors) => {
+                    console.log(errors);
+                },
+            });
+        } else {
+            patch(`/user/${currentID}`, {
+                only: ["userList", "errors"],
+                onSuccess: (page) => {
+                    close();
+                },
+                onError: (errors) => {
+                    console.log(errors);
+                },
+            });
+        }
     };
     useEffect(() => {
         const getCurrentUser = () => {
