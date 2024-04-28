@@ -3,9 +3,9 @@ import dynamicIconImports from "lucide-react/dynamicIconImports";
 import NavLink from "@/Components/NavLink";
 import { Separator } from "@/Components/ui/separator";
 import { ApplicationLogo } from "@/Components/ApplicationLogo";
-import { useNavMenu } from "@/hooks/useNavMenu";
 import { useEffect, useState } from "react";
 import Icon from "@/Components/icon";
+import { useApi } from "@/hooks/use-api";
 
 type NavMenuProps = {
     className?: string;
@@ -22,7 +22,7 @@ export const NavMenu = ({ className }: NavMenuProps) => {
     const [navItems, setNavItems] = useState([]);
     useEffect(() => {
         async function getNavMenu() {
-            const navMenu = await useNavMenu();
+            const { navMenu } = await useApi();
             setNavItems(navMenu);
         }
         getNavMenu();

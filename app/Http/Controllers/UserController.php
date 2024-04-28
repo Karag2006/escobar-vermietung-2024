@@ -7,7 +7,7 @@ use App\Http\Requests\UserStoreRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -20,14 +20,6 @@ class UserController extends Controller
         return Inertia::render('User/index', [
             'userList' => $userList
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -50,7 +42,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return response()->json($user, Response::HTTP_OK);
     }
 
     /**

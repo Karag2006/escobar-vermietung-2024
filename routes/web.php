@@ -24,7 +24,9 @@ Route::middleware('auth')->group(function () {
 
     // User Routes
     Route::get('/user', [UserController::class, 'index'])->name('user'); // List
-    Route::post('/user', [UserController::class, 'store'])->name('user.store'); // List
+    Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show'); // Get Single user by ID
+    Route::post('/user', [UserController::class, 'store'])->name('user.store'); // Store
+    
     
     Route::get('api/nav', [NavController::class, 'index']);
 });
