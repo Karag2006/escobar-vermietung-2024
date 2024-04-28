@@ -1,8 +1,15 @@
-import { ColumnDef } from "@tanstack/react-table";
+import {
+    ColumnDef,
+    CellContext as TanCellContext,
+} from "@tanstack/react-table";
 import { UserItem } from "@/types/user";
 
 import { Actions } from "./components/actions";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
+
+type CellContext<TData, TValue> = TanCellContext<TData, TValue> & {
+    editModal: (id: number) => void;
+};
 
 export const columns: ColumnDef<UserItem>[] = [
     {
@@ -27,8 +34,8 @@ export const columns: ColumnDef<UserItem>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            return <Actions row={row} />;
+        cell: (cell) => {
+            return <Actions row={cell.row} editModal={cell.editModal} />;
         },
     },
 ];

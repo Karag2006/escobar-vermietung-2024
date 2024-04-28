@@ -25,11 +25,18 @@ import { DataTableToolbar } from "./toolbar";
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    editModal: (id: number) => void;
+}
+declare module "@tanstack/react-table" {
+    interface CellContext<TData, TValue> {
+        editModal: (id: number) => void;
+    }
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    editModal,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -90,7 +97,10 @@ export function DataTable<TData, TValue>({
                                         <TableCell key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
-                                                cell.getContext()
+                                                {
+                                                    ...cell.getContext(),
+                                                    editModal,
+                                                }
                                             )}
                                         </TableCell>
                                     ))}

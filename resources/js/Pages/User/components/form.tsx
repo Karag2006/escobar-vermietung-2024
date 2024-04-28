@@ -19,6 +19,8 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
         password_confirmation: "",
     });
 
+    console.log(values.id);
+
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;

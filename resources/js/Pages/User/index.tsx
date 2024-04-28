@@ -9,18 +9,20 @@ import { Modal } from "@/Components/wrapper/modal";
 
 import { UserForm } from "./components/form";
 import { useState } from "react";
-import { CardWrapper } from "@/Components/wrapper/card-wrapper";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 
 export default function User({ auth, userList }: UserProps) {
-    let currentID = 0;
-
     const pageTitle = "Benutzerverwaltung";
-
     const [modalOpen, setModalOpen] = useState(false);
+    const [currentID, setCurrentID] = useState(0);
 
     const addUserModal = () => {
-        currentID = 0;
+        setCurrentID(0);
+        setModalOpen(true);
+    };
+
+    const editUserModal = (id: number) => {
+        setCurrentID(id);
         setModalOpen(true);
     };
 
@@ -38,7 +40,11 @@ export default function User({ auth, userList }: UserProps) {
         >
             <Head title={pageTitle} />
 
-            <DataTable columns={columns} data={userList} />
+            <DataTable
+                columns={columns}
+                data={userList}
+                editModal={editUserModal}
+            />
             <Modal modalOpen={modalOpen} openChange={setModalOpen}>
                 <ModalCardWrapper
                     header={

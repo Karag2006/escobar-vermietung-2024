@@ -7,15 +7,16 @@ import { useModalStore } from "@/stores/modalStore";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
+    editModal: (id: number) => void;
 }
 
-export function Actions<TData>({ row }: ActionsProps<TData>) {
+export function Actions<TData>({ row, editModal }: ActionsProps<TData>) {
     const { switchOpen, open } = useModalStore((state) => state);
     const user = userSchema.parse(row.original);
 
     const handleEdit = () => {
         console.log({ edit: user.email });
-        switchOpen(true, "user");
+        if (user.id) editModal(user.id);
     };
 
     const handleDelete = () => {
