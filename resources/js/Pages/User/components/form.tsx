@@ -1,9 +1,9 @@
 import { Button } from "@/Components/ui/button";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { getUserById } from "@/data/user";
-import { UserItem } from "@/types/user";
-import { router, useForm } from "@inertiajs/react";
-import { useEffect, useState } from "react";
+import { useForm } from "@inertiajs/react";
+
+import { useEffect } from "react";
 
 interface UserFormProps {
     currentID: number;

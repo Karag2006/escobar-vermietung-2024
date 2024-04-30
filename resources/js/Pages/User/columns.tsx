@@ -35,7 +35,13 @@ export const columns: ColumnDef<UserItem>[] = [
     {
         id: "actions",
         cell: (cell) => {
-            return <Actions row={cell.row} editModal={cell.editModal} />;
+            return (
+                <Actions
+                    row={cell.row}
+                    editModal={cell.editModal}
+                    deleteModal={cell.deleteModal}
+                />
+            );
         },
     },
 ];

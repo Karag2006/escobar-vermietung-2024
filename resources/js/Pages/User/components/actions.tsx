@@ -3,15 +3,18 @@ import { Row } from "@tanstack/react-table";
 import { Pencil, Trash2 } from "lucide-react";
 
 import { userSchema } from "@/types/user";
-import { useModalStore } from "@/stores/modalStore";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
     editModal: (id: number) => void;
+    deleteModal: (id: number) => void;
 }
 
-export function Actions<TData>({ row, editModal }: ActionsProps<TData>) {
-    const { switchOpen, open } = useModalStore((state) => state);
+export function Actions<TData>({
+    row,
+    editModal,
+    deleteModal,
+}: ActionsProps<TData>) {
     const user = userSchema.parse(row.original);
 
     const handleEdit = () => {
@@ -21,6 +24,7 @@ export function Actions<TData>({ row, editModal }: ActionsProps<TData>) {
 
     const handleDelete = () => {
         console.log("delete");
+        if (user.id) deleteModal(user.id);
     };
     return (
         <div className="flex justify-end gap-4">
