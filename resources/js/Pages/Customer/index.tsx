@@ -14,6 +14,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { columns } from "./columns";
 import { CustomerProps } from "@/types/customer";
 import { getCustomerById } from "@/data/customer";
+import { CustomerForm } from "./components/form";
 
 export default function User({ auth, customers }: CustomerProps) {
     const pageTitle = "Kunden";
@@ -117,11 +118,10 @@ export default function User({ auth, customers }: CustomerProps) {
                     }
                     showHeader
                 >
-                    Customer Form
-                    {/* <UserForm
+                    <CustomerForm
                         currentID={currentID}
                         close={() => setModalOpen(false)}
-                    /> */}
+                    />
                 </ModalCardWrapper>
             </Modal>
         </AuthenticatedLayout>

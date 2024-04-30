@@ -16,7 +16,7 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
                     <label
                         htmlFor={id}
                         className={cn(
-                            "absolute top-1 left-0 text-gray-300 group-hover:text-gray-600 group-focus-within:text-blue-400 group-focus-within:text-xs group-focus-within:top-[-1rem] transition-all group-hover:cursor-text",
+                            "absolute top-1 left-0 text-gray-500 group-hover:text-gray-600 group-focus-within:text-blue-400 group-focus-within:text-xs group-focus-within:top-[-1rem] transition-all group-hover:cursor-text",
                             value && value !== "" && "text-xs top-[-1rem]",
                             error && error !== "" && "text-destructive"
                         )}
