@@ -22,12 +22,12 @@ class NavSeeder extends Seeder
                 'icon'              => 'circle-gauge',
                 'link'              => 'dashboard',
             ],
-            // [
-            //     'id'                => 2,
-            //     'name'              => 'Kunden',
-            //     'icon'              => 'users-round',
-            //     'link'              =>  'dashboard',
-            // ],
+            [
+                'id'                => 2,
+                'name'              => 'Kunden',
+                'icon'              => 'users-round',
+                'link'              =>  'customer',
+            ],
             // [
             //     'id'                => 3,
             //     'name'              => 'Angebote',

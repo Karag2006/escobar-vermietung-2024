@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/user', [UserController::class, 'store'])->name('user.store'); // Store
     Route::patch('/user/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.delete');
+
+    require __DIR__.'/customer.php';
     
     Route::get('api/nav', [NavController::class, 'index']);
 });

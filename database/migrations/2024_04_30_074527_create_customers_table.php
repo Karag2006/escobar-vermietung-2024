@@ -1,25 +1,15 @@
 <?php
 
-/*
- *
- *  (c) Martin Richter - 03/2021
- *
- *
-*/
-
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCustomersTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
             // Autoincrement ID
@@ -59,11 +49,9 @@ class CreateCustomersTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('customers');
     }
-}
+};
