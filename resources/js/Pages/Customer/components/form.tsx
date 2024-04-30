@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { Button } from "@/Components/ui/button";
 import { InputTP24 } from "@/Components/ui/input-tp24";
+import { DecisionButtons } from "@/Components/decision-buttons";
 
 import { getCustomerById } from "@/data/customer";
 
@@ -88,7 +88,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         <div className="p-4">
             <form onSubmit={handleSubmit}>
                 <div className="flex gap-10 flex-col md:flex-row">
-                    <div className="flex flex-col gap-8 w-full">
+                    <div className="flex flex-col gap-6 w-full">
                         <InputTP24
                             label="Personalausweis Nr."
                             id="pass_number"
@@ -125,7 +125,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                             disabled={processing}
                         />
                     </div>
-                    <div className="flex flex-col gap-8 w-full">
+                    <div className="flex flex-col gap-6 w-full">
                         <div className="flex gap-2">
                             <InputTP24
                                 className="w-[45%]"
@@ -175,7 +175,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         />
                     </div>
                 </div>
-                <div className="flex gap-8 flex-col md:flex-row my-10">
+                <div className="flex gap-10 flex-col md:flex-row my-16">
                     <InputTP24
                         className="w-full"
                         label="Führerschein Nr."
@@ -193,7 +193,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         disabled={processing}
                     />
                 </div>
-                <div className="flex gap-10 flex-col md:flex-row">
+                <div className="flex gap-10 flex-col md:flex-row mb-10">
                     <InputTP24
                         className="w-full"
                         label="Kommentar"
@@ -203,24 +203,12 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         disabled={processing}
                     />
                 </div>
-
-                <div className="formActions flex gap-2 mt-8">
-                    <Button
-                        type="submit"
-                        variant="success"
-                        disabled={processing}
-                    >
-                        Senden
-                    </Button>
-                    <Button
-                        type="reset"
-                        variant="destructive"
-                        onClick={close}
-                        disabled={processing}
-                    >
-                        Abbrechen
-                    </Button>
-                </div>
+                <DecisionButtons
+                    yesLabel="Speichern"
+                    noLabel="Abbrechen"
+                    sendForm
+                    noAction={close}
+                />
             </form>
         </div>
     );

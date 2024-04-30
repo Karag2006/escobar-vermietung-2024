@@ -76,7 +76,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
         <div className="p-4">
             <form onSubmit={handleSubmit}>
                 <div className="flex gap-10 flex-col md:flex-row">
-                    <div className="flex flex-col gap-10 w-full">
+                    <div className="flex flex-col gap-6 w-full">
                         <InputTP24
                             label="Benutzername (Name fürs Einloggen)*"
                             id="username"
@@ -99,7 +99,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             disabled={processing}
                         />
                     </div>
-                    <div className="flex flex-col gap-10 w-full">
+                    <div className="flex flex-col gap-6 w-full">
                         <InputTP24
                             label="Passwort"
                             id="password"
