@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show'); // Get Single user by ID
     Route::post('/user', [UserController::class, 'store'])->name('user.store'); // Store
     Route::patch('/user/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.delete');
     
     Route::get('api/nav', [NavController::class, 'index']);
 });
