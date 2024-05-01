@@ -5,6 +5,7 @@ import { InputTP24 } from "@/Components/ui/input-tp24";
 import { DecisionButtons } from "@/Components/decision-buttons";
 
 import { getCustomerById } from "@/data/customer";
+import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 
 interface CustomerFormProps {
     currentID: number;
@@ -39,7 +40,12 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         comment: "",
     });
 
-    const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const handleChange = (
+        e:
+            | React.FormEvent<HTMLInputElement>
+            | React.FormEvent<HTMLTextAreaElement>
+            | React.FormEvent<HTMLSelectElement>
+    ) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;
         setData((data) => ({
@@ -194,7 +200,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                     />
                 </div>
                 <div className="flex gap-10 flex-col md:flex-row mb-10">
-                    <InputTP24
+                    <TextareaTP24
                         className="w-full"
                         label="Kommentar"
                         id="comment"
