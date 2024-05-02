@@ -6,6 +6,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 
 import { getCustomerById } from "@/data/customer";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
+import { Combobox } from "@/Components/combobox";
 
 interface CustomerFormProps {
     currentID: number;
@@ -190,13 +191,12 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         onChange={handleChange}
                         disabled={processing}
                     />
-                    <InputTP24
+                    <Combobox
+                        items={["B", "BE", "B96", "Klasse 3"]}
                         className="w-full"
                         label="Führerschein Klasse"
                         id="driving_license_class"
                         value={data.driving_license_class}
-                        onChange={handleChange}
-                        disabled={processing}
                     />
                 </div>
                 <div className="flex gap-10 flex-col md:flex-row mb-10">
