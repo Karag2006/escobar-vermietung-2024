@@ -1,0 +1,113 @@
+// Combines a Form Input field with a DatePicker.
+// Input field value should be in format 'dd.mm.yyyy'
+// date Picker expects an instance of Date() and returns an instance of Date()
+// date-fns is used to format, parse and validate Dates
+// German locale is used when displaying dates
+
+import { FormEvent, useEffect, useState } from "react";
+import { isValid, parse, format } from "date-fns";
+import { de } from "date-fns/locale/de";
+import { Button } from "../ui/button";
+import { Calendar } from "lucide-react";
+import { InputTP24 } from "../ui/input-tp24";
+import { Picker } from "./picker";
+
+interface DatePickerProps {
+    value: string;
+    label: string;
+    id: string;
+    fieldName: string;
+    error?: string;
+    required?: boolean;
+    disabled?: boolean;
+    onUpdateValue?: (value: string) => void;
+    removeError?: () => void;
+}
+
+type DatePickerReturnType = {
+    event?: FormEvent<HTMLInputElement>;
+    data?: string;
+};
+
+const options = { locale: de };
+
+export const DatePicker = ({
+    value,
+    label,
+    id,
+    fieldName,
+    required,
+    disabled,
+    error,
+    onUpdateValue,
+    removeError,
+}: DatePickerProps) => {
+    const [picker, setPicker] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(value);
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+    const togglePicker = () => {
+        setPicker(!picker);
+    };
+
+    const updateValue = ({ data, event }: DatePickerReturnType) => {
+        // if the function was called by editing the input field
+        if (
+            event &&
+            event.target instanceof HTMLInputElement &&
+            event.target.type == "text"
+        ) {
+            setSelectedValue(event.target.value);
+            onUpdateValue && onUpdateValue(event.target.value);
+            setPicker(false);
+            return;
+        }
+        //if the function was called by selecting a date in the date Picker
+        if (data) {
+            const selectedDate = format(data, "dd.MM.yyyy", options);
+            setSelectedValue(selectedDate);
+            onUpdateValue && onUpdateValue(selectedDate);
+            setPicker(false);
+            return;
+        }
+
+        useEffect(() => {
+            const setDate = (date?: string) => {
+                if (date && isValid(parse(date, "dd.MM.yyyy", new Date())))
+                    return parse(date, "dd.MM.yyyy", new Date());
+
+                return new Date();
+            };
+
+            return () => {
+                setCurrentDate(setDate(selectedValue));
+            };
+        }, [selectedValue]);
+    };
+    return (
+        <div className="relative flex gap-4">
+            <Button
+                onClick={togglePicker}
+                variant="ghost"
+                size="sm"
+                type="button"
+            >
+                <Calendar className="h-5 w-5" />
+                <span className="sr-only">open Calendar to Pick a Date</span>
+            </Button>
+            <InputTP24
+                className="w-full"
+                id={id}
+                type="text"
+                value={selectedValue}
+                label={label}
+                required={required}
+                disabled={disabled}
+                onInput={(e) => updateValue({ event: e })}
+            />
+            {picker ? (
+                <Picker value={currentDate} onPickDate={() => {}} />
+            ) : null}
+        </div>
+    );
+};

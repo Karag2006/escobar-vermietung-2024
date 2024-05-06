@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/Components/ui/button";
 
-import { InputTP24 } from "./ui/input-tp24";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/Components/ui/button";
+import { InputTP24 } from "@/Components/ui/input-tp24";
 
 type ComboboxItem = {
     value: string;

@@ -7,6 +7,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { getCustomerById } from "@/data/customer";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { Combobox } from "@/Components/combobox";
+import { DatePicker } from "@/Components/datePicker";
 
 interface CustomerFormProps {
     currentID: number;
@@ -117,11 +118,11 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                             onChange={handleChange}
                             disabled={processing}
                         />
-                        <InputTP24
+                        <DatePicker
                             label="Geburtsdatum"
                             id="birth_date"
                             value={data.birth_date}
-                            onChange={handleChange}
+                            fieldName="birth_date"
                             disabled={processing}
                         />
                         <InputTP24
