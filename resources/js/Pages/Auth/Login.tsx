@@ -65,7 +65,12 @@ const Login = ({ status }: { status?: string }) => {
                 />
 
                 <div className="flex items-center justify-end mt-8">
-                    <Button variant="primary" size="sm" disabled={processing}>
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        disabled={processing}
+                        type="submit"
+                    >
                         Log in
                     </Button>
                 </div>

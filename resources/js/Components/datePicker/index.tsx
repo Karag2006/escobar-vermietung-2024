@@ -4,7 +4,7 @@
 // date-fns is used to format, parse and validate Dates
 // German locale is used when displaying dates
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { isValid, parse, format } from "date-fns";
 import { de } from "date-fns/locale/de";
 import { Button } from "../ui/button";
@@ -106,7 +106,11 @@ export const DatePicker = ({
                 onInput={(e) => updateValue({ event: e })}
             />
             {picker ? (
-                <Picker value={currentDate} onPickDate={() => {}} />
+                <Picker
+                    value={currentDate}
+                    onPickDate={() => {}}
+                    onClickOutside={() => setPicker(false)}
+                />
             ) : null}
         </div>
     );
