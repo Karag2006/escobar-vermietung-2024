@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@/Components/ui/button";
 
 import { InputTP24 } from "./ui/input-tp24";
-import { ScrollArea } from "./ui/scroll-area";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 type ComboboxItem = {
     value: string;
@@ -28,9 +28,15 @@ export const Combobox = ({
     label,
     error,
 }: ComboboxProps) => {
+    const ref = useRef<null | HTMLDivElement>(null);
+
     const [open, setOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value);
     const [filteredList, setFilteredList] = useState(items);
+
+    const onClickOutside = () => {
+        setOpen(false);
+    };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
@@ -49,44 +55,65 @@ export const Combobox = ({
 
     const selectItem = (item: string) => {
         setSelectedValue(item);
+        setFilteredList(items);
         setOpen(false);
     };
+    useEffect(() => {
+        const handleClickOutside = (e: Event) => {
+            if (
+                ref.current &&
+                e.target instanceof Element &&
+                !ref.current.contains(e.target)
+            ) {
+                onClickOutside && onClickOutside();
+            }
+        };
+        document.addEventListener("click", handleClickOutside, true);
+        return () => {
+            document.removeEventListener("click", handleClickOutside, true);
+        };
+    }, [onClickOutside]);
+
     return (
-        <div className={cn("w-full relative", className)}>
-            <HoverCard open={open} onOpenChange={setOpen} openDelay={1}>
-                <HoverCardTrigger>
-                    <InputTP24
-                        className="w-full"
-                        value={selectedValue}
-                        id={id}
-                        onChange={handleChange}
-                        onFocus={() => setOpen(true)}
-                        label={label}
-                        error={error}
-                    />
-                </HoverCardTrigger>
-                <HoverCardContent>
-                    <ScrollArea className="h-32 w-full">
-                        {filteredList.length > 0 ? (
-                            filteredList.map((item) => {
-                                return (
-                                    <div
-                                        onClick={() => selectItem(item)}
-                                        role="option"
-                                        className="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none 
-                                        hover:bg-accent hover:text-accent-foreground
-                                        focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-                                    >
-                                        {item}
-                                    </div>
-                                );
-                            })
-                        ) : (
-                            <div>kein Filterergebnis</div>
-                        )}
-                    </ScrollArea>
-                </HoverCardContent>
-            </HoverCard>
+        <div className="relative w-full" ref={ref}>
+            <InputTP24
+                id={id}
+                className={className}
+                value={selectedValue}
+                label={label}
+                error={error}
+                onFocus={() => setOpen(true)}
+                onChange={handleChange}
+            />
+            <div className="absolute top-2 right-2 text-gray-600">
+                {open ? (
+                    <ChevronDown className="h-5 w-5" />
+                ) : (
+                    <ChevronUp className="h-5 w-5" />
+                )}
+            </div>
+
+            {open ? (
+                <div
+                    className={cn(
+                        "absolute top-10 left-0 bg-white z-10 w-full shadow-md"
+                    )}
+                >
+                    <div role="selectGroup" className="flex flex-col">
+                        {filteredList.map((item) => (
+                            <Button
+                                key={item}
+                                role="selectItem"
+                                type="button"
+                                variant="dropdown"
+                                onClick={() => selectItem(item)}
+                            >
+                                {item}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+            ) : null}
         </div>
     );
 };

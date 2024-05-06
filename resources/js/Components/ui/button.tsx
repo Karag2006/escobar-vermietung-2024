@@ -27,6 +27,8 @@ const buttonVariants = cva(
                 primary:
                     "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-xs text-white uppercase tracking-widest rounded-md",
                 icon: "bg-transparent text-current hover:text-current/80 focus:text-current/80",
+                dropdown:
+                    "justify-start rounded-none w-full bg-transparent text-current hover:bg-gray-200 focus:bg-gray-200",
             },
             size: {
                 default: "h-10 px-4 py-2",
