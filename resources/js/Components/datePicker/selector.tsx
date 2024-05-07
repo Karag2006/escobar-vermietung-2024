@@ -1,7 +1,10 @@
 import { format, subMonths, addMonths, subYears, addYears } from "date-fns";
 import { de } from "date-fns/locale/de";
-import { Button } from "../ui/button";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import { Button } from "../ui/button";
+
 const options = { locale: de };
 
 interface SelectorProps {
@@ -35,35 +38,33 @@ export const Selector = ({
         <div className="flex justify-between items-center px-12 py-1">
             {mode === "calendar" && (
                 <>
-                    <Button
-                        className="borderless"
-                        onClick={selectPreviousMonth}
-                    >
+                    <Button variant="borderless" onClick={selectPreviousMonth}>
                         <ChevronLeft className="h-5 w-5" />
                     </Button>
                     <Button
+                        variant="borderless"
                         className="borderless text-lg"
                         onClick={() => changeMode("month")}
                     >
                         {date ? format(date, "MMMM yyyy", options) : ""}
                     </Button>
-                    <Button className="borderless" onClick={selectNextMonth}>
+                    <Button variant="borderless" onClick={selectNextMonth}>
                         <ChevronRight className="h-5 w-5" />
                     </Button>
                 </>
             )}
             {mode === "month" && (
                 <>
-                    <Button className="borderless" onClick={selectPreviousYear}>
+                    <Button variant="borderless" onClick={selectPreviousYear}>
                         <ChevronLeft className="h-5 w-5" />
                     </Button>
                     <Button
-                        className="borderless"
+                        variant="borderless"
                         onClick={() => changeMode("year")}
                     >
                         {date ? format(date, "yyyy", options) : ""}
                     </Button>
-                    <Button className="borderless" onClick={selectNextYear}>
+                    <Button variant="borderless" onClick={selectNextYear}>
                         <ChevronRight className="h-5 w-5" />
                     </Button>
                 </>

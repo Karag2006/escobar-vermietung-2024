@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Selector } from "./selector";
 import { Calendar } from "./calendar";
+import { MonthList } from "./month-list";
+import { YearList } from "./year-list";
 
 interface PickerProps {
     value: Date;
@@ -51,12 +53,13 @@ export const Picker = ({ value, onPickDate, onClickOutside }: PickerProps) => {
     return (
         <div
             ref={ref}
-            className="absolute top-10 left-0 z-10 min-w-[320px] bg-gray-100"
+            className="absolute top-10 left-0 z-10 min-w-[320px] bg-gray-100 shadow-md"
         >
-            <div className="p-4 bg-primary text-gray-100">
+            <div className="date-picker-head p-4 bg-primary text-gray-100">
                 <div className="text-gray-100/60">
                     <Button
-                        className="borderless"
+                        variant="borderless"
+                        className="text-lg"
                         onClick={() => setMode("year")}
                     >
                         {selectedDate ? format(selectedDate, "yyyy") : ""}
@@ -64,7 +67,8 @@ export const Picker = ({ value, onPickDate, onClickOutside }: PickerProps) => {
                 </div>
                 <div className="">
                     <Button
-                        className="borderless text-2xl"
+                        variant="borderless"
+                        className="text-2xl"
                         onClick={showSelectedDate}
                     >
                         {selectedDate
@@ -83,22 +87,28 @@ export const Picker = ({ value, onPickDate, onClickOutside }: PickerProps) => {
                 {mode === "calendar" && (
                     <Calendar
                         selectedDate={selectedDate}
-                        updateDate={setSelectedDate}
+                        updateDate={handleDateSelect}
                         displayDate={displayDate}
                     />
                 )}
-                {/* <FormElementDateInputMonthList
-        v-if="mode == 'month'"
-        :selectedDate="selectedDate"
-        :changeMode="changeMode"
-      />
-      <FormElementDateInputYearList
-        v-if="mode == 'year'"
-        :changeMode="changeMode"
-        :selectedDate="selectedDate"
-        :onlyFuture="true"
-        :intervalSize="10"
-      /> */}
+                {mode === "month" && (
+                    <MonthList
+                        selectedDate={selectedDate}
+                        displayDate={displayDate}
+                        updateDate={setDisplayDate}
+                        changeMode={setMode}
+                    />
+                )}
+                {mode === "year" && (
+                    <YearList
+                        selectedDate={selectedDate}
+                        updateDate={setDisplayDate}
+                        displayDate={displayDate}
+                        changeMode={setMode}
+                        onlyFuture={true}
+                        intervalSize={10}
+                    />
+                )}
             </div>
         </div>
     );

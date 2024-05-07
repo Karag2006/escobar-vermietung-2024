@@ -26,7 +26,7 @@ interface DatePickerProps {
 
 type DatePickerReturnType = {
     event?: FormEvent<HTMLInputElement>;
-    data?: string;
+    date?: Date;
 };
 
 const options = { locale: de };
@@ -50,7 +50,7 @@ export const DatePicker = ({
         setPicker(!picker);
     };
 
-    const updateValue = ({ data, event }: DatePickerReturnType) => {
+    const updateValue = ({ date, event }: DatePickerReturnType) => {
         // if the function was called by editing the input field
         if (
             event &&
@@ -63,27 +63,25 @@ export const DatePicker = ({
             return;
         }
         //if the function was called by selecting a date in the date Picker
-        if (data) {
-            const selectedDate = format(data, "dd.MM.yyyy", options);
+        if (date) {
+            const selectedDate = format(date, "dd.MM.yyyy", options);
             setSelectedValue(selectedDate);
             onUpdateValue && onUpdateValue(selectedDate);
             setPicker(false);
             return;
         }
-
-        useEffect(() => {
-            const setDate = (date?: string) => {
-                if (date && isValid(parse(date, "dd.MM.yyyy", new Date())))
-                    return parse(date, "dd.MM.yyyy", new Date());
-
-                return new Date();
-            };
-
-            return () => {
-                setCurrentDate(setDate(selectedValue));
-            };
-        }, [selectedValue]);
     };
+    useEffect(() => {
+        const setDate = (date?: string) => {
+            if (date && isValid(parse(date, "dd.MM.yyyy", new Date())))
+                return parse(date, "dd.MM.yyyy", new Date());
+
+            return new Date();
+        };
+
+        setCurrentDate(setDate(selectedValue));
+        return () => {};
+    }, [selectedValue]);
     return (
         <div className="relative flex gap-4">
             <Button
@@ -108,7 +106,7 @@ export const DatePicker = ({
             {picker ? (
                 <Picker
                     value={currentDate}
-                    onPickDate={() => {}}
+                    onPickDate={(date) => updateValue({ date })}
                     onClickOutside={() => setPicker(false)}
                 />
             ) : null}

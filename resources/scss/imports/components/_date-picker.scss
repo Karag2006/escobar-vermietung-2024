@@ -1,0 +1,46 @@
+@layer components {
+    .date-picker-head {
+        button {
+            @apply hover:bg-transparent hover:opacity-50;
+        }
+    }
+    .calendar {
+        div:nth-child(n + 8):nth-child(-n + 14),
+        div:nth-child(n + 22):nth-child(-n + 28),
+        div:nth-child(n + 36):nth-child(-n + 42) {
+            @apply bg-gray-900/5;
+        }
+
+        button {
+            @apply rounded-full w-full aspect-square;
+        }
+        .today {
+            @apply border-[1px] border-solid border-primary;
+        }
+        .selected {
+            @apply bg-primary text-gray-100 hover:text-gray-900;
+        }
+    }
+    .month-list {
+        button {
+            @apply w-full h-full rounded-none hover:text-gray-600 hover:bg-transparent;
+        }
+        .current {
+            @apply border-[1px] border-solid border-primary;
+        }
+        .selected {
+            @apply bg-primary text-gray-100 hover:text-gray-900;
+        }
+    }
+    .year-list {
+        button {
+            @apply w-full h-full rounded-none hover:bg-gray-400;
+        }
+        .current {
+            @apply border-[1px] border-solid border-primary;
+        }
+        .selected {
+            @apply text-xl text-primary hover:bg-transparent;
+        }
+    }
+}

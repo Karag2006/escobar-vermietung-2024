@@ -64,7 +64,7 @@ export const Calendar = ({
     }, [displayDate]);
 
     return (
-        <div className="grid grid-cols-7 px-3 pb-3 min-h-48">
+        <div className="calendar grid grid-cols-7 px-3 pb-3 min-h-48">
             {dayTitles.map((title) => (
                 <div
                     key={title}
@@ -77,8 +77,8 @@ export const Calendar = ({
                 <div key={index} className="place-items-center grid">
                     {day ? (
                         <Button
-                            variant="icon"
-                            className={cn("borderless", dayClasses(day))}
+                            variant="borderless"
+                            className={cn("", dayClasses(day))}
                             onClick={() => updateDate(day)}
                         >
                             {day ? format(day, "d") : ""}

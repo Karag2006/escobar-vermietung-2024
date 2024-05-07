@@ -29,6 +29,7 @@ const buttonVariants = cva(
                 icon: "bg-transparent text-current hover:text-current/80 focus:text-current/80",
                 dropdown:
                     "justify-start rounded-none w-full bg-transparent text-current hover:bg-gray-200 focus:bg-gray-200",
+                borderless: "border-none bg-transparent hover:bg-gray-300",
             },
             size: {
                 default: "h-10 px-4 py-2",
