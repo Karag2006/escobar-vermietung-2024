@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { InputTP24 } from "@/Components/ui/input-tp24";
-import { DecisionButtons } from "@/Components/decision-buttons";
-
 import { getCustomerById } from "@/data/customer";
+
+import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { Combobox } from "@/Components/combobox";
 import { DatePicker } from "@/Components/datePicker";
+import { DecisionButtons } from "@/Components/decision-buttons";
 
 interface CustomerFormProps {
     currentID: number;

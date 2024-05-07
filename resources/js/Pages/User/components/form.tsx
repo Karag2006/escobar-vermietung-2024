@@ -1,9 +1,10 @@
-import { Button } from "@/Components/ui/button";
-import { InputTP24 } from "@/Components/ui/input-tp24";
-import { getUserById } from "@/data/user";
+import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { useEffect } from "react";
+import { getUserById } from "@/data/user";
+
+import { InputTP24 } from "@/Components/ui/input-tp24";
+import { DecisionButtons } from "@/Components/decision-buttons";
 
 interface UserFormProps {
     currentID: number;
@@ -75,7 +76,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
     return (
         <div className="p-4">
             <form onSubmit={handleSubmit}>
-                <div className="flex gap-10 flex-col md:flex-row">
+                <div className="flex gap-10 flex-col md:flex-row mb-8">
                     <div className="flex flex-col gap-6 w-full">
                         <InputTP24
                             label="Benutzername (Name fürs Einloggen)*"
@@ -119,23 +120,13 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                     </div>
                 </div>
 
-                <div className="formActions flex gap-2 mt-8">
-                    <Button
-                        type="submit"
-                        variant="success"
-                        disabled={processing}
-                    >
-                        Senden
-                    </Button>
-                    <Button
-                        type="reset"
-                        variant="destructive"
-                        onClick={close}
-                        disabled={processing}
-                    >
-                        Abbrechen
-                    </Button>
-                </div>
+                <DecisionButtons
+                    sendForm
+                    yesLabel="Senden"
+                    noLabel="Abbrechen"
+                    disabled={processing}
+                    noAction={close}
+                />
             </form>
         </div>
     );
