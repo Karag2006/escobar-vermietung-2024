@@ -1,10 +1,16 @@
 // expects instance of Date() in "value" prop, emits instance of Date()
 // uses date-fns for all internal date related functionality
 // uses German locale for displaying dates.
-import { format, addMonths, subMonths } from "date-fns";
-import { de } from "date-fns/locale/de";
+
+// uses custom classes to apply some tailwind classes
+// see resources/scss/imports/components/_date-picker.scss
+
 import { useEffect, useRef, useState } from "react";
-import { Button } from "../ui/button";
+import { format } from "date-fns";
+import { de } from "date-fns/locale/de";
+
+import { Button } from "@/Components/ui/button";
+
 import { Selector } from "./selector";
 import { Calendar } from "./calendar";
 import { MonthList } from "./month-list";

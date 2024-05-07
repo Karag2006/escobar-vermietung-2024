@@ -3,7 +3,7 @@ import { de } from "date-fns/locale/de";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { Button } from "../ui/button";
+import { Button } from "@/Components/ui/button";
 
 const options = { locale: de };
 
