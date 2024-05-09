@@ -5,6 +5,7 @@ import {
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 import { TrailerItem } from "@/types/trailer";
 import { Actions } from "./components/actions";
+import { TuevBatch } from "./components/tuev-batch";
 
 export const columns: ColumnDef<TrailerItem>[] = [
     {
@@ -43,6 +44,10 @@ export const columns: ColumnDef<TrailerItem>[] = [
         accessorKey: "tuev",
         header: ({ column }) => {
             return <DataTableColumnHeader column={column} title="Tüv" />;
+        },
+        cell: (cell) => {
+            const tuev = cell.row.original.tuev;
+            return <TuevBatch tuev={tuev} />;
         },
     },
     {
