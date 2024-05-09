@@ -1,7 +1,12 @@
+// does transmit any value written into the input.
+// this can be used in the backend to create new items
+// or should be caught in an error
+
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { PickerReturn } from "@/types";
 
 import { Button } from "@/Components/ui/button";
 import { InputTP24 } from "@/Components/ui/input-tp24";
@@ -18,6 +23,7 @@ interface ComboboxProps {
     value?: string;
     label?: string;
     error?: string;
+    onValueChange: (data: PickerReturn) => void;
 }
 
 export const Combobox = ({
@@ -27,6 +33,7 @@ export const Combobox = ({
     value,
     label,
     error,
+    onValueChange,
 }: ComboboxProps) => {
     const ref = useRef<null | HTMLDivElement>(null);
 
@@ -49,13 +56,14 @@ export const Combobox = ({
         } else {
             setFilteredList(items);
         }
-
         setSelectedValue(value);
+        onValueChange && onValueChange({ id, value });
     };
 
     const selectItem = (item: string) => {
         setSelectedValue(item);
         setFilteredList(items);
+        onValueChange && onValueChange({ id, value: item });
         setOpen(false);
     };
     useEffect(() => {

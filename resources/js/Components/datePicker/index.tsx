@@ -14,6 +14,7 @@ import { Button } from "@/Components/ui/button";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 
 import { Picker } from "./picker";
+import { PickerReturn } from "@/types";
 
 interface DatePickerProps {
     value: string;
@@ -23,7 +24,7 @@ interface DatePickerProps {
     error?: string;
     required?: boolean;
     disabled?: boolean;
-    onUpdateValue?: (value: string) => void;
+    onUpdateValue?: (result: PickerReturn) => void;
     removeError?: () => void;
 }
 
@@ -61,7 +62,7 @@ export const DatePicker = ({
             event.target.type == "text"
         ) {
             setSelectedValue(event.target.value);
-            onUpdateValue && onUpdateValue(event.target.value);
+            onUpdateValue && onUpdateValue({ id, value: event.target.value });
             setPicker(false);
             return;
         }
@@ -69,7 +70,7 @@ export const DatePicker = ({
         if (date) {
             const selectedDate = format(date, "dd.MM.yyyy", options);
             setSelectedValue(selectedDate);
-            onUpdateValue && onUpdateValue(selectedDate);
+            onUpdateValue && onUpdateValue({ id, value: selectedDate });
             setPicker(false);
             return;
         }

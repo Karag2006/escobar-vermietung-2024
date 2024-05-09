@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { getCustomerById } from "@/data/customer";
+import { PickerReturn } from "@/types";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
@@ -41,6 +42,15 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         car_number: "",
         comment: "",
     });
+
+    const handlePickerChange = (result: PickerReturn) => {
+        const key = result.id;
+        const value = result.value;
+        setData((data) => ({
+            ...data,
+            [key]: value,
+        }));
+    };
 
     const handleChange = (
         e:
@@ -123,6 +133,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                             id="birth_date"
                             value={data.birth_date}
                             fieldName="birth_date"
+                            onUpdateValue={handlePickerChange}
                             disabled={processing}
                         />
                         <InputTP24
@@ -198,6 +209,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         label="Führerschein Klasse"
                         id="driving_license_class"
                         value={data.driving_license_class}
+                        onValueChange={handlePickerChange}
                     />
                 </div>
                 <div className="flex gap-10 flex-col md:flex-row mb-10">
