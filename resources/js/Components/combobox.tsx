@@ -87,7 +87,7 @@ export const Combobox = ({
             <InputTP24
                 id={id}
                 className={className}
-                value={selectedValue}
+                value={value}
                 label={label}
                 error={error}
                 onFocus={() => setOpen(true)}
