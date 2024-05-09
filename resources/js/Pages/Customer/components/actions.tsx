@@ -2,7 +2,7 @@ import { Button } from "@/Components/ui/button";
 import { Row } from "@tanstack/react-table";
 import { Pencil, Trash2 } from "lucide-react";
 
-import { userSchema } from "@/types/user";
+import { customerSchema } from "@/types/customer";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
@@ -15,29 +15,28 @@ export function Actions<TData>({
     editModal,
     deleteModal,
 }: ActionsProps<TData>) {
-    const user = userSchema.parse(row.original);
+    const customer = customerSchema.parse(row.original);
 
     const handleEdit = () => {
-        console.log({ edit: user.email });
-        if (user.id) editModal(user.id);
+        if (customer.id) editModal(customer.id);
     };
 
     const handleDelete = () => {
         console.log("delete");
-        if (user.id) deleteModal(user.id);
+        if (customer.id) deleteModal(customer.id);
     };
     return (
         <div className="flex justify-end gap-4">
             <div className=" text-green-600">
                 <Button variant="icon" size="content" onClick={handleEdit}>
                     <Pencil className="h-5 w-5" />
-                    <span className="sr-only">Benutzer bearbeiten</span>
+                    <span className="sr-only">Kunden bearbeiten</span>
                 </Button>
             </div>
             <div className="text-red-600">
                 <Button variant="icon" size="content" onClick={handleDelete}>
                     <Trash2 className="h-5 w-5" />
-                    <span className="sr-only">Benutzer löschen</span>
+                    <span className="sr-only">Kunden löschen</span>
                 </Button>
             </div>
         </div>

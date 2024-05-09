@@ -4,6 +4,7 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 import { CustomerItem } from "@/types/customer";
+import { Actions } from "./components/actions";
 
 export const columns: ColumnDef<CustomerItem>[] = [
     {
@@ -33,13 +34,13 @@ export const columns: ColumnDef<CustomerItem>[] = [
     {
         id: "actions",
         cell: (cell) => {
-            // return (
-            //     <Actions
-            //         row={cell.row}
-            //         editModal={cell.editModal}
-            //         deleteModal={cell.deleteModal}
-            //     />
-            // );
+            return (
+                <Actions
+                    row={cell.row}
+                    editModal={cell.editModal}
+                    deleteModal={cell.deleteModal}
+                />
+            );
         },
     },
 ];
