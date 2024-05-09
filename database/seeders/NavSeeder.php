@@ -58,13 +58,12 @@ class NavSeeder extends Seeder
             //     'icon'              => 'fas fa-trailer',
             //     'children'          => '10;11'
             // ],
-            // [
-            //     'id'                => 10,
-            //     'name'              => 'Anhänger',
-            //     'icon'              => 'fas fa-trailer',
-            //     'link'              => '/trailers',
-            //     'isChild'           => true
-            // ],
+            [
+                'id'                => 10,
+                'name'              => 'Anhänger',
+                'icon'              => 'caravan',
+                'link'              => 'trailer'
+            ],
             // [
             //     'id'                => 11,
             //     'name'              => 'Zubehör',

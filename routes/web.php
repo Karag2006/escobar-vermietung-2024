@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.delete');
 
     require __DIR__.'/customer.php';
+    require __DIR__.'/trailer.php';
     
     Route::get('api/nav', [NavController::class, 'index']);
 });
