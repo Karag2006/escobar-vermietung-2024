@@ -1,13 +1,11 @@
 import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { getCustomerById } from "@/data/customer";
+import { getTrailerById } from "@/data/trailer";
 import { PickerReturn } from "@/types";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
-import { Combobox } from "@/Components/combobox";
-import { DatePicker } from "@/Components/datePicker";
 import { DecisionButtons } from "@/Components/decision-buttons";
 
 interface CustomerFormProps {
@@ -27,19 +25,13 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         clearErrors,
     } = useForm({
         id: currentID,
-        pass_number: "",
-        name1: "",
-        name2: "",
-        birth_date: "",
-        birth_city: "",
-        street: "",
-        plz: "",
-        city: "",
-        phone: "",
-        email: "",
-        driving_license_no: "",
-        driving_license_class: "",
-        car_number: "",
+        title: "",
+        plateNumber: "",
+        chassisNumber: "",
+        tuev: "",
+        totalWeight: "",
+        usableWeight: "",
+        loading_size: [],
         comment: "",
     });
 
@@ -69,8 +61,8 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!currentID) {
-            post("/customer", {
-                only: ["customers", "errors"],
+            post("/trailer", {
+                only: ["trailers", "errors"],
                 onSuccess: (page) => {
                     close();
                 },
@@ -79,8 +71,8 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                 },
             });
         } else {
-            patch(`/customer/${currentID}`, {
-                only: ["customers", "errors"],
+            patch(`/trailer/${currentID}`, {
+                only: ["trailers", "errors"],
                 onSuccess: (page) => {
                     close();
                 },
@@ -91,14 +83,14 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         }
     };
     useEffect(() => {
-        const getCurrentCustomer = () => {
+        const getCurrentTrailer = () => {
             if (currentID) {
-                getCustomerById(currentID).then((customer) =>
-                    setData({ ...customer })
+                getTrailerById(currentID).then((trailer) =>
+                    setData({ ...trailer })
                 );
             }
         };
-        getCurrentCustomer();
+        getCurrentTrailer();
         return;
     }, []);
 
@@ -108,111 +100,72 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                 <div className="flex gap-10 flex-col md:flex-row">
                     <div className="flex flex-col gap-6 w-full">
                         <InputTP24
-                            label="Personalausweis Nr."
-                            id="pass_number"
-                            value={data.pass_number}
+                            label="Anhängerbezeichnung *"
+                            id="title"
+                            value={data.title}
                             onChange={handleChange}
                             disabled={processing}
                         />
                         <InputTP24
-                            label="Name / Firma *"
-                            id="name1"
-                            value={data.name1}
+                            label="Kennzeichen *"
+                            id="plateNumber"
+                            value={data.plateNumber}
                             onChange={handleChange}
                             disabled={processing}
                         />
                         <InputTP24
-                            label="Name 2"
-                            id="name2"
-                            value={data.name2}
+                            label="Fahrgestellnummer *"
+                            id="chassisNumber"
+                            value={data.chassisNumber}
                             onChange={handleChange}
                             disabled={processing}
                         />
-                        <DatePicker
+                        <InputTP24
+                            label="Tüv Fälligkeit"
+                            id="tuev"
+                            value={data.tuev}
+                            onChange={handleChange}
+                            disabled={processing}
+                        />
+                        {/* <DatePicker
                             label="Geburtsdatum"
                             id="birth_date"
                             value={data.birth_date}
                             fieldName="birth_date"
                             onUpdateValue={handlePickerChange}
                             disabled={processing}
-                        />
-                        <InputTP24
-                            label="Geburtsort"
-                            id="birth_city"
-                            value={data.birth_city}
-                            onChange={handleChange}
-                            disabled={processing}
-                        />
+                        /> */}
                     </div>
                     <div className="flex flex-col gap-6 w-full">
                         <div className="flex gap-2">
                             <InputTP24
-                                className="w-[45%]"
-                                label="Postleitzahl"
-                                id="plz"
-                                value={data.plz}
+                                className="w-full"
+                                label="zulässiges Gesamtgewicht *"
+                                id="totalWeight"
+                                value={data.totalWeight}
                                 onChange={handleChange}
                                 disabled={processing}
                             />
                             <InputTP24
                                 className="w-full"
-                                label="Ort"
-                                id="city"
-                                value={data.city}
+                                label="Nutzlast *"
+                                id="usableWeight"
+                                value={data.usableWeight}
                                 onChange={handleChange}
                                 disabled={processing}
                             />
                         </div>
                         <InputTP24
                             className="mb-8"
-                            label="Strasse"
-                            id="street"
-                            value={data.street}
-                            onChange={handleChange}
-                            disabled={processing}
-                        />
-                        <InputTP24
-                            label="Telefonnummer"
-                            id="phone"
-                            value={data.phone}
-                            onChange={handleChange}
-                            disabled={processing}
-                        />
-                        <InputTP24
-                            label="Kennzeichen vom Zugfahrzeug"
-                            id="car_number"
-                            value={data.car_number}
-                            onChange={handleChange}
-                            disabled={processing}
-                        />
-                        <InputTP24
-                            label="E-Mail Adresse"
-                            id="email"
-                            value={data.email}
+                            label="Lademaße ( L x B x H )"
+                            id="loading_size"
+                            value={data.loading_size}
                             onChange={handleChange}
                             disabled={processing}
                         />
                     </div>
                 </div>
-                <div className="flex gap-10 flex-col md:flex-row my-16">
-                    <InputTP24
-                        className="w-full"
-                        label="Führerschein Nr."
-                        id="driving_license_no"
-                        value={data.driving_license_no}
-                        onChange={handleChange}
-                        disabled={processing}
-                    />
-                    <Combobox
-                        items={["B", "BE", "B96", "Klasse 3"]}
-                        className="w-full"
-                        label="Führerschein Klasse"
-                        id="driving_license_class"
-                        value={data.driving_license_class}
-                        onValueChange={handlePickerChange}
-                    />
-                </div>
-                <div className="flex gap-10 flex-col md:flex-row mb-10">
+                <div className="flex gap-10 flex-col md:flex-row my-10">
                     <TextareaTP24
                         className="w-full"
                         label="Kommentar"
