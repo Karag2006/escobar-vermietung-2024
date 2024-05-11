@@ -15,6 +15,9 @@ export const columns: ColumnDef<TrailerItem>[] = [
         header: ({ column }) => {
             return <DataTableColumnHeader column={column} title="Anhänger" />;
         },
+        cell: ({ row }) => {
+            return <div className="max-w-[500px]">{row.getValue("title")}</div>;
+        },
     },
     {
         accessorKey: "plateNumber",
@@ -22,6 +25,9 @@ export const columns: ColumnDef<TrailerItem>[] = [
             return (
                 <DataTableColumnHeader column={column} title="Kennzeichen" />
             );
+        },
+        cell: ({ row }) => {
+            return <div className="w-max">{row.getValue("plateNumber")}</div>;
         },
     },
     {
@@ -34,6 +40,7 @@ export const columns: ColumnDef<TrailerItem>[] = [
                 <WeightDisplay
                     weight={cell.row.original.totalWeight}
                     unit="kg"
+                    className="w-max"
                 />
             );
         },
@@ -48,6 +55,7 @@ export const columns: ColumnDef<TrailerItem>[] = [
                 <WeightDisplay
                     weight={cell.row.original.usableWeight}
                     unit="kg"
+                    className="w-max"
                 />
             );
         },
@@ -61,6 +69,7 @@ export const columns: ColumnDef<TrailerItem>[] = [
             return (
                 <LoadingSizeDisplay
                     loadingSize={cell.row.original.loading_size}
+                    className="w-max"
                 />
             );
         },
@@ -71,7 +80,9 @@ export const columns: ColumnDef<TrailerItem>[] = [
             return <DataTableColumnHeader column={column} title="Tüv" />;
         },
         cell: (cell) => {
-            return <TuevBatch tuev={cell.row.original.tuev} />;
+            return (
+                <TuevBatch tuev={cell.row.original.tuev} className="w-max" />
+            );
         },
     },
     {
@@ -82,6 +93,7 @@ export const columns: ColumnDef<TrailerItem>[] = [
             //         row={cell.row}
             //         editModal={cell.editModal}
             //         deleteModal={cell.deleteModal}
+            //         className="w-max"
             //     />
             // );
         },

@@ -1,10 +1,15 @@
 interface WeightDisplayProps {
     weight?: string | null;
     unit: string;
+    className?: string;
 }
 
-export const WeightDisplay = ({ weight, unit }: WeightDisplayProps) => {
+export const WeightDisplay = ({
+    weight,
+    unit,
+    className,
+}: WeightDisplayProps) => {
     let displayString = "";
     if (weight) displayString = `${weight} ${unit}`;
-    return <span>{displayString}</span>;
+    return <span className={className}>{displayString}</span>;
 };

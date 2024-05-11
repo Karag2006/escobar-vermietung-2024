@@ -17,9 +17,10 @@ import { cn } from "@/lib/utils";
 interface TuevBatchProps {
     tuev?: string | null;
     compareDate?: Date;
+    className?: string;
 }
 
-export const TuevBatch = ({ tuev, compareDate }: TuevBatchProps) => {
+export const TuevBatch = ({ tuev, compareDate, className }: TuevBatchProps) => {
     if (!tuev) return null;
     let classes = [];
     let date = new Date();
@@ -37,7 +38,8 @@ export const TuevBatch = ({ tuev, compareDate }: TuevBatchProps) => {
         <div
             className={cn(
                 "flex w-max justify-center py-2 px-4 rounded-2xl",
-                classes
+                classes,
+                className
             )}
         >
             {format(tuevDate, "MM / yy")}
