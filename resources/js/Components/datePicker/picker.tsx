@@ -18,18 +18,26 @@ import { YearList } from "./year-list";
 
 interface PickerProps {
     value: Date;
+    pickerStyle?: string;
     onPickDate: (date: Date) => void;
     onClickOutside: () => void;
 }
 
 const options = { locale: de };
 
-export const Picker = ({ value, onPickDate, onClickOutside }: PickerProps) => {
+export const Picker = ({
+    value,
+    pickerStyle,
+    onPickDate,
+    onClickOutside,
+}: PickerProps) => {
     const ref = useRef<null | HTMLDivElement>(null);
 
     const [selectedDate, setSelectedDate] = useState(value);
     const [displayDate, setDisplayDate] = useState<Date>(value);
-    const [mode, setMode] = useState("calendar");
+    const [mode, setMode] = useState(
+        pickerStyle === "month" ? "month" : "calendar"
+    );
 
     const handleDateSelect = (date: Date) => {
         setSelectedDate(date);
@@ -71,17 +79,31 @@ export const Picker = ({ value, onPickDate, onClickOutside }: PickerProps) => {
                         {selectedDate ? format(selectedDate, "yyyy") : ""}
                     </Button>
                 </div>
-                <div className="">
-                    <Button
-                        variant="borderless"
-                        className="text-2xl"
-                        onClick={showSelectedDate}
-                    >
-                        {selectedDate
-                            ? format(selectedDate, "eee, dd. MMM", options)
-                            : ""}
-                    </Button>
-                </div>
+                {pickerStyle === "month" ? (
+                    <div className="">
+                        <Button
+                            variant="borderless"
+                            className="text-2xl"
+                            onClick={() => setMode("month")}
+                        >
+                            {selectedDate
+                                ? format(selectedDate, "MMM", options)
+                                : ""}
+                        </Button>
+                    </div>
+                ) : (
+                    <div className="">
+                        <Button
+                            variant="borderless"
+                            className="text-2xl"
+                            onClick={showSelectedDate}
+                        >
+                            {selectedDate
+                                ? format(selectedDate, "eee, dd. MMM", options)
+                                : ""}
+                        </Button>
+                    </div>
+                )}
             </div>
             <div className="card--body">
                 <Selector
@@ -97,7 +119,15 @@ export const Picker = ({ value, onPickDate, onClickOutside }: PickerProps) => {
                         displayDate={displayDate}
                     />
                 )}
-                {mode === "month" && (
+                {mode === "month" && pickerStyle === "month" && (
+                    <MonthList
+                        selectedDate={selectedDate}
+                        displayDate={displayDate}
+                        updateDate={handleDateSelect}
+                        changeMode={setMode}
+                    />
+                )}
+                {mode === "month" && !(pickerStyle === "month") && (
                     <MonthList
                         selectedDate={selectedDate}
                         displayDate={displayDate}
@@ -111,7 +141,7 @@ export const Picker = ({ value, onPickDate, onClickOutside }: PickerProps) => {
                         updateDate={setDisplayDate}
                         displayDate={displayDate}
                         changeMode={setMode}
-                        onlyFuture={true}
+                        onlyFuture={!(pickerStyle === "month")}
                         intervalSize={10}
                     />
                 )}

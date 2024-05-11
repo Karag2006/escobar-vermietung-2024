@@ -7,6 +7,7 @@ import { PickerReturn } from "@/types";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { DecisionButtons } from "@/Components/decision-buttons";
+import { MonthPicker } from "@/Components/datePicker/month-picker";
 
 interface CustomerFormProps {
     currentID: number;
@@ -120,21 +121,21 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                             onChange={handleChange}
                             disabled={processing}
                         />
-                        <InputTP24
+                        {/* <InputTP24
                             label="Tüv Fälligkeit"
                             id="tuev"
                             value={data.tuev}
                             onChange={handleChange}
                             disabled={processing}
-                        />
-                        {/* <DatePicker
-                            label="Geburtsdatum"
-                            id="birth_date"
-                            value={data.birth_date}
-                            fieldName="birth_date"
+                        /> */}
+                        <MonthPicker
+                            label="Tüv Fälligkeit"
+                            id="tuev"
+                            value={data.tuev}
+                            fieldName="tuev"
                             onUpdateValue={handlePickerChange}
                             disabled={processing}
-                        /> */}
+                        />
                     </div>
                     <div className="flex flex-col gap-6 w-full">
                         <div className="flex gap-2">
