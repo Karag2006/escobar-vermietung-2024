@@ -53,6 +53,7 @@ export const MonthPicker = ({
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const togglePicker = () => {
+        removeError && removeError();
         setPicker(!picker);
     };
 
@@ -104,9 +105,11 @@ export const MonthPicker = ({
                 id={id}
                 type="text"
                 value={value}
+                error={error}
                 label={label}
                 required={required}
                 disabled={disabled}
+                onFocus={removeError}
                 onInput={(e) => updateValue({ event: e })}
             />
             {picker ? (

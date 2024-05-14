@@ -54,6 +54,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
     ) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;
+        clearErrors(key);
         setData((data) => ({
             ...data,
             [key]: value,
@@ -147,6 +148,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                             value={data.tuev}
                             error={errors.tuev}
                             fieldName="tuev"
+                            removeError={() => clearErrors("tuev")}
                             onUpdateValue={handlePickerChange}
                             disabled={processing}
                         />
@@ -175,6 +177,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                         <LoadingSizeInput
                             value={data.loading_size}
                             errors={errors}
+                            clearErrors={clearErrors}
                             handleChangeSize={handleChangeSize}
                             processing={processing}
                         />

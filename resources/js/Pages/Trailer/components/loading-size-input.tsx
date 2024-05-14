@@ -9,6 +9,7 @@ interface LoadingSizeInputProps {
         "loading_size.2": string;
     };
     processing?: boolean;
+    clearErrors: (key: string) => void;
     handleChangeSize: (size: {
         length: string;
         width: string;
@@ -20,6 +21,7 @@ export const LoadingSizeInput = ({
     value,
     errors,
     processing,
+    clearErrors,
     handleChangeSize,
 }: LoadingSizeInputProps) => {
     const [localValue, setLocalValue] = useState({
@@ -32,6 +34,16 @@ export const LoadingSizeInput = ({
         width: "",
         height: "",
     });
+
+    const clearE = (key: string) => {
+        clearErrors(key);
+        if (key === "loading_size.0")
+            setLocalErrors({ ...localErrors, length: "" });
+        if (key === "loading_size.1")
+            setLocalErrors({ ...localErrors, width: "" });
+        if (key === "loading_size.2")
+            setLocalErrors({ ...localErrors, height: "" });
+    };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const key = e.currentTarget.id;
@@ -75,6 +87,7 @@ export const LoadingSizeInput = ({
                     value={localValue.length}
                     error={localErrors.length}
                     onInput={handleChange}
+                    onFocus={() => clearE("loading_size.0")}
                     disabled={processing}
                 />
                 <InputTP24
@@ -83,6 +96,7 @@ export const LoadingSizeInput = ({
                     value={localValue.width}
                     error={localErrors.width}
                     onInput={handleChange}
+                    onFocus={() => clearE("loading_size.1")}
                     disabled={processing}
                 />
                 <InputTP24
@@ -91,6 +105,7 @@ export const LoadingSizeInput = ({
                     value={localValue.height}
                     error={localErrors.height}
                     onInput={handleChange}
+                    onFocus={() => clearE("loading_size.2")}
                     disabled={processing}
                 />
             </div>
