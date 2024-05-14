@@ -8,6 +8,7 @@ import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { MonthPicker } from "@/Components/datePicker/month-picker";
+import { LoadingSizeInput } from "./loading-size-input";
 
 interface CustomerFormProps {
     currentID: number;
@@ -56,6 +57,23 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         setData((data) => ({
             ...data,
             [key]: value,
+        }));
+    };
+
+    const handleChangeSize = (size: {
+        length: string;
+        width: string;
+        height: string;
+    }) => {
+        console.log(size);
+        const temp = [
+            parseInt(size.length),
+            parseInt(size.width),
+            parseInt(size.height),
+        ];
+        setData((data) => ({
+            ...data,
+            loading_size: temp,
         }));
     };
 
@@ -156,13 +174,10 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                                 disabled={processing}
                             />
                         </div>
-                        <InputTP24
-                            className="mb-8"
-                            label="Lademaße ( L x B x H )"
-                            id="loading_size"
+                        <LoadingSizeInput
                             value={data.loading_size}
-                            onChange={handleChange}
-                            disabled={processing}
+                            handleChangeSize={handleChangeSize}
+                            processing={processing}
                         />
                     </div>
                 </div>
