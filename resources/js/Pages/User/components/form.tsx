@@ -5,6 +5,7 @@ import { getUserById } from "@/data/user";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { DecisionButtons } from "@/Components/decision-buttons";
+import { toast } from "sonner";
 
 interface UserFormProps {
     currentID: number;
@@ -44,21 +45,23 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
         if (!currentID) {
             post("/user", {
                 only: ["userList", "errors"],
-                onSuccess: (page) => {
+                onSuccess: () => {
+                    toast.success("Benutzer erfolgreich angelegt");
                     close();
                 },
-                onError: (errors) => {
-                    console.log(errors);
+                onError: () => {
+                    toast.error("Es sind fehler aufgetreten");
                 },
             });
         } else {
             patch(`/user/${currentID}`, {
                 only: ["userList", "errors"],
-                onSuccess: (page) => {
+                onSuccess: () => {
+                    toast.success("Benutzer erfolgreich geändert");
                     close();
                 },
-                onError: (errors) => {
-                    console.log(errors);
+                onError: () => {
+                    toast.error("Es sind fehler aufgetreten");
                 },
             });
         }

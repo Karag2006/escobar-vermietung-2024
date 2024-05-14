@@ -14,6 +14,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 
 import { UserForm } from "./components/form";
 import { columns } from "./columns";
+import { toast } from "sonner";
 
 export default function User({ auth, userList }: UserProps) {
     const pageTitle = "Benutzerverwaltung";
@@ -47,7 +48,8 @@ export default function User({ auth, userList }: UserProps) {
         console.log("confirm " + id);
         Form.delete(`/user/${id}`, {
             only: ["userList"],
-            onSuccess: (page) => {
+            onSuccess: () => {
+                toast.success("Benutzer erfolgreich gelöscht");
                 setConfirmModal(false);
             },
         });

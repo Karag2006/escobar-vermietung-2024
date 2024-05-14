@@ -21,6 +21,7 @@ import { NavMenu } from "./components/nav-menu";
 import { CardWrapper } from "@/Components/wrapper/card-wrapper";
 import { PageTitle } from "@/Components/page-title";
 import { TooltipProvider } from "@/Components/ui/tooltip";
+import { Toaster } from "@/Components/ui/sonner";
 
 interface AuthenticatedLayoutProps extends PropsWithChildren {
     user: User;
@@ -127,6 +128,7 @@ export default function Authenticated({
                                 footer={footer}
                             >
                                 <main>{children}</main>
+                                <Toaster richColors />
                             </CardWrapper>
                         </div>
                     </div>
