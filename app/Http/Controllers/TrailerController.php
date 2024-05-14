@@ -43,7 +43,7 @@ class TrailerController extends Controller
      */
     public function update(UpdateTrailerRequest $request, Trailer $trailer)
     {
-        //
+        $trailer->update($request->all());
     }
 
     /**
@@ -51,7 +51,7 @@ class TrailerController extends Controller
      */
     public function destroy(Trailer $trailer)
     {
-        //
+        $trailer->delete();
     }
 
     public function getTuev(trailer $trailer)
