@@ -4,6 +4,7 @@ import { Head, useForm } from "@inertiajs/react";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Button } from "@/Components/ui/button";
 import { InputTP24 } from "@/Components/ui/input-tp24";
+import { toast } from "sonner";
 
 const Login = ({ status }: { status?: string }) => {
     const { data, setData, post, processing, errors, reset, clearErrors } =
@@ -22,7 +23,15 @@ const Login = ({ status }: { status?: string }) => {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route("login"));
+        post(route("login"), {
+            only: ["errors"],
+            onSuccess: () => {
+                toast.success("Eingeloggt");
+            },
+            onError: () => {
+                toast.error("Fehler beim einloggen");
+            },
+        });
     };
 
     return (
