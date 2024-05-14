@@ -1,19 +1,19 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
+import { TriangleAlert } from "lucide-react";
 
 import { UserProps } from "@/types/user";
-import { DataTable } from "@/Components/data-table";
-import { columns } from "./columns";
-import { ActionButton } from "../../Components/action-button";
+import { getUserById } from "@/data/user";
+
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Modal } from "@/Components/wrapper/modal";
+import { DataTable } from "@/Components/data-table";
+import { ActionButton } from "@/Components/action-button";
+import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
+import { DecisionButtons } from "@/Components/decision-buttons";
 
 import { UserForm } from "./components/form";
-import { useState } from "react";
-import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
-
-import { DecisionButtons } from "@/Components/decision-buttons";
-import { TriangleAlert } from "lucide-react";
-import { getUserById } from "@/data/user";
+import { columns } from "./columns";
 
 export default function User({ auth, userList }: UserProps) {
     const pageTitle = "Benutzerverwaltung";
@@ -63,7 +63,7 @@ export default function User({ auth, userList }: UserProps) {
             header={pageTitle}
             headerAction={
                 <ActionButton
-                    label="Benutzer"
+                    label="Benutzer Anlegen"
                     actionType="add"
                     action={addUserModal}
                 />
