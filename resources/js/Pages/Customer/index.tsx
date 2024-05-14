@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
+import { toast } from "sonner";
 
 import { TriangleAlert } from "lucide-react";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-
 import { DataTable } from "@/Components/data-table";
 import { ActionButton } from "@/Components/action-button";
 import { Modal } from "@/Components/wrapper/modal";
@@ -48,6 +48,7 @@ export default function User({ auth, customers }: CustomerProps) {
         Form.delete(`/customer/${id}`, {
             only: ["customers"],
             onSuccess: (page) => {
+                toast.success("Kunde gelöscht");
                 setConfirmModal(false);
             },
         });

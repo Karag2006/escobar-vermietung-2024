@@ -9,6 +9,7 @@ import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { MonthPicker } from "@/Components/datePicker/month-picker";
 import { LoadingSizeInput } from "./loading-size-input";
+import { toast } from "sonner";
 
 interface TrailerFormProps {
     currentID: number;
@@ -81,21 +82,23 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
         if (!currentID) {
             post("/trailer", {
                 only: ["trailers", "errors"],
-                onSuccess: (page) => {
+                onSuccess: () => {
+                    toast.success("Anhänger erfolgreich angelegt");
                     close();
                 },
-                onError: (errors) => {
-                    // console.log(errors);
+                onError: () => {
+                    toast.error("Fehler beim anlegen des Anhänger");
                 },
             });
         } else {
             patch(`/trailer/${currentID}`, {
                 only: ["trailers", "errors"],
-                onSuccess: (page) => {
+                onSuccess: () => {
+                    toast.success("Anhänger erfolgreich geändert");
                     close();
                 },
-                onError: (errors) => {
-                    console.log(errors);
+                onError: () => {
+                    toast.error("Fehler beim ändern des Anhänger");
                 },
             });
         }

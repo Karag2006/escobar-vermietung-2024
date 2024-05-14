@@ -9,6 +9,7 @@ import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { Combobox } from "@/Components/combobox";
 import { DatePicker } from "@/Components/datePicker";
 import { DecisionButtons } from "@/Components/decision-buttons";
+import { toast } from "sonner";
 
 interface CustomerFormProps {
     currentID: number;
@@ -71,21 +72,23 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         if (!currentID) {
             post("/customer", {
                 only: ["customers", "errors"],
-                onSuccess: (page) => {
+                onSuccess: () => {
+                    toast.success("Kunde erfolgreich angelegt");
                     close();
                 },
-                onError: (errors) => {
-                    console.log(errors);
+                onError: () => {
+                    toast.error("Fehler beim anlegen des Kunden");
                 },
             });
         } else {
             patch(`/customer/${currentID}`, {
                 only: ["customers", "errors"],
-                onSuccess: (page) => {
+                onSuccess: () => {
+                    toast.success("Kunde wurde erfolgreich geändert");
                     close();
                 },
-                onError: (errors) => {
-                    console.log(errors);
+                onError: () => {
+                    toast.error("Fehler beim ändern des Kunden");
                 },
             });
         }

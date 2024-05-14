@@ -15,6 +15,7 @@ import { columns } from "./columns";
 import { TrailerProps } from "@/types/trailer";
 import { getTrailerById } from "@/data/trailer";
 import { TrailerForm } from "./components/form";
+import { toast } from "sonner";
 
 export default function User({ auth, trailers }: TrailerProps) {
     const pageTitle = "Anhänger";
@@ -47,7 +48,8 @@ export default function User({ auth, trailers }: TrailerProps) {
     const confirmDelete = (id?: number) => {
         Form.delete(`/trailer/${id}`, {
             only: ["trailers"],
-            onSuccess: (page) => {
+            onSuccess: () => {
+                toast.success("Anhänger wurde gelöscht");
                 setConfirmModal(false);
             },
         });
