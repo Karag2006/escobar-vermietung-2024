@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 
 interface LoadingSizeInputProps {
     value: string[];
-    error?: string;
+    errors?: {
+        "loading_size.0": string;
+        "loading_size.1": string;
+        "loading_size.2": string;
+    };
     processing?: boolean;
     handleChangeSize: (size: {
         length: string;
@@ -14,11 +18,16 @@ interface LoadingSizeInputProps {
 
 export const LoadingSizeInput = ({
     value,
-    error,
+    errors,
     processing,
     handleChangeSize,
 }: LoadingSizeInputProps) => {
     const [localValue, setLocalValue] = useState({
+        length: "",
+        width: "",
+        height: "",
+    });
+    const [localErrors, setLocalErrors] = useState({
         length: "",
         width: "",
         height: "",
@@ -42,7 +51,19 @@ export const LoadingSizeInput = ({
                 height: value[2] ? value[2] : "",
             });
         }
-    }, [value]);
+        if (
+            errors &&
+            (errors["loading_size.0"] ||
+                errors["loading_size.1"] ||
+                errors["loading_size.2"])
+        ) {
+            setLocalErrors({
+                length: errors["loading_size.0"],
+                width: errors["loading_size.1"],
+                height: errors["loading_size.2"],
+            });
+        }
+    }, [value, errors]);
 
     return (
         <div>
@@ -52,6 +73,7 @@ export const LoadingSizeInput = ({
                     label="Länge *"
                     id="length"
                     value={localValue.length}
+                    error={localErrors.length}
                     onInput={handleChange}
                     disabled={processing}
                 />
@@ -59,6 +81,7 @@ export const LoadingSizeInput = ({
                     label="Breite *"
                     id="width"
                     value={localValue.width}
+                    error={localErrors.width}
                     onInput={handleChange}
                     disabled={processing}
                 />
@@ -66,6 +89,7 @@ export const LoadingSizeInput = ({
                     label="Höhe"
                     id="height"
                     value={localValue.height}
+                    error={localErrors.height}
                     onInput={handleChange}
                     disabled={processing}
                 />

@@ -65,7 +65,6 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
         width: string;
         height: string;
     }) => {
-        console.log(size);
         const temp = [
             parseInt(size.length),
             parseInt(size.width),
@@ -86,7 +85,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                     close();
                 },
                 onError: (errors) => {
-                    console.log(errors);
+                    // console.log(errors);
                 },
             });
         } else {
@@ -122,6 +121,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                             label="Anhängerbezeichnung *"
                             id="title"
                             value={data.title}
+                            error={errors.title}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -129,6 +129,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                             label="Kennzeichen *"
                             id="plateNumber"
                             value={data.plateNumber}
+                            error={errors.plateNumber}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -136,20 +137,15 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                             label="Fahrgestellnummer *"
                             id="chassisNumber"
                             value={data.chassisNumber}
+                            error={errors.chassisNumber}
                             onChange={handleChange}
                             disabled={processing}
                         />
-                        {/* <InputTP24
-                            label="Tüv Fälligkeit"
-                            id="tuev"
-                            value={data.tuev}
-                            onChange={handleChange}
-                            disabled={processing}
-                        /> */}
                         <MonthPicker
                             label="Tüv Fälligkeit"
                             id="tuev"
                             value={data.tuev}
+                            error={errors.tuev}
                             fieldName="tuev"
                             onUpdateValue={handlePickerChange}
                             disabled={processing}
@@ -162,6 +158,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                                 label="zulässiges Gesamtgewicht *"
                                 id="totalWeight"
                                 value={data.totalWeight}
+                                error={errors.totalWeight}
                                 onChange={handleChange}
                                 disabled={processing}
                             />
@@ -170,12 +167,14 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                                 label="Nutzlast *"
                                 id="usableWeight"
                                 value={data.usableWeight}
+                                error={errors.usableWeight}
                                 onChange={handleChange}
                                 disabled={processing}
                             />
                         </div>
                         <LoadingSizeInput
                             value={data.loading_size}
+                            errors={errors}
                             handleChangeSize={handleChangeSize}
                             processing={processing}
                         />
@@ -187,6 +186,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                         label="Kommentar"
                         id="comment"
                         value={data.comment}
+                        error={errors.comment}
                         onChange={handleChange}
                         disabled={processing}
                     />
