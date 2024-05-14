@@ -22,19 +22,11 @@ class TrailerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreTrailerRequest $request)
     {
-        //
+        $trailer = Trailer::create($request->all());
     }
 
     /**
@@ -42,16 +34,9 @@ class TrailerController extends Controller
      */
     public function show(Trailer $trailer)
     {
-        //
+        return response()->json($trailer, Response::HTTP_OK);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Trailer $trailer)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -67,5 +52,15 @@ class TrailerController extends Controller
     public function destroy(Trailer $trailer)
     {
         //
+    }
+
+    public function getTuev(trailer $trailer)
+    {
+        $trailer = $trailer->only([
+            'id',
+            'tuev',
+        ]);
+
+        return response()->json($trailer, Response::HTTP_OK);
     }
 }
