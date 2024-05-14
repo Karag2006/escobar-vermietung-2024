@@ -51,6 +51,7 @@ export const DatePicker = ({
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const togglePicker = () => {
+        removeError && removeError();
         setPicker(!picker);
     };
 
@@ -103,8 +104,10 @@ export const DatePicker = ({
                 type="text"
                 value={value}
                 label={label}
+                error={error}
                 required={required}
                 disabled={disabled}
+                onFocus={removeError}
                 onInput={(e) => updateValue({ event: e })}
             />
             {picker ? (

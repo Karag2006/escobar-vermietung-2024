@@ -111,6 +111,8 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                             label="Personalausweis Nr."
                             id="pass_number"
                             value={data.pass_number}
+                            error={errors.pass_number}
+                            onFocus={() => clearErrors("pass_number")}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -118,21 +120,27 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                             label="Name / Firma *"
                             id="name1"
                             value={data.name1}
+                            error={errors.name1}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("name1")}
                             disabled={processing}
                         />
                         <InputTP24
                             label="Name 2"
                             id="name2"
                             value={data.name2}
+                            error={errors.name2}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("name2")}
                             disabled={processing}
                         />
                         <DatePicker
                             label="Geburtsdatum"
                             id="birth_date"
-                            value={data.birth_date}
                             fieldName="birth_date"
+                            value={data.birth_date}
+                            error={errors.birth_date}
+                            removeError={() => clearErrors("birth_date")}
                             onUpdateValue={handlePickerChange}
                             disabled={processing}
                         />
@@ -140,7 +148,9 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                             label="Geburtsort"
                             id="birth_city"
                             value={data.birth_city}
+                            error={errors.birth_city}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("birth_city")}
                             disabled={processing}
                         />
                     </div>
@@ -151,7 +161,9 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                                 label="Postleitzahl"
                                 id="plz"
                                 value={data.plz}
+                                error={errors.plz}
                                 onChange={handleChange}
+                                onFocus={() => clearErrors("plz")}
                                 disabled={processing}
                             />
                             <InputTP24
@@ -159,7 +171,9 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                                 label="Ort"
                                 id="city"
                                 value={data.city}
+                                error={errors.city}
                                 onChange={handleChange}
+                                onFocus={() => clearErrors("city")}
                                 disabled={processing}
                             />
                         </div>
@@ -168,28 +182,36 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                             label="Strasse"
                             id="street"
                             value={data.street}
+                            error={errors.street}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("street")}
                             disabled={processing}
                         />
                         <InputTP24
                             label="Telefonnummer"
                             id="phone"
                             value={data.phone}
+                            error={errors.phone}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("phone")}
                             disabled={processing}
                         />
                         <InputTP24
                             label="Kennzeichen vom Zugfahrzeug"
                             id="car_number"
                             value={data.car_number}
+                            error={errors.car_number}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("car_number")}
                             disabled={processing}
                         />
                         <InputTP24
                             label="E-Mail Adresse"
                             id="email"
                             value={data.email}
+                            error={errors.email}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("email")}
                             disabled={processing}
                         />
                     </div>
@@ -200,7 +222,9 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         label="Führerschein Nr."
                         id="driving_license_no"
                         value={data.driving_license_no}
+                        error={errors.driving_license_no}
                         onChange={handleChange}
+                        onFocus={() => clearErrors("driving_license_no")}
                         disabled={processing}
                     />
                     <Combobox
@@ -209,6 +233,8 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         label="Führerschein Klasse"
                         id="driving_license_class"
                         value={data.driving_license_class}
+                        error={errors.driving_license_class}
+                        removeError={() => clearErrors("driving_license_class")}
                         onValueChange={handlePickerChange}
                     />
                 </div>
@@ -218,7 +244,9 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         label="Kommentar"
                         id="comment"
                         value={data.comment}
+                        error={errors.comment}
                         onChange={handleChange}
+                        onFocus={() => clearErrors("comment")}
                         disabled={processing}
                     />
                 </div>

@@ -33,7 +33,6 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;
-        clearErrors(key);
         setData((data) => ({
             ...data,
             [key]: value,
@@ -85,6 +84,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             value={data.username}
                             error={errors.username}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("username")}
                             disabled={processing}
                         />
                         <InputTP24
@@ -93,6 +93,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             value={data.name}
                             error={errors.name}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("name")}
                             disabled={processing}
                         />
                         <InputTP24
@@ -101,6 +102,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             value={data.email}
                             error={errors.email}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("email")}
                             disabled={processing}
                         />
                     </div>
@@ -111,6 +113,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             type="password"
                             value={data.password}
                             error={errors.password}
+                            onFocus={() => clearErrors("password")}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -120,6 +123,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             type="password"
                             value={data.password_confirmation}
                             error={errors.password_confirmation}
+                            onFocus={() => clearErrors("password_confirmation")}
                             onChange={handleChange}
                             disabled={processing}
                         />

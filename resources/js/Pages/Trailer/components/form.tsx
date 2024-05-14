@@ -54,7 +54,6 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
     ) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;
-        clearErrors(key);
         setData((data) => ({
             ...data,
             [key]: value,
@@ -124,6 +123,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                             value={data.title}
                             error={errors.title}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("title")}
                             disabled={processing}
                         />
                         <InputTP24
@@ -132,6 +132,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                             value={data.plateNumber}
                             error={errors.plateNumber}
                             onChange={handleChange}
+                            onFocus={() => clearErrors("plateNumber")}
                             disabled={processing}
                         />
                         <InputTP24
@@ -139,6 +140,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                             id="chassisNumber"
                             value={data.chassisNumber}
                             error={errors.chassisNumber}
+                            onFocus={() => clearErrors("chassisNumber")}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -162,6 +164,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                                 value={data.totalWeight}
                                 error={errors.totalWeight}
                                 onChange={handleChange}
+                                onFocus={() => clearErrors("totalWeight")}
                                 disabled={processing}
                             />
                             <InputTP24
@@ -170,6 +173,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                                 id="usableWeight"
                                 value={data.usableWeight}
                                 error={errors.usableWeight}
+                                onFocus={() => clearErrors("usableWeight")}
                                 onChange={handleChange}
                                 disabled={processing}
                             />
@@ -191,6 +195,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                         value={data.comment}
                         error={errors.comment}
                         onChange={handleChange}
+                        onFocus={() => clearErrors("comment")}
                         disabled={processing}
                     />
                 </div>

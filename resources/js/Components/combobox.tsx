@@ -23,6 +23,7 @@ interface ComboboxProps {
     value?: string;
     label?: string;
     error?: string;
+    removeError?: () => void;
     onValueChange: (data: PickerReturn) => void;
 }
 
@@ -33,6 +34,7 @@ export const Combobox = ({
     value,
     label,
     error,
+    removeError,
     onValueChange,
 }: ComboboxProps) => {
     const ref = useRef<null | HTMLDivElement>(null);
@@ -43,6 +45,11 @@ export const Combobox = ({
 
     const onClickOutside = () => {
         setOpen(false);
+    };
+
+    const openPicker = () => {
+        removeError && removeError();
+        setOpen(true);
     };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -90,7 +97,7 @@ export const Combobox = ({
                 value={value}
                 label={label}
                 error={error}
-                onFocus={() => setOpen(true)}
+                onFocus={openPicker}
                 onChange={handleChange}
             />
             <div className="absolute top-2 right-2 text-gray-600">
