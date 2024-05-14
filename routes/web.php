@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
 
     require __DIR__.'/customer.php';
     require __DIR__.'/trailer.php';
+    require __DIR__.'/equipment.php';
     
     Route::get('api/nav', [NavController::class, 'index']);
 });
