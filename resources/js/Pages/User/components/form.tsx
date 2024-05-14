@@ -33,6 +33,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;
+        clearErrors(key);
         setData((data) => ({
             ...data,
             [key]: value,
@@ -82,6 +83,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             label="Benutzername (Name fürs Einloggen)*"
                             id="username"
                             value={data.username}
+                            error={errors.username}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -89,6 +91,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             label="Name*"
                             id="name"
                             value={data.name}
+                            error={errors.name}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -96,6 +99,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             label="E-Mail Addresse*"
                             id="email"
                             value={data.email}
+                            error={errors.email}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -106,6 +110,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             id="password"
                             type="password"
                             value={data.password}
+                            error={errors.password}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -114,6 +119,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
                             id="password_confirmation"
                             type="password"
                             value={data.password_confirmation}
+                            error={errors.password_confirmation}
                             onChange={handleChange}
                             disabled={processing}
                         />
