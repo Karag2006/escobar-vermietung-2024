@@ -10,12 +10,12 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { MonthPicker } from "@/Components/datePicker/month-picker";
 import { LoadingSizeInput } from "./loading-size-input";
 
-interface CustomerFormProps {
+interface TrailerFormProps {
     currentID: number;
     close: () => void;
 }
 
-export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
+export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
     const {
         data,
         setData,

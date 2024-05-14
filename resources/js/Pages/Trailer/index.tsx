@@ -14,7 +14,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { columns } from "./columns";
 import { TrailerProps } from "@/types/trailer";
 import { getTrailerById } from "@/data/trailer";
-import { CustomerForm } from "./components/form";
+import { TrailerForm } from "./components/form";
 
 export default function User({ auth, trailers }: TrailerProps) {
     const pageTitle = "Anhänger";
@@ -118,7 +118,7 @@ export default function User({ auth, trailers }: TrailerProps) {
                     }
                     showHeader
                 >
-                    <CustomerForm
+                    <TrailerForm
                         currentID={currentID}
                         close={() => setModalOpen(false)}
                     />

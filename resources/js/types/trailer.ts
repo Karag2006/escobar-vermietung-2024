@@ -7,7 +7,10 @@ export const trailerSchema = z.object({
     plateNumber: z.string(),
     totalWeight: z.string().optional().nullable(),
     usableWeight: z.string().optional().nullable(),
-    loading_size: z.string().optional().nullable(),
+    loading_size: z
+        .array(z.number().optional().nullable())
+        .optional()
+        .nullable(),
     tuev: z.string().optional().nullable(),
 });
 

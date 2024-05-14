@@ -88,14 +88,14 @@ export const columns: ColumnDef<TrailerItem>[] = [
     {
         id: "actions",
         cell: (cell) => {
-            // return (
-            //     <Actions
-            //         row={cell.row}
-            //         editModal={cell.editModal}
-            //         deleteModal={cell.deleteModal}
-            //         className="w-max"
-            //     />
-            // );
+            return (
+                <Actions
+                    row={cell.row}
+                    editModal={cell.editModal}
+                    deleteModal={cell.deleteModal}
+                    className="w-max"
+                />
+            );
         },
     },
 ];

@@ -37,12 +37,12 @@ export const LoadingSizeInput = ({
     useEffect(() => {
         if (value) {
             setLocalValue({
-                length: value[0],
-                width: value[1],
-                height: value[2],
+                length: value[0] ? value[0] : "",
+                width: value[1] ? value[1] : "",
+                height: value[2] ? value[2] : "",
             });
         }
-    }, []);
+    }, [value]);
 
     return (
         <div>

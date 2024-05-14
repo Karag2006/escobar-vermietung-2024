@@ -2,41 +2,43 @@ import { Button } from "@/Components/ui/button";
 import { Row } from "@tanstack/react-table";
 import { Pencil, Trash2 } from "lucide-react";
 
-import { customerSchema } from "@/types/customer";
+import { trailerSchema } from "@/types/trailer";
+import { cn } from "@/lib/utils";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
+    className?: string;
     editModal: (id: number) => void;
     deleteModal: (id: number) => void;
 }
 
 export function Actions<TData>({
     row,
+    className,
     editModal,
     deleteModal,
 }: ActionsProps<TData>) {
-    const customer = customerSchema.parse(row.original);
+    const trailer = trailerSchema.parse(row.original);
 
     const handleEdit = () => {
-        if (customer.id) editModal(customer.id);
+        if (trailer.id) editModal(trailer.id);
     };
 
     const handleDelete = () => {
-        console.log("delete");
-        if (customer.id) deleteModal(customer.id);
+        if (trailer.id) deleteModal(trailer.id);
     };
     return (
-        <div className="flex justify-end gap-4">
+        <div className={cn("flex justify-end gap-4", className)}>
             <div className=" text-green-600">
                 <Button variant="icon" size="content" onClick={handleEdit}>
                     <Pencil className="h-5 w-5" />
-                    <span className="sr-only">Kunden bearbeiten</span>
+                    <span className="sr-only">Anhänger bearbeiten</span>
                 </Button>
             </div>
             <div className="text-red-600">
                 <Button variant="icon" size="content" onClick={handleDelete}>
                     <Trash2 className="h-5 w-5" />
-                    <span className="sr-only">Kunden löschen</span>
+                    <span className="sr-only">Anhänger löschen</span>
                 </Button>
             </div>
         </div>
