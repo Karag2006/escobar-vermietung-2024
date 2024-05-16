@@ -22,20 +22,13 @@ class SettingController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSettingRequest $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      */
     public function show(Setting $setting)
     {
-        //
+        return response()->json($setting, Response::HTTP_OK);
     }
 
 
@@ -44,14 +37,6 @@ class SettingController extends Controller
      */
     public function update(UpdateSettingRequest $request, Setting $setting)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Setting $setting)
-    {
-        //
+        $setting->update($request->all());
     }
 }

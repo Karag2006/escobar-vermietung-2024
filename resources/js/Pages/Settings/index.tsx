@@ -54,7 +54,7 @@ export default function User({ auth, settings }: SettingProps) {
             only: ["settings", "errors"],
             onSuccess: () => {
                 toast.success("Einstellungen erfolgreich geändert");
-                close();
+                setEdit(false);
             },
             onError: () => {
                 toast.error("Fehler beim ändern der Einstellungen");

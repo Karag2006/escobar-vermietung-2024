@@ -11,7 +11,7 @@ class UpdateSettingRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class UpdateSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'vat'                   =>  'required|integer',
+            'offer_note'            =>  'nullable|string',
+            'reservation_note'      =>  'nullable|string',
+            'contract_note'         =>  'nullable|string',
+            'document_footer'       =>  'nullable|string',
+            'contactdata'           =>  'nullable|string',
         ];
     }
 }
