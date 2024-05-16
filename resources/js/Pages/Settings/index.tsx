@@ -16,6 +16,8 @@ import { getSettings } from "@/data/settings";
 
 import { toast } from "sonner";
 
+import RichTextEditor from "@/Components/richtext-editor";
+
 export default function User({ auth, settings }: SettingProps) {
     const pageTitle = "Einstellungen";
     const [confirmModal, setConfirmModal] = useState(false);
@@ -39,6 +41,13 @@ export default function User({ auth, settings }: SettingProps) {
         document_footer: settings.document_footer,
     });
 
+    const handleChange = (name: string, html: string) => {
+        setData((data) => ({
+            ...data,
+            [name]: html,
+        }));
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -47,15 +56,23 @@ export default function User({ auth, settings }: SettingProps) {
                 <ActionButton
                     label="Bearbeiten"
                     actionType="add"
-                    action={() => {}}
+                    action={() => setEdit(true)}
                 />
             }
         >
             <Head title={pageTitle} />
 
-            <div
-                dangerouslySetInnerHTML={{ __html: settings.contactdata }}
-            ></div>
+            {!edit && (
+                <div
+                    dangerouslySetInnerHTML={{ __html: settings.contactdata }}
+                ></div>
+            )}
+            {edit && (
+                <RichTextEditor
+                    value={data.contactdata}
+                    onChange={(value) => handleChange("contactdata", value)}
+                />
+            )}
         </AuthenticatedLayout>
     );
 }
