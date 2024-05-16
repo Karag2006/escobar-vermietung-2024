@@ -79,7 +79,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
     return (
         <div className="p-4">
             <form onSubmit={handleSubmit}>
-                <div className="flex gap-10 flex-col md:flex-row mb-8">
+                <div className="flex gap-10 flex-col md:flex-row">
                     <div className="flex flex-col gap-6 w-full">
                         <InputTP24
                             label="Benutzername (Name fürs Einloggen)*"
@@ -135,7 +135,7 @@ export const UserForm = ({ currentID, close }: UserFormProps) => {
 
                 <DecisionButtons
                     sendForm
-                    yesLabel="Senden"
+                    yesLabel="Speichern"
                     noLabel="Abbrechen"
                     disabled={processing}
                     noAction={close}

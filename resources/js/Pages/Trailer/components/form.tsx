@@ -190,7 +190,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                         />
                     </div>
                 </div>
-                <div className="flex gap-10 flex-col md:flex-row my-10">
+                <div className="flex gap-10 flex-col md:flex-row mt-10">
                     <TextareaTP24
                         className="w-full"
                         label="Kommentar"

@@ -241,7 +241,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         onValueChange={handlePickerChange}
                     />
                 </div>
-                <div className="flex gap-10 flex-col md:flex-row mb-10">
+                <div className="flex gap-10 flex-col md:flex-row">
                     <TextareaTP24
                         className="w-full"
                         label="Kommentar"

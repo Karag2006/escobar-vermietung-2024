@@ -20,7 +20,7 @@ export const DecisionButtons = ({
     disabled,
 }: DecisionButtonsProps) => {
     return (
-        <div className="flex gap-4">
+        <div className="flex gap-4 mt-8">
             {sendForm && (
                 <Button variant="success" type="submit" disabled={disabled}>
                     {yesLabel}

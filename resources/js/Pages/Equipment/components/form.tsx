@@ -119,7 +119,6 @@ export const EquipmentForm = ({ currentID, close }: EquipmentFormProps) => {
                         />
                     </div>
                 </div>
-                {/* TODO: give Decision Buttons margin top and remove margin Bottom on all Forms. */}
                 <DecisionButtons
                     yesLabel="Speichern"
                     noLabel="Abbrechen"
