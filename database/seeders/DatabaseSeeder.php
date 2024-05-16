@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             NavSeeder::class,
             EquipmentSeeder::class,
             SettingSeeder::class,
+            CollectAddressSeeder::class,
         ]);
     }
 }
