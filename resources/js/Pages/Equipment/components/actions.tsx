@@ -2,7 +2,7 @@ import { Button } from "@/Components/ui/button";
 import { Row } from "@tanstack/react-table";
 import { Pencil, Trash2 } from "lucide-react";
 
-import { customerSchema } from "@/types/customer";
+import { equipmentSchema } from "@/types/equipment";
 import {
     Tooltip,
     TooltipContent,
@@ -20,15 +20,15 @@ export function Actions<TData>({
     editModal,
     deleteModal,
 }: ActionsProps<TData>) {
-    const customer = customerSchema.parse(row.original);
+    const equipment = equipmentSchema.parse(row.original);
 
     const handleEdit = () => {
-        if (customer.id) editModal(customer.id);
+        if (equipment.id) editModal(equipment.id);
     };
 
     const handleDelete = () => {
         console.log("delete");
-        if (customer.id) deleteModal(customer.id);
+        if (equipment.id) deleteModal(equipment.id);
     };
     return (
         <div className="flex justify-end gap-4">
@@ -41,10 +41,10 @@ export function Actions<TData>({
                             onClick={handleEdit}
                         >
                             <Pencil className="h-5 w-5" />
-                            <span className="sr-only">Kunden bearbeiten</span>
+                            <span className="sr-only">Zubehör bearbeiten</span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Kunden bearbeiten</TooltipContent>
+                    <TooltipContent>Zubehör bearbeiten</TooltipContent>
                 </Tooltip>
             </div>
             <div className="text-red-600">
@@ -56,10 +56,10 @@ export function Actions<TData>({
                             onClick={handleDelete}
                         >
                             <Trash2 className="h-5 w-5" />
-                            <span className="sr-only">Kunden löschen</span>
+                            <span className="sr-only">Zubehör löschen</span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Kunden löschen</TooltipContent>
+                    <TooltipContent>Zubehör löschen</TooltipContent>
                 </Tooltip>
             </div>
         </div>

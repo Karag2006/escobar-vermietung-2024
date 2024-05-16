@@ -32,16 +32,16 @@ export const columns: ColumnDef<EquipmentItem>[] = [
             return <DataTableColumnHeader column={column} title="Details" />;
         },
     },
-    // {
-    //     id: "actions",
-    //     cell: (cell) => {
-    //         return (
-    //             <Actions
-    //                 row={cell.row}
-    //                 editModal={cell.editModal}
-    //                 deleteModal={cell.deleteModal}
-    //             />
-    //         );
-    //     },
-    // },
+    {
+        id: "actions",
+        cell: (cell) => {
+            return (
+                <Actions
+                    row={cell.row}
+                    editModal={cell.editModal}
+                    deleteModal={cell.deleteModal}
+                />
+            );
+        },
+    },
 ];
