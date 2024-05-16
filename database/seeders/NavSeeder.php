@@ -70,12 +70,12 @@ class NavSeeder extends Seeder
                 'icon'              => 'wrench',
                 'link'              => 'equipment',
             ],
-            // [
-            //     'id'                => 12,
-            //     'name'              => 'Einstellungen',
-            //     'icon'              => 'fas fa-cogs',
-            //     'link'              => '/options',
-            // ],
+            [
+                'id'                => 12,
+                'name'              => 'Einstellungen',
+                'icon'              => 'settings',
+                'link'              => 'settings',
+            ],
 
         ];
 

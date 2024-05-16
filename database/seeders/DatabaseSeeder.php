@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             NavSeeder::class,
             EquipmentSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }
