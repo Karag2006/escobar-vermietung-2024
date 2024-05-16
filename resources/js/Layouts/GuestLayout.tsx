@@ -11,8 +11,12 @@ export default function Guest({ children }: PropsWithChildren) {
         </div>
     );
     return (
-        <div className="min-h-screen flex flex-col sm:justify-center items-center">
-            <CardWrapper header={header} showHeader>
+        <div className="min-h-screen flex flex-col sm:mt-[10rem] items-center">
+            <CardWrapper
+                ClassName="sm:max-w-[35rem]"
+                header={header}
+                showHeader
+            >
                 {children}
                 <Toaster richColors />
             </CardWrapper>
