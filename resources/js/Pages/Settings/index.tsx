@@ -12,8 +12,14 @@ import RichTextEditor from "@/Components/richtext-editor";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 
 import { SettingsElement } from "./components/settings-element";
+import { DataTable } from "@/Components/data-table";
+import { columns } from "./columns";
 
-export default function User({ auth, settings }: SettingProps) {
+export default function User({
+    auth,
+    settings,
+    collectAddressList,
+}: SettingProps) {
     const pageTitle = "Einstellungen";
     const [confirmModal, setConfirmModal] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -75,116 +81,128 @@ export default function User({ auth, settings }: SettingProps) {
             }
         >
             <Head title={pageTitle} />
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <SettingsElement label="Umsatzsteuer">
-                    {!edit && <div>{`${settings.vat} %`}</div>}
+            <div className="flex flex-col gap-16">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <SettingsElement label="Umsatzsteuer">
+                        {!edit && <div>{`${settings.vat} %`}</div>}
+                        {edit && (
+                            <InputTP24
+                                className="max-w-12"
+                                id="vat"
+                                value={data.vat}
+                                error={errors.vat}
+                                onChange={handleChange}
+                                onFocus={() => clearErrors("vat")}
+                                disabled={processing}
+                                suffix="%"
+                            />
+                        )}
+                    </SettingsElement>
+                    <SettingsElement label="Angebot Hinweis-Text">
+                        {!edit && (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: settings.offer_note,
+                                }}
+                            ></div>
+                        )}
+                        {edit && (
+                            <RichTextEditor
+                                value={data.offer_note}
+                                onChange={(value) =>
+                                    handleRichtextChange("offer_note", value)
+                                }
+                            />
+                        )}
+                    </SettingsElement>
+                    <SettingsElement label="Reservierung Hinweis-Text">
+                        {!edit && (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: settings.reservation_note,
+                                }}
+                            ></div>
+                        )}
+                        {edit && (
+                            <RichTextEditor
+                                value={data.reservation_note}
+                                onChange={(value) =>
+                                    handleRichtextChange(
+                                        "reservation_note",
+                                        value
+                                    )
+                                }
+                            />
+                        )}
+                    </SettingsElement>
+                    <SettingsElement label="Mietvertrag Hinweis-Text">
+                        {!edit && (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: settings.contract_note,
+                                }}
+                            ></div>
+                        )}
+                        {edit && (
+                            <RichTextEditor
+                                value={data.contract_note}
+                                onChange={(value) =>
+                                    handleRichtextChange("contract_note", value)
+                                }
+                            />
+                        )}
+                    </SettingsElement>
+                    <SettingsElement label="Adressdaten">
+                        {!edit && (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: settings.contactdata,
+                                }}
+                            ></div>
+                        )}
+                        {edit && (
+                            <RichTextEditor
+                                value={data.contactdata}
+                                onChange={(value) =>
+                                    handleRichtextChange("contactdata", value)
+                                }
+                            />
+                        )}
+                    </SettingsElement>
+                    <SettingsElement label="Fußzeile">
+                        {!edit && (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: settings.document_footer,
+                                }}
+                            ></div>
+                        )}
+                        {edit && (
+                            <RichTextEditor
+                                value={data.document_footer}
+                                onChange={(value) =>
+                                    handleRichtextChange(
+                                        "document_footer",
+                                        value
+                                    )
+                                }
+                            />
+                        )}
+                    </SettingsElement>
                     {edit && (
-                        <InputTP24
-                            className="max-w-12"
-                            id="vat"
-                            value={data.vat}
-                            error={errors.vat}
-                            onChange={handleChange}
-                            onFocus={() => clearErrors("vat")}
-                            disabled={processing}
-                            suffix="%"
+                        <DecisionButtons
+                            yesLabel="Speichern"
+                            noLabel="Abbrechen"
+                            sendForm
+                            noAction={() => setEdit(false)}
                         />
                     )}
+                </form>
+
+                <SettingsElement label="Abholadressen">
+                    <DataTable columns={columns} data={collectAddressList} />
                 </SettingsElement>
-                <SettingsElement label="Angebot Hinweis-Text">
-                    {!edit && (
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: settings.offer_note,
-                            }}
-                        ></div>
-                    )}
-                    {edit && (
-                        <RichTextEditor
-                            value={data.offer_note}
-                            onChange={(value) =>
-                                handleRichtextChange("offer_note", value)
-                            }
-                        />
-                    )}
-                </SettingsElement>
-                <SettingsElement label="Reservierung Hinweis-Text">
-                    {!edit && (
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: settings.reservation_note,
-                            }}
-                        ></div>
-                    )}
-                    {edit && (
-                        <RichTextEditor
-                            value={data.reservation_note}
-                            onChange={(value) =>
-                                handleRichtextChange("reservation_note", value)
-                            }
-                        />
-                    )}
-                </SettingsElement>
-                <SettingsElement label="Mietvertrag Hinweis-Text">
-                    {!edit && (
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: settings.contract_note,
-                            }}
-                        ></div>
-                    )}
-                    {edit && (
-                        <RichTextEditor
-                            value={data.contract_note}
-                            onChange={(value) =>
-                                handleRichtextChange("contract_note", value)
-                            }
-                        />
-                    )}
-                </SettingsElement>
-                <SettingsElement label="Adressdaten">
-                    {!edit && (
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: settings.contactdata,
-                            }}
-                        ></div>
-                    )}
-                    {edit && (
-                        <RichTextEditor
-                            value={data.contactdata}
-                            onChange={(value) =>
-                                handleRichtextChange("contactdata", value)
-                            }
-                        />
-                    )}
-                </SettingsElement>
-                <SettingsElement label="Fußzeile">
-                    {!edit && (
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: settings.document_footer,
-                            }}
-                        ></div>
-                    )}
-                    {edit && (
-                        <RichTextEditor
-                            value={data.document_footer}
-                            onChange={(value) =>
-                                handleRichtextChange("document_footer", value)
-                            }
-                        />
-                    )}
-                </SettingsElement>
-                {edit && (
-                    <DecisionButtons
-                        yesLabel="Speichern"
-                        noLabel="Abbrechen"
-                        sendForm
-                        noAction={() => setEdit(false)}
-                    />
-                )}
-            </form>
+            </div>
         </AuthenticatedLayout>
     );
 }

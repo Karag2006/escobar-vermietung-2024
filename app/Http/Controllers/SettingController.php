@@ -21,7 +21,7 @@ class SettingController extends Controller
         $collectAddressList = CollectAddress::select('id', 'name', 'address')->orderBy('name')->get();
         return Inertia::render('Settings/index', [
             'settings' => $settings[0],
-            'collectAddressList' => $collectAddressList;
+            'collectAddressList' => $collectAddressList,
         ]);
     }
 

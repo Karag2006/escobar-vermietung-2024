@@ -1,5 +1,6 @@
 import { PageProps } from "@/types";
 import { z } from "zod";
+import { CollectAddressItem } from "./collect-address";
 
 export const settingSchema = z.object({
     id: z.number(),
@@ -17,4 +18,5 @@ export type SettingItem = z.infer<typeof settingSchema>;
 
 export type SettingProps = {
     settings: SettingItem;
+    collectAddressList: CollectAddressItem[];
 } & PageProps;

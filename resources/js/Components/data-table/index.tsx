@@ -25,13 +25,13 @@ import { DataTableToolbar } from "./toolbar";
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    editModal: (id: number) => void;
-    deleteModal: (id: number) => void;
+    editModal?: (id: number) => void;
+    deleteModal?: (id: number) => void;
 }
 declare module "@tanstack/react-table" {
     interface CellContext<TData, TValue> {
-        editModal: (id: number) => void;
-        deleteModal: (id: number) => void;
+        editModal?: (id: number) => void;
+        deleteModal?: (id: number) => void;
     }
 }
 
