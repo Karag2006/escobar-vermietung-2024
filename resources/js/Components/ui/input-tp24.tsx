@@ -6,10 +6,11 @@ export interface InputProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
+    suffix?: React.ReactNode;
 }
 
 export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, label, error, id, value, ...props }, ref) => {
+    ({ className, type, label, error, id, value, suffix, ...props }, ref) => {
         return (
             <div className={cn("group relative", className)}>
                 {label && label !== "" && (
@@ -37,6 +38,11 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
                 />
                 {error && error !== "" && (
                     <p className="text-sm text-destructive mt-2">{error}</p>
+                )}
+                {suffix && suffix !== "" && (
+                    <div className="absolute right-1 bottom-[0.2rem]">
+                        {suffix}
+                    </div>
                 )}
             </div>
         );
