@@ -11,7 +11,7 @@ class StoreEquipmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreEquipmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'                  =>  'required|string|min:5|max:50',
+            'details'               =>  'nullable|string|min:10|max:600',
+            'defaultNumber'         =>  'nullable|digits_between:1,2'
         ];
     }
 }
