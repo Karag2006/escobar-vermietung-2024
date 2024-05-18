@@ -12,8 +12,7 @@ import RichTextEditor from "@/Components/richtext-editor";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 
 import { SettingsElement } from "./components/settings-element";
-import { DataTable } from "@/Components/data-table";
-import { columns } from "./columns";
+import { CollectAddresses } from "./components/collect-addresses";
 
 export default function User({
     auth,
@@ -21,7 +20,6 @@ export default function User({
     collectAddressList,
 }: SettingProps) {
     const pageTitle = "Einstellungen";
-    const [confirmModal, setConfirmModal] = useState(false);
     const [edit, setEdit] = useState(false);
     const { data, setData, patch, processing, errors, reset, clearErrors } =
         useForm({
@@ -200,7 +198,7 @@ export default function User({
                 </form>
 
                 <SettingsElement label="Abholadressen">
-                    <DataTable columns={columns} data={collectAddressList} />
+                    <CollectAddresses collectAddresses={collectAddressList} />
                 </SettingsElement>
             </div>
         </AuthenticatedLayout>

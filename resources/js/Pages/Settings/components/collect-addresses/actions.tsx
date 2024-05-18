@@ -14,24 +14,28 @@ import {
 interface ActionsProps<TData> {
     row: Row<TData>;
     className?: string;
-    editModal: (id: number) => void;
-    deleteModal: (id: number) => void;
+    editRow?: number;
+    editStart?: (id: number) => void;
+    deleteModal?: (id: number) => void;
 }
 
 export function Actions<TData>({
     row,
     className,
-    editModal,
+    editRow,
+    editStart,
     deleteModal,
 }: ActionsProps<TData>) {
+    if (editRow && editRow >= 0) return null;
+
     const collectAddress = collectAddressSchema.parse(row.original);
 
     const handleEdit = () => {
-        if (collectAddress.id) editModal(collectAddress.id);
+        if (collectAddress.id && editStart) editStart(collectAddress.id);
     };
 
     const handleDelete = () => {
-        if (collectAddress.id) deleteModal(collectAddress.id);
+        if (collectAddress.id && deleteModal) deleteModal(collectAddress.id);
     };
     return (
         <div className={cn("flex justify-end gap-4", className)}>
@@ -44,10 +48,12 @@ export function Actions<TData>({
                             onClick={handleEdit}
                         >
                             <Pencil className="h-5 w-5" />
-                            <span className="sr-only">Anhänger bearbeiten</span>
+                            <span className="sr-only">
+                                Abholadresse bearbeiten
+                            </span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Anhänger bearbeiten</TooltipContent>
+                    <TooltipContent>Abholadresse bearbeiten</TooltipContent>
                 </Tooltip>
             </div>
             <div className="text-red-600">
@@ -59,10 +65,12 @@ export function Actions<TData>({
                             onClick={handleDelete}
                         >
                             <Trash2 className="h-5 w-5" />
-                            <span className="sr-only">Anhänger löschen</span>
+                            <span className="sr-only">
+                                Abholadresse löschen
+                            </span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Anhänger löschen</TooltipContent>
+                    <TooltipContent>Abholadresse löschen</TooltipContent>
                 </Tooltip>
             </div>
         </div>

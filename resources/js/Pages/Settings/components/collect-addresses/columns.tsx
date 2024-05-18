@@ -4,9 +4,12 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 import { CollectAddressItem } from "@/types/collect-address";
-import { Actions } from "./components/actions";
+import { Actions } from "./actions";
 
 export const columns: ColumnDef<CollectAddressItem>[] = [
+    // {
+    //     accessorKey: "id",
+    // },
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -26,17 +29,18 @@ export const columns: ColumnDef<CollectAddressItem>[] = [
         },
     },
 
-    // {
-    //     id: "actions",
-    //     cell: (cell) => {
-    //         return (
-    //             <Actions
-    //                 row={cell.row}
-    //                 editModal={cell.editModal}
-    //                 deleteModal={cell.deleteModal}
-    //                 className="w-max"
-    //             />
-    //         );
-    //     },
-    // },
+    {
+        id: "actions",
+        cell: (cell) => {
+            return (
+                <Actions
+                    row={cell.row}
+                    editRow={cell.editRow}
+                    editStart={cell.editStart}
+                    deleteModal={cell.deleteModal}
+                    className="w-max ml-auto"
+                />
+            );
+        },
+    },
 ];
