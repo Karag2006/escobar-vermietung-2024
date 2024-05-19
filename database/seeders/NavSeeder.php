@@ -28,12 +28,12 @@ class NavSeeder extends Seeder
                 'icon'              => 'users-round',
                 'link'              =>  'customer',
             ],
-            // [
-            //     'id'                => 3,
-            //     'name'              => 'Angebote',
-            //     'icon'              => 'fas fa-id-card-alt',
-            //     'link'              => '/offers',
-            // ],
+            [
+                'id'                => 3,
+                'name'              => 'Angebote',
+                'icon'              => 'book-open',
+                'link'              => 'offer',
+            ],
             // [
             //     'id'                => 4,
             //     'name'              => 'Reservierungen',
