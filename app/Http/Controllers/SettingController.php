@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSettingRequest;
 use App\Http\Requests\UpdateSettingRequest;
+use App\Http\Requests\UpdateLicenseClassesRequest;
 use App\Models\Setting;
 use App\Models\CollectAddress;
 use Inertia\Inertia;
@@ -41,5 +42,14 @@ class SettingController extends Controller
     public function update(UpdateSettingRequest $request, Setting $setting)
     {
         $setting->update($request->all());
+    }
+
+    public function showLicenseClasses(Setting $setting) {
+        return response()->json(json_decode($setting["license_classes"]), Response::HTTP_OK);
+    }
+    public function updateLicenseClasses(UpdateLicenseClassesRequest $request, Setting $setting) {
+
+        $setting['license_classes'] = json_encode($request["license_classes"]);
+        $setting->save();
     }
 }
