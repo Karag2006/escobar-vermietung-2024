@@ -40,6 +40,7 @@ export const CollectAddresses = ({
     const confirmDelete = (id?: number) => {
         Form.delete(`/collectaddress/${id}`, {
             only: ["collectAddressList"],
+            preserveScroll: true,
             onSuccess: (page) => {
                 toast.success("Adresse gelöscht");
                 setConfirmModal(false);
@@ -49,7 +50,11 @@ export const CollectAddresses = ({
 
     return (
         <>
-            <DataTable columns={columns} data={collectAddresses} />
+            <DataTable
+                columns={columns}
+                data={collectAddresses}
+                deleteModal={deleteModal}
+            />
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
                     header={

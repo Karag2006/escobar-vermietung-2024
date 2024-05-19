@@ -25,7 +25,7 @@ class CollectAddressController extends Controller
      */
     public function store(StoreCollectAddressRequest $request)
     {
-        //
+        $address = CollectAddress::create($request->all());
     }
 
     /**
@@ -50,6 +50,6 @@ class CollectAddressController extends Controller
      */
     public function destroy(CollectAddress $collectAddress)
     {
-        //
+        $collectAddress->delete();
     }
 }

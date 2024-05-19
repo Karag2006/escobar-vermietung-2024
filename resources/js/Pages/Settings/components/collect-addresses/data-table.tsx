@@ -27,6 +27,8 @@ import { InputTP24 } from "@/Components/ui/input-tp24";
 import { FormActions } from "./form-actions";
 import { getAddressById } from "@/data/collect-address";
 import { collectAddressSchema } from "@/types/collect-address";
+import { Button } from "@/Components/ui/button";
+import { Plus, X } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -64,6 +66,7 @@ export function DataTable<TData, TValue>({
 
     const cancelEdit = () => {
         setCurrentID(0);
+        Form.setData((data) => ({ ...data, id: 0, name: "", address: "" }));
     };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -83,6 +86,7 @@ export function DataTable<TData, TValue>({
                 preserveScroll: true,
                 onSuccess: () => {
                     toast.success("Adresse erfolgreich angelegt");
+                    cancelEdit();
                 },
                 onError: () => {
                     toast.error("Fehler beim anlegen der Adresse");
@@ -246,6 +250,39 @@ export function DataTable<TData, TValue>({
                                         className="h-24 text-center"
                                     >
                                         No results.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            {currentID === 0 && (
+                                <TableRow>
+                                    <TableCell>
+                                        <InputTP24
+                                            value={Form.data.name}
+                                            label="Name"
+                                            id="name"
+                                            onChange={handleChange}
+                                            error={Form.errors.name}
+                                            onFocus={() =>
+                                                Form.clearErrors("name")
+                                            }
+                                            disabled={Form.processing}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <InputTP24
+                                            value={Form.data.address}
+                                            label="Adresse"
+                                            id="address"
+                                            onChange={handleChange}
+                                            error={Form.errors.address}
+                                            onFocus={() =>
+                                                Form.clearErrors("address")
+                                            }
+                                            disabled={Form.processing}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <FormActions cancelEdit={cancelEdit} />
                                     </TableCell>
                                 </TableRow>
                             )}
