@@ -92,6 +92,10 @@ export const Combobox = ({
         };
     }, [onClickOutside]);
 
+    useEffect(() => {
+        setFilteredList(items);
+    }, [items]);
+
     return (
         <div className={cn("relative", className)} ref={ref}>
             <InputTP24

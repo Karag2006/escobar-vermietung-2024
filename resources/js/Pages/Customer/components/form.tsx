@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { getCustomerById } from "@/data/customer";
@@ -10,6 +10,7 @@ import { Combobox } from "@/Components/combobox";
 import { DatePicker } from "@/Components/datePicker";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
+import { getLicenseClasses } from "@/data/settings";
 
 interface CustomerFormProps {
     currentID: number;
@@ -43,6 +44,10 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         car_number: "",
         comment: "",
     });
+
+    const [drivingLicenseClasses, setDrivingLicenseClasses] = useState<
+        string[]
+    >([]);
 
     const handlePickerChange = (result: PickerReturn) => {
         const key = result.id;
@@ -102,7 +107,10 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
             }
         };
         getCurrentCustomer();
-        return;
+        getLicenseClasses().then((data) => {
+            setDrivingLicenseClasses(data);
+            console.log(drivingLicenseClasses);
+        });
     }, []);
 
     return (
@@ -231,7 +239,7 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
                         disabled={processing}
                     />
                     <Combobox
-                        items={["B", "BE", "B96", "Klasse 3"]}
+                        items={drivingLicenseClasses}
                         className="w-full"
                         label="Führerschein Klasse"
                         id="driving_license_class"
