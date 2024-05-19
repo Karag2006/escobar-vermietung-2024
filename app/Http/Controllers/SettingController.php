@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSettingRequest;
 use App\Http\Requests\UpdateSettingRequest;
 use App\Http\Requests\UpdateLicenseClassesRequest;
+use App\Http\Requests\UpdatePaymentTypesRequest;
 use App\Models\Setting;
 use App\Models\CollectAddress;
 use Inertia\Inertia;
@@ -50,6 +51,16 @@ class SettingController extends Controller
     public function updateLicenseClasses(UpdateLicenseClassesRequest $request, Setting $setting) {
 
         $setting['license_classes'] = json_encode($request["license_classes"]);
+        $setting->save();
+    }
+
+    public function showPaymentTypes(Setting $setting) {
+        return response()->json(json_decode($setting["payment_types"]), Response::HTTP_OK);
+    }
+
+    public function updatePaymentTypes(UpdatePaymentTypesRequest $request, Setting $setting) {
+        
+        $setting['payment_types'] = json_encode($request["payment_types"]);
         $setting->save();
     }
 }

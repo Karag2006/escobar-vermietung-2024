@@ -9,4 +9,8 @@ Route::patch('/settings/{setting}', [SettingController::class, 'update'])->name(
 // License Classes Routes
 Route::get('settings/licenseclasses/{setting}', [SettingController::class, 'showLicenseClasses'])->name('licenseClasses.get');
 Route::patch('settings/licenseclasses/{setting}', [SettingController::class, 'updateLicenseClasses'])->name('licenseClasses.update');
+
+// Payment Types Routes
+Route::get('settings/paymenttypes/{setting}', [SettingController::class, 'showPaymentTypes'])->name('paymentTypes.get');
+Route::patch('settings/paymenttypes/{setting}', [SettingController::class, 'updatePaymentTypes'])->name('paymentTypes.update');
 ?>
