@@ -13,120 +13,120 @@ import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 
 import { Actions } from "./actions";
 
-interface LicenseClassesProps {
-    classes: string[];
+interface PaymentTypesProps {
+    types: string[];
 }
 
-export const LicenseClasses = ({ classes }: LicenseClassesProps) => {
+export const PaymentTypes = ({ types }: PaymentTypesProps) => {
     const { data, setData, patch } = useForm({
-        license_classes: classes,
+        payment_types: types,
     });
 
     const [editedIndex, setEditedIndex] = useState(-1);
-    const [editedClass, setEditedClass] = useState("");
-    const [editedClassValue, setEditedClassValue] = useState("");
+    const [editedType, setEditedType] = useState("");
+    const [editedTypeValue, setEditedTypeValue] = useState("");
     const [deleteModal, setDeleteModal] = useState(false);
 
     const handleComboChange = (data: PickerReturn) => {
-        setEditedClass(data.value);
+        setEditedType(data.value);
     };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-        setEditedClassValue(e.currentTarget.value);
+        setEditedTypeValue(e.currentTarget.value);
     };
 
-    const editClass = () => {
-        const index = data.license_classes.findIndex((item) => {
-            return item === editedClass;
+    const editType = () => {
+        const index = data.payment_types.findIndex((item) => {
+            return item === editedType;
         });
         if (index > -1) {
             setEditedIndex(index);
         } else {
             setEditedIndex(index);
-            setData((data) => ({ ...data, license_classes: classes }));
+            setData((data) => ({ ...data, payment_types: types }));
         }
-        setEditedClassValue(editedClass);
+        setEditedTypeValue(editedType);
     };
 
     const cancel = () => {
         setEditedIndex(-1);
-        setEditedClass("");
-        setEditedClassValue("");
+        setEditedType("");
+        setEditedTypeValue("");
         setDeleteModal(false);
-        setData((data) => ({ ...data, license_classes: classes }));
+        setData((data) => ({ ...data, payment_types: types }));
     };
 
-    const addClassToList = () => {
-        let array = data.license_classes;
-        array.push(editedClassValue);
-        setData((data) => ({ ...data, license_classes: array }));
-        saveClasses();
+    const addTypeToList = () => {
+        let array = data.payment_types;
+        array.push(editedTypeValue);
+        setData((data) => ({ ...data, payment_types: array }));
+        saveTypes();
     };
 
-    const changeClass = () => {
-        let array = data.license_classes;
-        array[editedIndex] = editedClassValue;
-        setData((data) => ({ ...data, license_classes: array }));
-        saveClasses();
+    const changeType = () => {
+        let array = data.payment_types;
+        array[editedIndex] = editedTypeValue;
+        setData((data) => ({ ...data, payment_types: array }));
+        saveTypes();
     };
 
-    const deleteClass = () => {
+    const deleteType = () => {
         setDeleteModal(true);
     };
 
-    const deleteClassConfirm = () => {
-        let array = data.license_classes;
+    const deleteTypeConfirm = () => {
+        let array = data.payment_types;
         array.splice(editedIndex, 1);
-        setData((data) => ({ ...data, license_classes: array }));
-        saveClasses();
+        setData((data) => ({ ...data, payment_types: array }));
+        saveTypes();
         setDeleteModal(false);
     };
 
-    const saveClasses = () => {
-        patch("/settings/licenseclasses/1", {
+    const saveTypes = () => {
+        patch("/settings/paymenttypes/1", {
             only: ["settings", "errors"],
             preserveScroll: true,
             onSuccess: () => {
-                toast.success("Führerschein Klassen erfolgreich geändert");
+                toast.success("Zahlungsart erfolgreich geändert");
                 cancel();
             },
             onError: () => {
-                toast.error("Fehler beim ändern der Führerschein Klassen");
+                toast.error("Fehler beim ändern der Zahlungsart");
             },
         });
     };
 
     useEffect(() => {
-        editClass();
-    }, [editedClass]);
+        editType();
+    }, [editedType]);
 
     return (
         <>
             <div className="flex gap-8">
                 <Combobox
                     className="w-[20rem]"
-                    items={data.license_classes}
-                    label="Auswahl Führerschein Klasse"
+                    items={data.payment_types}
+                    label="Auswahl Zahlungsart"
                     id="licenseClass"
-                    value={editedClass}
+                    value={editedType}
                     onValueChange={handleComboChange}
                 />
                 <InputTP24
                     className="w-[20rem]"
                     label={
                         editedIndex === -1
-                            ? "Neue Führerschein Klasse"
-                            : "Führerschein Klasse ändern"
+                            ? "Neue Zahlungsart"
+                            : "Zahlungsart ändern"
                     }
-                    value={editedClassValue}
+                    value={editedTypeValue}
                     onChange={handleChange}
                 />
-                {editedClassValue && editedClassValue !== "" && (
+                {editedTypeValue && editedTypeValue !== "" && (
                     <Actions
                         edit={editedIndex > -1}
-                        addItem={addClassToList}
-                        editItem={changeClass}
-                        deleteItem={deleteClass}
+                        addItem={addTypeToList}
+                        editItem={changeType}
+                        deleteItem={deleteType}
                         cancel={cancel}
                     />
                 )}
@@ -135,7 +135,7 @@ export const LicenseClasses = ({ classes }: LicenseClassesProps) => {
                 <ModalCardWrapper
                     header={
                         <h3 className="font-semibold text-xl text-gray-800">
-                            Führerschein Klasse löschen
+                            Zahlungsart löschen
                         </h3>
                     }
                     showHeader
@@ -143,14 +143,14 @@ export const LicenseClasses = ({ classes }: LicenseClassesProps) => {
                         <DecisionButtons
                             yesLabel="Löschen"
                             noLabel="Abbrechen"
-                            yesAction={deleteClassConfirm}
+                            yesAction={deleteTypeConfirm}
                             noAction={cancel}
                         />
                     }
                 >
                     <p>
                         Soll die Adresse{" "}
-                        <span className="font-bold">"{editedClass}"</span>{" "}
+                        <span className="font-bold">"{editedType}"</span>{" "}
                         wirklich gelöscht werden?
                     </p>
                     <p className="flex gap-2">
