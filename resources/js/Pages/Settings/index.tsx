@@ -13,6 +13,7 @@ import { InputTP24 } from "@/Components/ui/input-tp24";
 
 import { SettingsElement } from "./components/settings-element";
 import { CollectAddresses } from "./components/collect-addresses";
+import { LicenseClasses } from "./components/license-classes";
 
 export default function User({
     auth,
@@ -197,6 +198,13 @@ export default function User({
                     )}
                 </form>
 
+                <SettingsElement label="Führerschein Klassen">
+                    <LicenseClasses
+                        // settings.license_classes is a JSON encoded String
+                        // representing an array of strings.
+                        classes={JSON.parse(settings.license_classes)}
+                    />
+                </SettingsElement>
                 <SettingsElement label="Abholadressen">
                     <CollectAddresses collectAddresses={collectAddressList} />
                 </SettingsElement>

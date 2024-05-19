@@ -9,6 +9,7 @@ class Setting extends Model
 {
     use HasFactory;
 
+    // use the old "options" Database Table name, to be able to use the old Database without changes.
     protected $table = 'options';
 
     protected $fillable = [

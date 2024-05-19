@@ -7,10 +7,24 @@ export interface InputProps
     label?: string;
     error?: string;
     suffix?: React.ReactNode;
+    suffixClasses?: string;
 }
 
 export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, label, error, id, value, suffix, ...props }, ref) => {
+    (
+        {
+            className,
+            type,
+            label,
+            error,
+            id,
+            value,
+            suffix,
+            suffixClasses,
+            ...props
+        },
+        ref
+    ) => {
         return (
             <div className={cn("group relative", className)}>
                 {label && label !== "" && (
@@ -29,7 +43,7 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
                     id={id}
                     type={type}
                     className={cn(
-                        "w-full border-b-[1px] border-b-gray-300 focus:outline-0 hover:border-b-gray-600 focus:border-b-blue-400 bg-transparent px-1 pb-1 pt-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50",
+                        "w-full border-b-[1px] border-b-gray-300 focus:outline-0 group-hover:border-b-gray-600 focus:border-b-blue-400 bg-transparent px-1 pb-1 pt-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50",
                         error && error !== "" && "border-destructive"
                     )}
                     ref={ref}
@@ -40,7 +54,12 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
                     <p className="text-sm text-destructive mt-2">{error}</p>
                 )}
                 {suffix && suffix !== "" && (
-                    <div className="absolute right-1 bottom-[0.2rem]">
+                    <div
+                        className={cn(
+                            "absolute right-1 bottom-[0.2rem]",
+                            suffixClasses
+                        )}
+                    >
                         {suffix}
                     </div>
                 )}

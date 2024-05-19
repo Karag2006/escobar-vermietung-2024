@@ -3,7 +3,7 @@
 // or should be caught in an error
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { PickerReturn } from "@/types";
@@ -90,7 +90,7 @@ export const Combobox = ({
     }, [onClickOutside]);
 
     return (
-        <div className="relative w-full" ref={ref}>
+        <div className="relative" ref={ref}>
             <InputTP24
                 id={id}
                 className={className}
@@ -99,6 +99,20 @@ export const Combobox = ({
                 error={error}
                 onFocus={openPicker}
                 onChange={handleChange}
+                suffix={
+                    value !== "" && (
+                        <Button
+                            variant="icon"
+                            onClick={() =>
+                                onValueChange &&
+                                onValueChange({ id, value: "" })
+                            }
+                        >
+                            <X className="h-5 w-5" />
+                        </Button>
+                    )
+                }
+                suffixClasses="right-4 top-0"
             />
             <div className="absolute top-2 right-2 text-gray-600">
                 {open ? (
