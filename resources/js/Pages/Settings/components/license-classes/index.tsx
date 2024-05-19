@@ -1,34 +1,27 @@
+import { useEffect, useState } from "react";
+import { useForm } from "@inertiajs/react";
+import { TriangleAlert } from "lucide-react";
+import { toast } from "sonner";
+
+import { PickerReturn } from "@/types";
+
+import { DecisionButtons } from "@/Components/decision-buttons";
 import { Combobox } from "@/Components/combobox";
 import { InputTP24 } from "@/Components/ui/input-tp24";
-import { PickerReturn } from "@/types";
-import { useForm } from "@inertiajs/react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Actions } from "./actions";
 import { Modal } from "@/Components/wrapper/modal";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
-import { DecisionButtons } from "@/Components/decision-buttons";
-import { TriangleAlert } from "lucide-react";
+
+import { Actions } from "./actions";
 
 interface LicenseClassesProps {
     classes: string[];
 }
 
 export const LicenseClasses = ({ classes }: LicenseClassesProps) => {
-    const {
-        data,
-        setData,
-        post,
-        patch,
-        processing,
-        errors,
-        reset,
-        clearErrors,
-    } = useForm({
+    const { data, setData, patch } = useForm({
         license_classes: classes,
     });
 
-    const [changed, setChanged] = useState(false);
     const [editedIndex, setEditedIndex] = useState(-1);
     const [editedClass, setEditedClass] = useState("");
     const [editedClassValue, setEditedClassValue] = useState("");
@@ -43,11 +36,15 @@ export const LicenseClasses = ({ classes }: LicenseClassesProps) => {
     };
 
     const editClass = () => {
-        setEditedIndex(
-            data.license_classes.findIndex((item) => {
-                return item === editedClass;
-            })
-        );
+        const index = data.license_classes.findIndex((item) => {
+            return item === editedClass;
+        });
+        if (index > -1) {
+            setEditedIndex(index);
+            setEditedClassValue(editedClass);
+        } else {
+            setData((data) => ({ ...data, license_classes: classes }));
+        }
         setEditedClassValue(editedClass);
     };
 
@@ -56,6 +53,7 @@ export const LicenseClasses = ({ classes }: LicenseClassesProps) => {
         setEditedClass("");
         setEditedClassValue("");
         setDeleteModal(false);
+        setData((data) => ({ ...data, license_classes: classes }));
     };
 
     const addClassToList = () => {

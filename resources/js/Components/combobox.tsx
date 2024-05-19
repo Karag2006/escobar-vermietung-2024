@@ -40,7 +40,6 @@ export const Combobox = ({
     const ref = useRef<null | HTMLDivElement>(null);
 
     const [open, setOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState(value);
     const [filteredList, setFilteredList] = useState(items);
 
     const onClickOutside = () => {
@@ -63,15 +62,19 @@ export const Combobox = ({
         } else {
             setFilteredList(items);
         }
-        setSelectedValue(value);
+
         onValueChange && onValueChange({ id, value });
     };
 
     const selectItem = (item: string) => {
-        setSelectedValue(item);
         setFilteredList(items);
         onValueChange && onValueChange({ id, value: item });
         setOpen(false);
+    };
+
+    const clearValue = () => {
+        setFilteredList(items);
+        onValueChange && onValueChange({ id, value: "" });
     };
     useEffect(() => {
         const handleClickOutside = (e: Event) => {
@@ -90,7 +93,7 @@ export const Combobox = ({
     }, [onClickOutside]);
 
     return (
-        <div className="relative" ref={ref}>
+        <div className={cn("relative", className)} ref={ref}>
             <InputTP24
                 id={id}
                 className={className}
@@ -101,13 +104,7 @@ export const Combobox = ({
                 onChange={handleChange}
                 suffix={
                     value !== "" && (
-                        <Button
-                            variant="icon"
-                            onClick={() =>
-                                onValueChange &&
-                                onValueChange({ id, value: "" })
-                            }
-                        >
+                        <Button variant="icon" size="icon" onClick={clearValue}>
                             <X className="h-5 w-5" />
                         </Button>
                     )
