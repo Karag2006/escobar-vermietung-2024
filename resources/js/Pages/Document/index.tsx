@@ -16,7 +16,7 @@ import { getOfferById } from "@/data/document";
 import { DocumentForm } from "./components/form";
 import { offerColumns } from "./offer-columns";
 
-export default function User({ auth, offerList }: DocumentProps) {
+export default function User({ auth, offerList, type }: DocumentProps) {
     const pageTitle = "Angebote";
     const [confirmModal, setConfirmModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -118,9 +118,11 @@ export default function User({ auth, offerList }: DocumentProps) {
                 <ModalCardWrapper
                     header={
                         <h3 className="font-semibold text-xl text-gray-800">
-                            {currentID === 0
-                                ? "Kunden Anlegen"
-                                : "Kunden bearbeiten"}
+                            {type === "offer"
+                                ? currentID === 0
+                                    ? "Angebot Anlegen"
+                                    : "Angebot bearbeiten"
+                                : null}
                         </h3>
                     }
                     showHeader
@@ -128,6 +130,7 @@ export default function User({ auth, offerList }: DocumentProps) {
                     <DocumentForm
                         currentID={currentID}
                         close={() => setModalOpen(false)}
+                        documentType={type}
                     />
                 </ModalCardWrapper>
             </Modal>
