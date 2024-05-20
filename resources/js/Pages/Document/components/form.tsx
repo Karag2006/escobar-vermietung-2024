@@ -4,7 +4,11 @@ import { useForm } from "@inertiajs/react";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
 import { getOfferById } from "@/data/document";
-import { blankForm } from "@/lib/document-form";
+import {
+    blankForm,
+    documentCustomerForm,
+    documentTrailerForm,
+} from "@/lib/document-form";
 import {
     Tabs,
     TabsContent,
@@ -12,9 +16,10 @@ import {
     TabsTrigger,
 } from "@/Components/ui/tabs-tp24";
 import { CustomerForm } from "./sub-forms/customer";
+import { customerType, documentType } from "@/types/document";
 
 interface DocumentFormProps {
-    documentType: string;
+    documentType: documentType;
     currentID: number;
     close: () => void;
 }
@@ -26,6 +31,17 @@ export const DocumentForm = ({
 }: DocumentFormProps) => {
     const { data, setData, post, patch, processing, errors, clearErrors } =
         useForm(blankForm);
+
+    const handleChangeInSubForm = (
+        subFormKey: string,
+        subFormData: documentCustomerForm | documentTrailerForm
+    ) => {
+        setData((data) => ({
+            ...data,
+            [subFormKey]: subFormData,
+        }));
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!currentID) {
@@ -79,7 +95,12 @@ export const DocumentForm = ({
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="customer">
-                        <CustomerForm />
+                        <CustomerForm
+                            type={customerType.CUSTOMER}
+                            documentType={documentType}
+                            customer={data.customer}
+                            handleChangeInSubForm={handleChangeInSubForm}
+                        />
                     </TabsContent>
                     <TabsContent value="driver"></TabsContent>
                     <TabsContent value="trailer"></TabsContent>

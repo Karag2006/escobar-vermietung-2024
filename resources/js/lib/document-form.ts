@@ -85,3 +85,9 @@ export const blankForm = {
         contactdata: "",
     },
 };
+
+export type documentForm = typeof blankForm;
+
+export type documentCustomerForm = typeof blankForm.customer;
+
+export type documentTrailerForm = typeof blankForm.trailer;

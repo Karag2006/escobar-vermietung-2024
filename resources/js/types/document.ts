@@ -1,6 +1,17 @@
 import { PageProps } from "@/types";
 import { z } from "zod";
 
+export enum customerType {
+    CUSTOMER = "customer",
+    DRIVER = "driver",
+}
+
+export enum documentType {
+    OFFER = "offer",
+    RESERVATION = "reservation",
+    CONTRACT = "contract",
+}
+
 export const documentSchema = z.object({
     id: z.number().optional().nullable(),
     offer_number: z.number().optional().nullable(),
@@ -16,5 +27,5 @@ export type Document = z.infer<typeof documentSchema>;
 
 export type DocumentProps = {
     offerList?: Document[];
-    type: string;
+    type: documentType;
 } & PageProps;
