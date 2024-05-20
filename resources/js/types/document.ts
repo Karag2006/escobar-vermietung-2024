@@ -1,9 +1,9 @@
 import { PageProps } from "@/types";
 import { z } from "zod";
 
-export const offerSchema = z.object({
+export const documentSchema = z.object({
     id: z.number().optional().nullable(),
-    offer_number: z.number(),
+    offer_number: z.number().optional().nullable(),
     collect_date: z.string(),
     return_date: z.string(),
     customer_name1: z.string(),
@@ -12,8 +12,9 @@ export const offerSchema = z.object({
     collect_address_id: z.number(),
 });
 
-export type OfferItem = z.infer<typeof offerSchema>;
+export type Document = z.infer<typeof documentSchema>;
 
-export type OfferProps = {
-    offerList: OfferItem[];
+export type DocumentProps = {
+    offerList?: Document[];
+    type: string;
 } & PageProps;

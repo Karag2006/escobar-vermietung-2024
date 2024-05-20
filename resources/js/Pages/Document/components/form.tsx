@@ -12,12 +12,12 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
 import { getLicenseClasses } from "@/data/settings";
 
-interface OfferFormProps {
+interface DocumentFormProps {
     currentID: number;
     close: () => void;
 }
 
-export const OfferForm = ({ currentID, close }: OfferFormProps) => {
+export const DocumentForm = ({ currentID, close }: DocumentFormProps) => {
     const {
         data,
         setData,

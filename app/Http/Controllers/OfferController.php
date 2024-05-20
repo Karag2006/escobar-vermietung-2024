@@ -32,8 +32,9 @@ class OfferController extends Controller
             ->where('current_state', 'offer')
             ->orderBy('offer_number', 'desc')
             ->get();
-        return Inertia::render('Offer/index', [
-            'offerList' => $offerList
+        return Inertia::render('Document/index', [
+            'offerList' => $offerList,
+            'type' => 'offer'
         ]);
     }
 

@@ -11,12 +11,12 @@ import { Modal } from "@/Components/wrapper/modal";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { DecisionButtons } from "@/Components/decision-buttons";
 
-import { columns } from "./columns";
-import { OfferProps } from "@/types/document";
+import { DocumentProps } from "@/types/document";
 import { getOfferById } from "@/data/document";
-import { OfferForm } from "./components/form";
+import { DocumentForm } from "./components/form";
+import { offerColumns } from "./offer-columns";
 
-export default function User({ auth, offerList }: OfferProps) {
+export default function User({ auth, offerList }: DocumentProps) {
     const pageTitle = "Angebote";
     const [confirmModal, setConfirmModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -26,32 +26,36 @@ export default function User({ auth, offerList }: OfferProps) {
         id: currentID,
     });
 
-    const addOfferModal = () => {
+    const addDocumentModal = () => {
         setCurrentID(0);
         setModalOpen(true);
     };
 
-    const editOfferModal = (id: number) => {
+    const editDocumentModal = (id: number) => {
         setCurrentID(id);
         setModalOpen(true);
     };
 
     const deleteModal = (id: number) => {
         setCurrentID(id);
-        getOfferById(id).then((offer) => {
-            setDeleteName(offer.offer_number);
-        });
+        if (offerList) {
+            getOfferById(id).then((offer) => {
+                setDeleteName(offer.offer_number);
+            });
+        }
         setConfirmModal(true);
     };
 
     const confirmDelete = (id?: number) => {
-        Form.delete(`/offer/${id}`, {
-            only: ["offerList"],
-            onSuccess: (page) => {
-                toast.success("Angebot gelöscht");
-                setConfirmModal(false);
-            },
-        });
+        if (offerList) {
+            Form.delete(`/offer/${id}`, {
+                only: ["offerList"],
+                onSuccess: (page) => {
+                    toast.success("Angebot gelöscht");
+                    setConfirmModal(false);
+                },
+            });
+        }
     };
 
     const cancelDelete = () => {
@@ -66,18 +70,20 @@ export default function User({ auth, offerList }: OfferProps) {
                 <ActionButton
                     label="Angebot hinzufügen"
                     actionType="add"
-                    action={addOfferModal}
+                    action={addDocumentModal}
                 />
             }
         >
             <Head title={pageTitle} />
 
-            <DataTable
-                columns={columns}
-                data={offerList}
-                editModal={editOfferModal}
-                deleteModal={deleteModal}
-            />
+            {offerList && (
+                <DataTable
+                    columns={offerColumns}
+                    data={offerList}
+                    editModal={editDocumentModal}
+                    deleteModal={deleteModal}
+                />
+            )}
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
                     header={
@@ -119,7 +125,7 @@ export default function User({ auth, offerList }: OfferProps) {
                     }
                     showHeader
                 >
-                    <OfferForm
+                    <DocumentForm
                         currentID={currentID}
                         close={() => setModalOpen(false)}
                     />
