@@ -17,6 +17,7 @@ import {
 } from "@/Components/ui/tabs-tp24";
 import { CustomerForm } from "./sub-forms/customer";
 import { customerType, documentType } from "@/types/document";
+import { TrailerForm } from "./sub-forms/trailer";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -110,7 +111,14 @@ export const DocumentForm = ({
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
-                    <TabsContent value="trailer"></TabsContent>
+                    <TabsContent value="trailer">
+                        <TrailerForm
+                            type="trailer"
+                            documentType={documentType}
+                            trailer={data.trailer}
+                            handleChangeInSubForm={handleChangeInSubForm}
+                        />
+                    </TabsContent>
                     <TabsContent value="data"></TabsContent>
                     <TabsContent value="settings"></TabsContent>
                 </Tabs>
