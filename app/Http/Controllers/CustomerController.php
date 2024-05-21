@@ -52,4 +52,9 @@ class CustomerController extends Controller
     {
         $customer->delete();
     }
+
+    public function getSelector() {
+        $selectors = Customer::select('id', 'name1', 'name2')->orderBy('id')->get();
+        return response()->json($selectors, Response::HTTP_OK);
+    }
 }

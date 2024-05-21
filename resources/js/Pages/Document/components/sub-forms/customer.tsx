@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { getCustomerById } from "@/data/customer";
+import { getCustomerById, getCustomerSelectors } from "@/data/customer";
 import { PickerReturn } from "@/types";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
@@ -11,7 +11,7 @@ import { DatePicker } from "@/Components/datePicker";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
 import { getLicenseClasses } from "@/data/settings";
-import { customerType, documentType } from "@/types/document";
+import { customerType, documentType, SeletorItem } from "@/types/document";
 import { documentCustomerForm } from "@/lib/document-form";
 
 interface CustomerFormProps {
@@ -30,6 +30,8 @@ export const CustomerForm = ({
     customer,
     handleChangeInSubForm,
 }: CustomerFormProps) => {
+    const [customerList, setCustomerList] = useState<SeletorItem[]>([]);
+
     const {
         data,
         setData,
@@ -71,7 +73,7 @@ export const CustomerForm = ({
     };
 
     const handleSubmit = () => {
-        if (!data.id) {
+        if (data.id <= 0) {
             post("/customer", {
                 only: ["customers", "errors"],
                 onSuccess: () => {
@@ -104,9 +106,15 @@ export const CustomerForm = ({
             }
         };
         getCurrentCustomer();
+    }, [data.id]);
+
+    useEffect(() => {
         getLicenseClasses().then((data) => {
             setDrivingLicenseClasses(data);
             console.log(drivingLicenseClasses);
+        });
+        getCustomerSelectors().then((data) => {
+            setCustomerList(data);
         });
     }, []);
 
