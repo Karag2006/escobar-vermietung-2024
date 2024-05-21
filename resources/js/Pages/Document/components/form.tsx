@@ -102,7 +102,14 @@ export const DocumentForm = ({
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
-                    <TabsContent value="driver"></TabsContent>
+                    <TabsContent value="driver">
+                        <CustomerForm
+                            type={customerType.DRIVER}
+                            documentType={documentType}
+                            customer={data.driver}
+                            handleChangeInSubForm={handleChangeInSubForm}
+                        />
+                    </TabsContent>
                     <TabsContent value="trailer"></TabsContent>
                     <TabsContent value="data"></TabsContent>
                     <TabsContent value="settings"></TabsContent>

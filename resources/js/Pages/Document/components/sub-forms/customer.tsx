@@ -6,13 +6,15 @@ import { PickerReturn } from "@/types";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
-import { Combobox } from "@/Components/combobox";
+
 import { DatePicker } from "@/Components/datePicker";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
 import { getLicenseClasses } from "@/data/settings";
-import { customerType, documentType, SeletorItem } from "@/types/document";
-import { documentCustomerForm } from "@/lib/document-form";
+import { customerType, documentType, SelectorItem } from "@/types/document";
+import { blankForm, documentCustomerForm } from "@/lib/document-form";
+import { SelectorCombobox } from "@/Components/selector-combobox";
+import { Combobox } from "@/Components/combobox";
 
 interface CustomerFormProps {
     type: customerType;
@@ -30,7 +32,10 @@ export const CustomerForm = ({
     customer,
     handleChangeInSubForm,
 }: CustomerFormProps) => {
-    const [customerList, setCustomerList] = useState<SeletorItem[]>([]);
+    const [customerList, setCustomerList] = useState<SelectorItem[]>([]);
+    const [drivingLicenseClasses, setDrivingLicenseClasses] = useState<
+        string[]
+    >([]);
 
     const {
         data,
@@ -42,10 +47,6 @@ export const CustomerForm = ({
         reset,
         clearErrors,
     } = useForm(customer);
-
-    const [drivingLicenseClasses, setDrivingLicenseClasses] = useState<
-        string[]
-    >([]);
 
     const handlePickerChange = (result: PickerReturn) => {
         const key = result.id;
@@ -99,11 +100,11 @@ export const CustomerForm = ({
     };
     useEffect(() => {
         const getCurrentCustomer = () => {
-            if (data.id) {
+            if (data.id > 0) {
                 getCustomerById(data.id).then((customer) =>
                     setData({ ...customer })
                 );
-            }
+            } else setData(blankForm.customer);
         };
         getCurrentCustomer();
     }, [data.id]);
@@ -111,7 +112,6 @@ export const CustomerForm = ({
     useEffect(() => {
         getLicenseClasses().then((data) => {
             setDrivingLicenseClasses(data);
-            console.log(drivingLicenseClasses);
         });
         getCustomerSelectors().then((data) => {
             setCustomerList(data);
@@ -120,6 +120,17 @@ export const CustomerForm = ({
 
     return (
         <div className="p-4">
+            <div className="flex flex-col md:max-w-[50%] mb-10">
+                <SelectorCombobox
+                    id="id"
+                    value={data.id}
+                    items={customerList}
+                    onValueChange={handlePickerChange}
+                    label={`${
+                        type === "customer" ? "Kunden" : "Fahrer"
+                    } auswählen`}
+                />
+            </div>
             <div className="flex gap-10 flex-col md:flex-row">
                 <div className="flex flex-col gap-6 w-full">
                     <InputTP24

@@ -34,4 +34,4 @@ export const SelectorSchema = z.object({
     id: z.number(),
     selector: z.string(),
 });
-export type SeletorItem = z.infer<typeof SelectorSchema>;
+export type SelectorItem = z.infer<typeof SelectorSchema>;

@@ -7,23 +7,24 @@ import { ChevronDown, ChevronUp, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { PickerReturn } from "@/types";
+import { SelectorItem } from "@/types/document";
 
 import { Button } from "@/Components/ui/button";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { InputClearButton } from "./input-clear-button";
 
-interface ComboboxProps {
-    items: string[];
+interface SelectorComboboxProps {
+    items: SelectorItem[];
     id: string;
     className?: string;
-    value?: string;
+    value?: number;
     label?: string;
     error?: string;
     removeError?: () => void;
     onValueChange: (data: PickerReturn) => void;
 }
 
-export const Combobox = ({
+export const SelectorCombobox = ({
     items,
     id,
     className,
@@ -32,11 +33,12 @@ export const Combobox = ({
     error,
     removeError,
     onValueChange,
-}: ComboboxProps) => {
+}: SelectorComboboxProps) => {
     const ref = useRef<null | HTMLDivElement>(null);
 
     const [open, setOpen] = useState(false);
     const [filteredList, setFilteredList] = useState(items);
+    const [filterValue, setFilterValue] = useState("");
 
     const onClickOutside = () => {
         setOpen(false);
@@ -48,29 +50,35 @@ export const Combobox = ({
     };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-        const value = e.currentTarget.value;
+        const inputValue = e.currentTarget.value;
 
-        if (value !== "") {
+        if (inputValue !== "") {
             const list = items.filter((item) => {
-                return item.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+                return (
+                    item.selector
+                        .toLowerCase()
+                        .indexOf(inputValue.toLowerCase()) !== -1
+                );
             });
             setFilteredList(list);
         } else {
             setFilteredList(items);
         }
 
-        onValueChange && onValueChange({ id, value });
+        setFilterValue(inputValue);
     };
 
-    const selectItem = (item: string) => {
+    const selectItem = (item: SelectorItem) => {
         setFilteredList(items);
-        onValueChange && onValueChange({ id, value: item });
+        onValueChange && onValueChange({ id, value: item.id });
+
         setOpen(false);
     };
 
     const clearValue = () => {
         setFilteredList(items);
-        onValueChange && onValueChange({ id, value: "" });
+        setFilterValue("");
+        onValueChange && onValueChange({ id, value: 0 });
     };
     useEffect(() => {
         const handleClickOutside = (e: Event) => {
@@ -92,18 +100,28 @@ export const Combobox = ({
         setFilteredList(items);
     }, [items]);
 
+    useEffect(() => {
+        const index = filteredList.findIndex((item) => item.id === value);
+        if (index === -1) setFilterValue("");
+
+        setFilterValue(filteredList[index]?.selector);
+    }, [value]);
+
     return (
         <div className={cn("relative", className)} ref={ref}>
             <InputTP24
                 id={id}
                 className={className}
-                value={value}
+                value={filterValue}
                 label={label}
                 error={error}
                 onFocus={openPicker}
                 onChange={handleChange}
                 suffix={
-                    value !== "" && <InputClearButton clearValue={clearValue} />
+                    filterValue &&
+                    filterValue !== "" && (
+                        <InputClearButton clearValue={clearValue} />
+                    )
                 }
                 suffixClasses="right-4 top-0"
             />
@@ -122,15 +140,17 @@ export const Combobox = ({
                     )}
                 >
                     <div role="selectGroup" className="flex flex-col">
-                        {filteredList.map((item) => (
+                        {filteredList.map((item, index) => (
                             <Button
-                                key={item}
+                                key={index}
                                 role="selectItem"
                                 type="button"
                                 variant="dropdown"
                                 onClick={() => selectItem(item)}
                             >
-                                {item}
+                                {typeof item === "string"
+                                    ? item
+                                    : item.selector}
                             </Button>
                         ))}
                     </div>

@@ -9,7 +9,7 @@ export interface User {
 
 export type PickerReturn = {
     id: string;
-    value: string;
+    value: string | number;
 };
 
 export type PageProps<
