@@ -9,3 +9,8 @@ export const getTrailerSelectors = async () => {
     const { data } = await axios.get("/selector/trailer");
     return data;
 };
+
+export const getTuev = async (id: number) => {
+    const { data } = await axios.get(`/tuev/${id}`);
+    return data;
+};

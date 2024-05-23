@@ -63,4 +63,9 @@ class TrailerController extends Controller
 
         return response()->json($trailer, Response::HTTP_OK);
     }
+
+    public function getSelector() {
+        $selectors = Trailer::select('id', 'plateNumber', 'title')->orderBy('plateNumber')->get();
+        return response()->json($selectors, Response::HTTP_OK);
+    }
 }

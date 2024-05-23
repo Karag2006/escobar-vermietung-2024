@@ -7,22 +7,20 @@ import { PickerReturn } from "@/types";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 
-import { DatePicker } from "@/Components/datePicker";
-import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
-import { getLicenseClasses } from "@/data/settings";
 import { customerType, documentType, SelectorItem } from "@/types/document";
 import { blankForm, documentTrailerForm } from "@/lib/document-form";
 import { SelectorCombobox } from "@/Components/selector-combobox";
-import { Combobox } from "@/Components/combobox";
-import { getTrailerById, getTrailerSelectors } from "@/data/trailer";
+import { getTrailerById, getTrailerSelectors, getTuev } from "@/data/trailer";
 import { MonthPicker } from "@/Components/datePicker/month-picker";
 import { LoadingSizeInput } from "@/Pages/Trailer/components/loading-size-input";
+import { TuevBatch } from "@/Pages/Trailer/components/tuev-batch";
 
 interface TrailerFormProps {
     type: "trailer";
     documentType: documentType;
     trailer: documentTrailerForm;
+    tuevCompareDate?: string;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentTrailerForm
@@ -31,6 +29,7 @@ interface TrailerFormProps {
 
 export const TrailerForm = ({
     type,
+    tuevCompareDate,
     documentType,
     trailer,
     handleChangeInSubForm,
@@ -130,21 +129,28 @@ export const TrailerForm = ({
         getTrailerSelectors().then((data) => {
             setTrailerList(data);
         });
-        if (data.id > 0) {
-            getTrailerById(data.id).then((trailer) => setData({ ...trailer }));
-        } else setData(blankForm.trailer);
+        if (data.id > 0 && data.tuev === "") {
+            getTuev(data.id).then((trailer) => {
+                setData((data) => ({ ...data, tuev: trailer.tuev }));
+                handleChangeInSubForm(type, { ...data, tuev: trailer.tuev });
+            });
+        }
     }, []);
 
     return (
         <div className="p-4">
-            <div className="flex flex-col md:max-w-[50%] mb-10">
+            <div className="flex flex-col md:flex-row gap-10 mb-10">
                 <SelectorCombobox
+                    className="w-full"
                     id="id"
                     value={data.id}
                     items={trailerList}
                     onValueChange={handlePickerChange}
                     label="Anhänger auswählen"
                 />
+                <div className="w-full flex justify-end">
+                    <TuevBatch tuev={data.tuev} compareDate={tuevCompareDate} />
+                </div>
             </div>
             <div className="flex gap-10 flex-col md:flex-row">
                 <div className="flex flex-col gap-6 w-full">
@@ -173,16 +179,6 @@ export const TrailerForm = ({
                         error={errors.chassisNumber}
                         onFocus={() => clearErrors("chassisNumber")}
                         onChange={handleChange}
-                        disabled={processing}
-                    />
-                    <MonthPicker
-                        label="Tüv Fälligkeit"
-                        id="tuev"
-                        value={data.tuev}
-                        error={errors.tuev}
-                        fieldName="tuev"
-                        removeError={() => clearErrors("tuev")}
-                        onUpdateValue={handlePickerChange}
                         disabled={processing}
                     />
                 </div>
@@ -218,7 +214,7 @@ export const TrailerForm = ({
                     />
                 </div>
             </div>
-            <div className="flex gap-10 flex-col md:flex-row">
+            <div className="flex gap-10 flex-col md:flex-row mt-10">
                 <TextareaTP24
                     className="w-full"
                     label="Kommentar"

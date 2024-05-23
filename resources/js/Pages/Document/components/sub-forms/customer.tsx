@@ -120,7 +120,7 @@ export const CustomerForm = ({
 
     return (
         <div className="p-4">
-            <div className="flex flex-col md:max-w-[50%] mb-10">
+            <div className="flex flex-col md:max-w-[calc(50%-1.25rem)] mb-10">
                 <SelectorCombobox
                     id="id"
                     value={data.id}

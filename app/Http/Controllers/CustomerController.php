@@ -54,7 +54,7 @@ class CustomerController extends Controller
     }
 
     public function getSelector() {
-        $selectors = Customer::select('id', 'name1', 'name2')->orderBy('id')->get();
+        $selectors = Customer::select('id', 'name1', 'name2')->orderBy('name1')->get();
         return response()->json($selectors, Response::HTTP_OK);
     }
 }

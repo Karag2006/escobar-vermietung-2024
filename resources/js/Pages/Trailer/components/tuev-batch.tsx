@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 interface TuevBatchProps {
     tuev?: string | null;
-    compareDate?: Date;
+    compareDate?: string;
     className?: string;
 }
 
@@ -24,7 +24,8 @@ export const TuevBatch = ({ tuev, compareDate, className }: TuevBatchProps) => {
     if (!tuev) return null;
     let classes = [];
     let date = new Date();
-    if (compareDate) date = compareDate;
+    if (compareDate && compareDate !== "")
+        date = parse(compareDate, "dd.mm.yyyy", new Date());
 
     const tuevDate = parse(tuev, "MM/yy", new Date());
 

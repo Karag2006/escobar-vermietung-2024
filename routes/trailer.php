@@ -7,4 +7,10 @@ Route::post('/trailer', [TrailerController::class, 'store'])->name('trailer.stor
 Route::get('/trailer/{trailer}', [TrailerController::class, 'show'])->name('trailer.show'); // Get single trailer by ID
 Route::patch('/trailer/{trailer}', [TrailerController::class, 'update'])->name('trailer.update'); // update existing Trailer
 Route::delete('/trailer/{trailer}', [TrailerController::class, 'destroy'])->name('trailer.delete'); // delete existing Trailer
+
+// get Tuev Date for specific Trailer
+Route::get('/tuev/{trailer}', [TrailerController::class, 'getTuev'])->name('trailer.tuev');
+
+// get Trailer Selector List
+Route::get('/selector/trailer', [TrailerController::class, 'getSelector'])->name('trailer.selector')
 ?>

@@ -41,7 +41,7 @@ export const blankForm = {
         tuev: "",
         totalWeight: "",
         usableWeight: "",
-        loading_size: [],
+        loading_size: [0],
         comment: "",
     },
     data: {
