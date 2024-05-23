@@ -1,0 +1,72 @@
+@layer components {
+    .time-picker-head {
+        button {
+            @apply hover:bg-transparent hover:opacity-50;
+        }
+    }
+
+    .clock {
+        --_outer-width: 20rem;
+        --_width: 19rem;
+        --_letter-size: 2.4rem;
+
+        @apply bg-neutral-400;
+        block-size: var(--_outer-width);
+        border-radius: 50%;
+        container-type: inline-size;
+        display: grid;
+        inline-size: var(--_outer-width);
+        margin-inline: auto;
+        place-content: center;
+    }
+
+    .clock-face {
+        @apply bg-neutral-100;
+        aspect-ratio: 1;
+        display: grid;
+        place-content: center;
+        border-radius: 50%;
+        block-size: var(--_width);
+        font-weight: var(--fw-bold);
+        inline-size: var(--_width);
+        padding: unset;
+        position: relative;
+
+        &--24 {
+            @apply bg-neutral-100;
+            --_width: 14rem;
+            aspect-ratio: 1;
+            display: grid;
+            place-content: center;
+            border-radius: 50%;
+            block-size: var(--_width);
+            inline-size: var(--_width);
+            padding: unset;
+            position: relative;
+        }
+
+        time {
+            display: grid;
+            height: var(--_letter-size);
+            position: absolute;
+            place-content: center;
+            position: absolute;
+
+            width: var(--_letter-size);
+        }
+        button {
+            display: grid;
+            place-content: center;
+            width: var(--_letter-size);
+            height: var(--_letter-size);
+            border-radius: 50%;
+
+            &.selected {
+                @apply text-neutral-100 bg-primary;
+            }
+            &:hover {
+                @apply text-neutral-900 bg-neutral-200;
+            }
+        }
+    }
+}

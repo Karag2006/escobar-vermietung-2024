@@ -25,7 +25,7 @@
         { "number": 21, "degree": 180 },
         { "number": 22, "degree": 210 },
         { "number": 23, "degree": 240 },
-        { "number": 24, "degree": 270 }
+        { "number": 0, "degree": 270 }
     ],
     "minutes": [
         { "number": 0, "degree": 270 },

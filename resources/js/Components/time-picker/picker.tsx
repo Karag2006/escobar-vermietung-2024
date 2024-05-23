@@ -93,6 +93,7 @@ export const Picker = ({
             <div className="time-picker-head p-4 bg-primary text-gray-100">
                 <div className="text-gray-100/60">
                     <Button
+                        size="icon"
                         variant="borderless"
                         className="text-lg"
                         onClick={() => setMode("hour")}
