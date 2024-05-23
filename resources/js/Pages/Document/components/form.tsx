@@ -7,6 +7,7 @@ import { getOfferById } from "@/data/document";
 import {
     blankForm,
     documentCustomerForm,
+    documentDataForm,
     documentTrailerForm,
 } from "@/lib/document-form";
 import {
@@ -18,6 +19,7 @@ import {
 import { CustomerForm } from "./sub-forms/customer";
 import { customerType, documentType } from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
+import { DataForm } from "./sub-forms/data";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -35,7 +37,10 @@ export const DocumentForm = ({
 
     const handleChangeInSubForm = (
         subFormKey: string,
-        subFormData: documentCustomerForm | documentTrailerForm
+        subFormData:
+            | documentCustomerForm
+            | documentTrailerForm
+            | documentDataForm
     ) => {
         setData((data) => ({
             ...data,
@@ -119,7 +124,14 @@ export const DocumentForm = ({
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
-                    <TabsContent value="data"></TabsContent>
+                    <TabsContent value="data">
+                        <DataForm
+                            type="data"
+                            documentType={documentType}
+                            document={data}
+                            handleChangeInSubForm={handleChangeInSubForm}
+                        />
+                    </TabsContent>
                     <TabsContent value="settings"></TabsContent>
                 </Tabs>
                 <DecisionButtons

@@ -45,6 +45,7 @@ export const blankForm = {
         comment: "",
     },
     data: {
+        id: 0,
         offer_number: "",
         reservation_number: "",
         contract_number: "",
@@ -91,3 +92,7 @@ export type documentForm = typeof blankForm;
 export type documentCustomerForm = typeof blankForm.customer;
 
 export type documentTrailerForm = typeof blankForm.trailer;
+
+export type documentDataForm = typeof blankForm.data;
+
+export type documentSettingsForm = typeof blankForm.settings;
