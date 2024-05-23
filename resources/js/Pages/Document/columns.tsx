@@ -5,9 +5,9 @@ import {
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 
 import { Actions } from "./components/actions";
-import { OfferItem } from "@/types/document";
+import { Document } from "@/types/document";
 
-export const columns: ColumnDef<OfferItem>[] = [
+export const columns: ColumnDef<Document>[] = [
     {
         accessorKey: "offer_number",
         header: ({ column }) => {
@@ -49,11 +49,14 @@ export const columns: ColumnDef<OfferItem>[] = [
         },
     },
     {
-        accessorKey: "collect_address_id",
+        id: "collect_address",
         header: ({ column }) => {
             return (
                 <DataTableColumnHeader column={column} title="Abhol Adresse" />
             );
+        },
+        cell: (cell) => {
+            return <span>{cell.row.original.collect_address.name}</span>;
         },
     },
     // {

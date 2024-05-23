@@ -21,6 +21,7 @@ export const documentSchema = z.object({
     vehicle_title: z.string(),
     vehicle_plateNumber: z.string(),
     collect_address_id: z.number(),
+    collect_address: z.object({ id: z.number(), name: z.string() }),
 });
 
 export type Document = z.infer<typeof documentSchema>;

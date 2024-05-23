@@ -49,11 +49,14 @@ export const offerColumns: ColumnDef<Document>[] = [
         },
     },
     {
-        accessorKey: "collect_address_id",
+        id: "collect_address",
         header: ({ column }) => {
             return (
                 <DataTableColumnHeader column={column} title="Abhol Adresse" />
             );
+        },
+        cell: (cell) => {
+            return <span>{cell.row.original.collect_address.name}</span>;
         },
     },
     // {
