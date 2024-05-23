@@ -28,7 +28,7 @@ export const PaymentTypes = ({ types }: PaymentTypesProps) => {
     const [deleteModal, setDeleteModal] = useState(false);
 
     const handleComboChange = (data: PickerReturn) => {
-        setEditedType(data.value);
+        setEditedType(data.value + "");
     };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {

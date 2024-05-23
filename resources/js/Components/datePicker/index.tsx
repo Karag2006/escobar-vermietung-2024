@@ -15,6 +15,7 @@ import { InputTP24 } from "@/Components/ui/input-tp24";
 
 import { Picker } from "./picker";
 import { PickerReturn } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface DatePickerProps {
     value: string;
@@ -24,6 +25,7 @@ interface DatePickerProps {
     error?: string;
     required?: boolean;
     disabled?: boolean;
+    className?: string;
     onUpdateValue?: (result: PickerReturn) => void;
     removeError?: () => void;
 }
@@ -41,6 +43,7 @@ export const DatePicker = ({
     id,
     fieldName,
     required,
+    className,
     disabled,
     error,
     onUpdateValue,
@@ -88,7 +91,7 @@ export const DatePicker = ({
         return () => {};
     }, [selectedValue]);
     return (
-        <div className="relative flex gap-4">
+        <div className={cn("relative flex gap-4", className)}>
             <Button
                 onClick={togglePicker}
                 variant="ghost"

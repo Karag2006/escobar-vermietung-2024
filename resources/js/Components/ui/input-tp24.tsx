@@ -8,6 +8,8 @@ export interface InputProps
     error?: string;
     suffix?: React.ReactNode;
     suffixClasses?: string;
+    prefixElement?: React.ReactNode;
+    prefixClasses?: string;
 }
 
 export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
@@ -21,6 +23,8 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
             value,
             suffix,
             suffixClasses,
+            prefixElement,
+            prefixClasses,
             ...props
         },
         ref
@@ -39,12 +43,24 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
                         {label}
                     </label>
                 )}
+                {prefixElement && prefixElement !== "" && (
+                    <div
+                        className={cn(
+                            "absolute left-1 bottom-[0.17rem] hidden group-focus-within:block",
+                            prefixClasses,
+                            value && value !== "" ? "block" : ""
+                        )}
+                    >
+                        {prefixElement}
+                    </div>
+                )}
                 <input
                     id={id}
                     type={type}
                     className={cn(
                         "w-full border-b-[1px] border-b-gray-300 focus:outline-0 group-hover:border-b-gray-600 focus:border-b-blue-400 bg-transparent px-1 pb-1 pt-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50",
-                        error && error !== "" && "border-destructive"
+                        error && error !== "" && "border-destructive",
+                        prefixElement && prefixElement !== "" ? "pl-4" : ""
                     )}
                     ref={ref}
                     value={value}

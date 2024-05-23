@@ -36,3 +36,9 @@ export const SelectorSchema = z.object({
     selector: z.string(),
 });
 export type SelectorItem = z.infer<typeof SelectorSchema>;
+
+export const CollectAddressSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+});
+export type CollectAddressItem = z.infer<typeof CollectAddressSchema>;
