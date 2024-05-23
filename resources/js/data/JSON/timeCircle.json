@@ -1,0 +1,44 @@
+{
+    "outerHours": [
+        { "number": 1, "degree": 300 },
+        { "number": 2, "degree": 330 },
+        { "number": 3, "degree": 0 },
+        { "number": 4, "degree": 30 },
+        { "number": 5, "degree": 60 },
+        { "number": 6, "degree": 90 },
+        { "number": 7, "degree": 120 },
+        { "number": 8, "degree": 150 },
+        { "number": 9, "degree": 180 },
+        { "number": 10, "degree": 210 },
+        { "number": 11, "degree": 240 },
+        { "number": 12, "degree": 270 }
+    ],
+    "innerHours": [
+        { "number": 13, "degree": 300 },
+        { "number": 14, "degree": 330 },
+        { "number": 15, "degree": 0 },
+        { "number": 16, "degree": 30 },
+        { "number": 17, "degree": 60 },
+        { "number": 18, "degree": 90 },
+        { "number": 19, "degree": 120 },
+        { "number": 20, "degree": 150 },
+        { "number": 21, "degree": 180 },
+        { "number": 22, "degree": 210 },
+        { "number": 23, "degree": 240 },
+        { "number": 24, "degree": 270 }
+    ],
+    "minutes": [
+        { "number": 0, "degree": 270 },
+        { "number": 5, "degree": 300 },
+        { "number": 10, "degree": 330 },
+        { "number": 15, "degree": 0 },
+        { "number": 20, "degree": 30 },
+        { "number": 25, "degree": 60 },
+        { "number": 30, "degree": 90 },
+        { "number": 35, "degree": 120 },
+        { "number": 40, "degree": 150 },
+        { "number": 45, "degree": 180 },
+        { "number": 50, "degree": 210 },
+        { "number": 55, "degree": 240 }
+    ]
+}

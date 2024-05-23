@@ -11,6 +11,7 @@ import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { DatePicker } from "@/Components/datePicker";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { Combobox } from "@/Components/combobox";
+import { TimePicker } from "@/Components/time-picker";
 
 interface DataFormProps {
     type: "data";
@@ -66,8 +67,16 @@ export const DataForm = ({
 
     return (
         <div className="p-4">
-            <div className="flex gap-10 flex-col md:flex-row"></div>
             <div className="flex gap-10 flex-col md:flex-row">
+                <TimePicker
+                    value={data.collect_time}
+                    id="collect_time"
+                    label="Test Zeit"
+                    fieldName="collect_time"
+                    onUpdateValue={handlePickerChange}
+                />
+            </div>
+            <div className="flex gap-10 flex-col md:flex-row mt-10">
                 <TextareaTP24
                     className="w-full"
                     label="Kommentar"
