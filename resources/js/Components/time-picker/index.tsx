@@ -91,7 +91,7 @@ export const TimePicker = ({
     }, [selectedValue]);
 
     return (
-        <div className="relative flex gap-4">
+        <div className="relative flex gap-2">
             <Button
                 onClick={togglePicker}
                 variant="ghost"

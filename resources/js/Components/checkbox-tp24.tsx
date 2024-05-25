@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Checkbox } from "./ui/checkbox";
 
 interface CheckboxTP24Props {
@@ -21,7 +22,7 @@ export const CheckboxTP24 = ({
         onCheckedChange({ id, checked });
     };
     return (
-        <div className={className}>
+        <div className={cn("flex gap-2 justify-start items-center", className)}>
             <label htmlFor={id} className=" text-muted-foreground mr-2">
                 {label}
             </label>

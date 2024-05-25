@@ -91,7 +91,7 @@ export const DatePicker = ({
         return () => {};
     }, [selectedValue]);
     return (
-        <div className={cn("relative flex gap-4", className)}>
+        <div className={cn("relative flex gap-2", className)}>
             <Button
                 onClick={togglePicker}
                 variant="ghost"

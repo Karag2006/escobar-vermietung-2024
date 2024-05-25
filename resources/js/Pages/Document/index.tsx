@@ -114,7 +114,11 @@ export default function User({ auth, offerList, type }: DocumentProps) {
                     </p>
                 </ModalCardWrapper>
             </Modal>
-            <Modal modalOpen={modalOpen} openChange={setModalOpen}>
+            <Modal
+                className="xl:max-w-[1400px]"
+                modalOpen={modalOpen}
+                openChange={setModalOpen}
+            >
                 <ModalCardWrapper
                     header={
                         <h3 className="font-semibold text-xl text-gray-800">

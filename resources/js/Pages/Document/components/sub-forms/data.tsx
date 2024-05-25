@@ -99,7 +99,7 @@ export const DataForm = ({
     return (
         <div className="p-4">
             <div className="flex gap-10 flex-col">
-                <div className="flex gap-6 flex-col md:flex-row">
+                <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <DatePicker
                         value={data.collect_date}
                         id="collect_date"
@@ -129,8 +129,9 @@ export const DataForm = ({
                         onUpdateValue={handlePickerChange}
                     />
                 </div>
-                <div className="flex gap-6 flex-col md:flex-row">
+                <div className="flex gap-6 flex-col md:flex-row lg:justify-between">
                     <AddressCombobox
+                        className="w-full"
                         items={collectAdresses}
                         label="Abhol Anschrift *"
                         id="collect_address_id"
@@ -139,8 +140,11 @@ export const DataForm = ({
                         removeError={() => clearErrors("collect_address_id")}
                         onValueChange={handlePickerChange}
                     />
+                    <div className="w-full"></div>
+                    <div className="w-full"></div>
+                    <div className="w-full"></div>
                 </div>
-                <div className="flex gap-6 flex-col md:flex-row">
+                <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <CurrencyInput
                         className="w-full"
                         id="total_price"
@@ -165,7 +169,7 @@ export const DataForm = ({
                         onValueChange={handleChange}
                     />
                 </div>
-                <div className="flex gap-6 flex-col md:flex-row">
+                <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <CurrencyInput
                         className="w-full"
                         id="reservation_deposit_value"
@@ -191,13 +195,13 @@ export const DataForm = ({
                     />
                     <CheckboxTP24
                         id="reservation_deposit_recieved"
-                        className="w-full"
+                        className="w-full lg:justify-end"
                         checked={data.reservation_deposit_recieved}
                         label="Anzahlung eingegangen"
                         onCheckedChange={handlePickerChange}
                     />
                 </div>
-                <div className="flex gap-6 flex-col md:flex-row">
+                <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <CurrencyInput
                         id="final_payment_value"
                         value={data.final_payment_value}
@@ -205,7 +209,7 @@ export const DataForm = ({
                         onValueChange={handleChange}
                     />
                 </div>
-                <div className="flex gap-10 flex-col md:flex-row">
+                <div className="flex gap-10 flex-col lg:flex-row lg:justify-between">
                     <TextareaTP24
                         className="w-full"
                         label="Kommentar"
