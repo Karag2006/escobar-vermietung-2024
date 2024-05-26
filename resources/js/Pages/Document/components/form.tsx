@@ -20,6 +20,7 @@ import { CustomerForm } from "./sub-forms/customer";
 import { customerType, documentType } from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
+import { SettingsForm } from "./sub-forms/settings";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -132,7 +133,9 @@ export const DocumentForm = ({
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
-                    <TabsContent value="settings"></TabsContent>
+                    <TabsContent value="settings">
+                        <SettingsForm />
+                    </TabsContent>
                 </Tabs>
                 <DecisionButtons
                     yesLabel="Speichern"

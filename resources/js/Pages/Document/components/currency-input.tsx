@@ -1,4 +1,5 @@
 import { InputTP24 } from "@/Components/ui/input-tp24";
+import { useEffect, useState } from "react";
 
 interface CurrencyInputProps {
     value: string;
@@ -8,6 +9,7 @@ interface CurrencyInputProps {
     disabled?: boolean;
     error?: string;
     onValueChange: (e: React.FormEvent<HTMLInputElement>) => void;
+    onFinishedValueChange: (e: React.FormEvent<HTMLInputElement>) => void;
 }
 
 export const CurrencyInput = ({
@@ -18,11 +20,13 @@ export const CurrencyInput = ({
     disabled,
     error,
     onValueChange,
+    onFinishedValueChange,
 }: CurrencyInputProps) => {
     return (
         <InputTP24
             value={value}
             onChange={onValueChange}
+            onBlur={onFinishedValueChange}
             className={className}
             label={label}
             id={id}
