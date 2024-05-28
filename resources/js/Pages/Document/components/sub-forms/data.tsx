@@ -305,7 +305,6 @@ export const DataForm = ({
                 </div>
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <CurrencyInput
-                        className="w-full"
                         id="total_price"
                         value={currencyFields.total_price}
                         label="Preis (Brutto) *"
@@ -313,7 +312,6 @@ export const DataForm = ({
                         onFinishedValueChange={handleCurrencyValueChanged}
                     />
                     <CurrencyInput
-                        className="w-full"
                         id="netto_price"
                         value={currencyFields.netto_price}
                         label="Netto Preis (automatisch)"
@@ -322,7 +320,6 @@ export const DataForm = ({
                         onFinishedValueChange={handleCurrencyValueChanged}
                     />
                     <CurrencyInput
-                        className="w-full"
                         id="tax_value"
                         value={currencyFields.tax_value}
                         label="Umsatzsteuer (automatisch)"
@@ -333,7 +330,6 @@ export const DataForm = ({
                 </div>
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <CurrencyInput
-                        className="w-full"
                         id="reservation_deposit_value"
                         value={currencyFields.reservation_deposit_value}
                         label="Anzahlung"
@@ -367,6 +363,7 @@ export const DataForm = ({
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <CurrencyInput
                         id="final_payment_value"
+                        className="w-[calc(25%-1rem)]"
                         value={currencyFields.final_payment_value}
                         label="Restzahlung"
                         onValueChange={handleCurrencyInput}

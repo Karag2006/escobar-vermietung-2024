@@ -92,15 +92,26 @@ export const DocumentForm = ({
         <div className="p-4">
             <form onSubmit={handleSubmit}>
                 <Tabs defaultValue="customer">
-                    <TabsList>
-                        <TabsTrigger value="customer">Kunde</TabsTrigger>
-                        <TabsTrigger value="driver">Fahrer</TabsTrigger>
-                        <TabsTrigger value="trailer">Anhänger</TabsTrigger>
-                        <TabsTrigger value="data">Vertragsdaten</TabsTrigger>
-                        <TabsTrigger value="settings">
-                            Einstellungen
-                        </TabsTrigger>
-                    </TabsList>
+                    <div className="flex justify-between items-center">
+                        <TabsList>
+                            <TabsTrigger value="customer">Kunde</TabsTrigger>
+                            <TabsTrigger value="driver">Fahrer</TabsTrigger>
+                            <TabsTrigger value="trailer">Anhänger</TabsTrigger>
+                            <TabsTrigger value="data">
+                                Vertragsdaten
+                            </TabsTrigger>
+                            <TabsTrigger value="settings">
+                                Einstellungen
+                            </TabsTrigger>
+                        </TabsList>
+                        <DecisionButtons
+                            className="items-center mt-0"
+                            yesLabel="Speichern"
+                            noLabel="Abbrechen"
+                            sendForm
+                            noAction={close}
+                        />
+                    </div>
                     <TabsContent value="customer">
                         <CustomerForm
                             type={customerType.CUSTOMER}
@@ -138,6 +149,7 @@ export const DocumentForm = ({
                     </TabsContent>
                 </Tabs>
                 <DecisionButtons
+                    className="ml-4"
                     yesLabel="Speichern"
                     noLabel="Abbrechen"
                     sendForm

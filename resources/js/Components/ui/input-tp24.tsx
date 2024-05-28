@@ -21,6 +21,7 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
             error,
             id,
             value,
+            disabled,
             suffix,
             suffixClasses,
             prefixElement,
@@ -30,7 +31,13 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
         ref
     ) => {
         return (
-            <div className={cn("group relative", className)}>
+            <div
+                className={cn(
+                    "group relative",
+                    className,
+                    disabled && "opacity-50"
+                )}
+            >
                 {label && label !== "" && (
                     <label
                         htmlFor={id}
@@ -58,11 +65,12 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
                     id={id}
                     type={type}
                     className={cn(
-                        "w-full border-b-[1px] border-b-gray-300 focus:outline-0 group-hover:border-b-gray-600 focus:border-b-blue-400 bg-transparent px-1 pb-1 pt-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50",
+                        "w-full border-b-[1px] border-b-gray-300 focus:outline-0 group-hover:border-b-gray-600 focus:border-b-blue-400 bg-transparent px-1 pb-1 pt-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none  disabled:cursor-not-allowed",
                         error && error !== "" && "border-destructive",
-                        prefixElement && prefixElement !== "" ? "pl-4" : ""
+                        prefixElement && prefixElement !== "" ? "pl-5" : ""
                     )}
                     ref={ref}
+                    disabled={disabled}
                     value={value}
                     {...props}
                 />

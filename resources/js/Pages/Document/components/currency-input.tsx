@@ -1,4 +1,5 @@
 import { InputTP24 } from "@/Components/ui/input-tp24";
+import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 interface CurrencyInputProps {
@@ -27,7 +28,7 @@ export const CurrencyInput = ({
             value={value}
             onChange={onValueChange}
             onBlur={onFinishedValueChange}
-            className={className}
+            className={cn("w-full max-h-[33px]", className)}
             label={label}
             id={id}
             disabled={disabled}

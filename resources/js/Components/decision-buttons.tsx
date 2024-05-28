@@ -1,8 +1,10 @@
 import { Button } from "@/Components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface DecisionButtonsProps {
     yesLabel: string;
     noLabel: string;
+    className?: string;
     sendForm?: boolean;
     id?: number;
     disabled?: boolean;
@@ -17,10 +19,11 @@ export const DecisionButtons = ({
     noAction,
     sendForm,
     id,
+    className,
     disabled,
 }: DecisionButtonsProps) => {
     return (
-        <div className="flex gap-4 mt-8">
+        <div className={cn("flex gap-4 mt-8", className)}>
             {sendForm && (
                 <Button variant="success" type="submit" disabled={disabled}>
                     {yesLabel}
