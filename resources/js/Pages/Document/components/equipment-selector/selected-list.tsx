@@ -21,7 +21,7 @@ export const SelectedList = ({
 
     return (
         <div className="flex flex-col gap-2">
-            {selected.map((item) => (
+            {selected?.map((item) => (
                 <div key={item.id}>
                     <SelectedItem
                         item={item}

@@ -29,9 +29,14 @@ export const Selector = ({
         setFilter(value);
         setFilteredList(
             equipmentList.filter((element) => {
+                const name = element.name.toLowerCase();
+                const details = element.details
+                    ? element.details.toLowerCase()
+                    : "";
+
                 return (
-                    element.name.includes(value) ||
-                    element.details?.includes(value)
+                    name.includes(value.toLowerCase()) ||
+                    details.includes(value.toLowerCase())
                 );
             })
         );
@@ -41,7 +46,7 @@ export const Selector = ({
         id: string | number;
         checked: boolean;
     }) => {
-        const item = equipmentList.find((element) => element.id === data.id);
+        const item = equipmentList?.find((element) => element.id === data.id);
         if (item && data.checked) addItem(item);
         else if (item && !data.checked) removeItem(item);
     };
@@ -55,9 +60,7 @@ export const Selector = ({
         setFilteredList(equipmentList);
     }, [equipmentList]);
 
-    useEffect(() => {
-        console.log("selectorTest");
-    }, [selectedItems]);
+    useEffect(() => {}, [selectedItems]);
 
     return (
         <div>
@@ -78,7 +81,7 @@ export const Selector = ({
                     <div key={item.id} className="">
                         <SelectorItem
                             item={item}
-                            selected={selectedItems.some(
+                            selected={selectedItems?.some(
                                 (element) => element.id === item.id
                             )}
                             changeSelected={handleChangeSelected}

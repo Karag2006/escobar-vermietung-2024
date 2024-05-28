@@ -20,8 +20,9 @@ export const EquipmentSelector = ({
 
     const addToSelectedEquipmentList = (item: EquipmentItem) => {
         let temp = [item];
-        setSelectedEquipmentList(selectedEquipmentList.concat(temp));
-        onListChange(selectedEquipmentList.concat(temp));
+        let selected = selectedEquipmentList ? selectedEquipmentList : [];
+        setSelectedEquipmentList(selected.concat(temp));
+        onListChange(selected.concat(temp));
     };
 
     const removeFromSelectedEquipmentList = (item: EquipmentItem) => {

@@ -120,6 +120,7 @@ export const DataForm = ({
                     ...data,
                     reservation_deposit_value: depositValue,
                 });
+                calculateFinalPayment(totalValue, depositValue);
             }
         }
     };
@@ -153,10 +154,9 @@ export const DataForm = ({
     };
     const calculateValues = (totalValue: number, depositValue: number) => {
         calculateVatValues(totalValue);
-        if (documentType !== "contract") {
+        if (documentType !== "contract")
             calculateDeposit(totalValue, depositValue);
-        }
-        calculateFinalPayment(totalValue, depositValue);
+        else calculateFinalPayment(totalValue, depositValue);
     };
 
     const handlePickerChange = (result: PickerReturn) => {
@@ -193,6 +193,8 @@ export const DataForm = ({
             calculateValues(
                 stringToFloat(value),
                 data.reservation_deposit_value
+                    ? data.reservation_deposit_value
+                    : 0
             );
         }
         if (key === "reservation_deposit_value")
@@ -229,6 +231,19 @@ export const DataForm = ({
         }));
 
         handleChangeInSubForm(type, { ...data, selectedEquipmentList: list });
+    };
+
+    const handleCheckboxChange = (result: {
+        id: string | number;
+        checked: boolean;
+    }) => {
+        const key = result.id;
+        const checked = result.checked;
+        setData((data) => ({
+            ...data,
+            [key]: checked,
+        }));
+        handleChangeInSubForm(type, { ...data, [key]: checked });
     };
 
     useEffect(() => {
@@ -346,7 +361,7 @@ export const DataForm = ({
                         className="w-full lg:justify-end"
                         checked={data.reservation_deposit_recieved}
                         label="Anzahlung eingegangen"
-                        onCheckedChange={handlePickerChange}
+                        onCheckedChange={handleCheckboxChange}
                     />
                 </div>
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
