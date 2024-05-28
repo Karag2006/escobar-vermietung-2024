@@ -1,3 +1,5 @@
+import { EquipmentItem } from "@/types/equipment";
+
 export const blankForm = {
     customer: {
         id: 0,
@@ -88,12 +90,20 @@ export const blankForm = {
     },
 };
 
-export type documentForm = typeof blankForm;
-
 export type documentCustomerForm = typeof blankForm.customer;
 
 export type documentTrailerForm = typeof blankForm.trailer;
 
-export type documentDataForm = typeof blankForm.data;
+export type documentDataForm = typeof blankForm.data & {
+    selectedEquipmentList: EquipmentItem[];
+};
 
 export type documentSettingsForm = typeof blankForm.settings;
+
+export type documentForm = {
+    customer: documentCustomerForm;
+    driver: documentCustomerForm;
+    trailer: documentTrailerForm;
+    data: documentDataForm;
+    settings: documentSettingsForm;
+};

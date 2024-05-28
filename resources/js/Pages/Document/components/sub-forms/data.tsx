@@ -222,6 +222,15 @@ export const DataForm = ({
         handleChangeInSubForm(type, { ...data, [result.id]: result.value });
     };
 
+    const handleEquipmentChange = (list: EquipmentItem[]) => {
+        setData((data) => ({
+            ...data,
+            selectedEquipmentList: list,
+        }));
+
+        handleChangeInSubForm(type, { ...data, selectedEquipmentList: list });
+    };
+
     useEffect(() => {
         getCollectAddresses().then((data) => {
             setCollectAdresses(data);
@@ -350,7 +359,10 @@ export const DataForm = ({
                     />
                 </div>
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
-                    <EquipmentSelector />
+                    <EquipmentSelector
+                        onListChange={handleEquipmentChange}
+                        selectedList={data.selectedEquipmentList}
+                    />
                 </div>
                 <div className="flex gap-10 flex-col lg:flex-row lg:justify-between">
                     <TextareaTP24
