@@ -22,6 +22,9 @@ import { AddressCombobox } from "../address-combobox";
 import { CurrencyInput } from "../currency-input";
 import { CheckboxTP24 } from "@/Components/checkbox-tp24";
 import { getPaymentTypes, getSettings } from "@/data/settings";
+import { EquipmentSelector } from "../equipment-selector";
+import { getEquipmentList } from "@/data/equipment";
+import { EquipmentItem } from "@/types/equipment";
 
 interface DataFormProps {
     type: "data";
@@ -51,6 +54,7 @@ export const DataForm = ({
     const [collectAdresses, setCollectAdresses] = useState<
         CollectAddressItem[]
     >([]);
+    const [equipmentList, setEquipmentList] = useState<EquipmentItem[]>([]);
     const [paymentTypes, setPaymentTypes] = useState<string[]>([]);
     const {
         data,
@@ -344,6 +348,9 @@ export const DataForm = ({
                         onValueChange={handleCurrencyInput}
                         onFinishedValueChange={handleCurrencyValueChanged}
                     />
+                </div>
+                <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
+                    <EquipmentSelector />
                 </div>
                 <div className="flex gap-10 flex-col lg:flex-row lg:justify-between">
                     <TextareaTP24

@@ -10,7 +10,7 @@ interface InputClearButtonProps {
 export const InputClearButton = ({ clearValue }: InputClearButtonProps) => {
     return (
         <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
                 <Button variant="icon" size="icon" onClick={clearValue}>
                     <X className="h-5 w-5" />
                     <span className="sr-only">Feld leeren</span>

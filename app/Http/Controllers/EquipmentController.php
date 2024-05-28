@@ -53,4 +53,10 @@ class EquipmentController extends Controller
     {
         $equipment->delete();
     }
+
+    public function apiIndex()
+    {
+        $equipmentList = Equipment::select('id', 'name', 'details', 'defaultNumber')->orderBy('name')->get();
+        return response()->json($equipmentList, Response::HTTP_OK);
+    }
 }
