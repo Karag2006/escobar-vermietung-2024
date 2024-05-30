@@ -16,7 +16,7 @@ import { getOfferById } from "@/data/document";
 import { DocumentForm } from "./components/form";
 import { offerColumns } from "./offer-columns";
 
-export default function User({ auth, offerList, type }: DocumentProps) {
+export default function Document({ auth, offerList, type }: DocumentProps) {
     const pageTitle = "Angebote";
     const [confirmModal, setConfirmModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);

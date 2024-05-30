@@ -59,16 +59,16 @@ export const offerColumns: ColumnDef<Document>[] = [
             return <span>{cell.row.original.collect_address.name}</span>;
         },
     },
-    // {
-    //     id: "actions",
-    //     cell: (cell) => {
-    //         return (
-    //             <Actions
-    //                 row={cell.row}
-    //                 editModal={cell.editModal}
-    //                 deleteModal={cell.deleteModal}
-    //             />
-    //         );
-    //     },
-    // },
+    {
+        id: "actions",
+        cell: (cell) => {
+            return (
+                <Actions
+                    row={cell.row}
+                    editModal={cell.editModal}
+                    deleteModal={cell.deleteModal}
+                />
+            );
+        },
+    },
 ];

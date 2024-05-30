@@ -76,7 +76,7 @@ class OfferController extends Controller
     public function index()
     {
         $offerList = Document::with('collectAddress:id,name')
-            ->select('id', 'offer_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id')
+            ->select('id', 'offer_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
             ->where('current_state', 'offer')
             ->orderBy('offer_number', 'desc')
             ->get();

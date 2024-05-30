@@ -1,6 +1,6 @@
 import { Button } from "@/Components/ui/button";
 import { Row } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
+import { CircleArrowUp, FileText, Pencil, Trash2 } from "lucide-react";
 
 import { customerSchema } from "@/types/customer";
 import {
@@ -8,6 +8,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/Components/ui/tooltip";
+import { documentSchema } from "@/types/document";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
@@ -20,18 +21,78 @@ export function Actions<TData>({
     editModal,
     deleteModal,
 }: ActionsProps<TData>) {
-    const customer = customerSchema.parse(row.original);
+    const document = documentSchema.parse(row.original);
+
+    const translateState = () => {
+        if (document.current_state === "offer") return "Angebot";
+        if (document.current_state === "reservation") return "Reservierung";
+        if (document.current_state === "contract") return "Mietvertrag";
+    };
+
+    const documentState = translateState();
 
     const handleEdit = () => {
-        if (customer.id) editModal(customer.id);
+        if (document.id) editModal(document.id);
     };
 
     const handleDelete = () => {
-        console.log("delete");
-        if (customer.id) deleteModal(customer.id);
+        if (document.id) deleteModal(document.id);
+    };
+
+    const handlePrint = () => {
+        return;
+    };
+
+    const handleForward = () => {
+        return;
     };
     return (
         <div className="flex justify-end gap-4">
+            <div className=" text-primary">
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="icon"
+                            size="content"
+                            onClick={handlePrint}
+                        >
+                            <FileText className="h-5 w-5" />
+
+                            <span className="sr-only">
+                                {documentState} als PDF Drucken
+                            </span>
+                        </Button>
+                    </TooltipTrigger>
+
+                    <TooltipContent>
+                        {documentState} als PDF Drucken
+                    </TooltipContent>
+                </Tooltip>
+            </div>
+            {(document.current_state === "offer" ||
+                document.current_state === "reservation") && (
+                <div className=" text-primary">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="icon"
+                                size="content"
+                                onClick={handleForward}
+                            >
+                                <CircleArrowUp className="h-5 w-5" />
+
+                                <span className="sr-only">
+                                    {documentState} in Reservierung umwandeln
+                                </span>
+                            </Button>
+                        </TooltipTrigger>
+
+                        <TooltipContent>
+                            {documentState} in Reservierung umwandeln
+                        </TooltipContent>
+                    </Tooltip>
+                </div>
+            )}
             <div className=" text-green-600">
                 <Tooltip>
                     <TooltipTrigger asChild>
@@ -41,10 +102,14 @@ export function Actions<TData>({
                             onClick={handleEdit}
                         >
                             <Pencil className="h-5 w-5" />
-                            <span className="sr-only">Kunden bearbeiten</span>
+
+                            <span className="sr-only">
+                                {documentState} bearbeiten
+                            </span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Kunden bearbeiten</TooltipContent>
+
+                    <TooltipContent>{documentState} bearbeiten</TooltipContent>
                 </Tooltip>
             </div>
             <div className="text-red-600">
@@ -56,10 +121,14 @@ export function Actions<TData>({
                             onClick={handleDelete}
                         >
                             <Trash2 className="h-5 w-5" />
-                            <span className="sr-only">Kunden löschen</span>
+
+                            <span className="sr-only">
+                                {documentState} löschen
+                            </span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Kunden löschen</TooltipContent>
+
+                    <TooltipContent>{documentState} löschen</TooltipContent>
                 </Tooltip>
             </div>
         </div>
