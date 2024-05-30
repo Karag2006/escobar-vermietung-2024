@@ -101,11 +101,9 @@ export const SelectorCombobox = ({
     }, [items]);
 
     useEffect(() => {
-        const index = filteredList.findIndex((item) => item.id === value);
-        if (index === -1) setFilterValue("");
-
-        setFilterValue(filteredList[index]?.selector);
-    }, [value]);
+        const index = items.findIndex((item) => item.id === value);
+        setFilterValue(items[index]?.selector);
+    }, [value, items]);
 
     return (
         <div className={cn("relative", className)} ref={ref}>

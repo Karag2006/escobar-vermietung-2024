@@ -54,7 +54,8 @@ export const TrailerForm = ({
             ...data,
             [key]: value,
         }));
-        handleChangeInSubForm(type, { ...data, [key]: value });
+        if (key !== "id")
+            handleChangeInSubForm(type, { ...data, [key]: value });
     };
 
     const handleChange = (
@@ -115,14 +116,15 @@ export const TrailerForm = ({
         }
     };
     useEffect(() => {
-        const getCurrentCustomer = () => {
-            if (data.id > 0) {
-                getTrailerById(data.id).then((trailer) =>
-                    setData({ ...trailer })
-                );
-            } else setData(blankForm.trailer);
+        const getCurrentTrailer = () => {
+            if (data.id > 0 && trailer.id !== data.id) {
+                getTrailerById(data.id).then((trailer) => {
+                    setData({ ...trailer });
+                    handleChangeInSubForm(type, { ...trailer });
+                });
+            }
         };
-        getCurrentCustomer();
+        getCurrentTrailer();
     }, [data.id]);
 
     useEffect(() => {

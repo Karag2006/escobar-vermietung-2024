@@ -51,11 +51,13 @@ export const CustomerForm = ({
     const handlePickerChange = (result: PickerReturn) => {
         const key = result.id;
         const value = result.value;
+        console.log(key);
         setData((data) => ({
             ...data,
             [key]: value,
         }));
-        handleChangeInSubForm(type, { ...data, [key]: value });
+        if (key !== "id")
+            handleChangeInSubForm(type, { ...data, [key]: value });
     };
 
     const handleChange = (
@@ -100,15 +102,19 @@ export const CustomerForm = ({
     };
     useEffect(() => {
         const getCurrentCustomer = () => {
-            if (data.id > 0) {
+            if (data.id > 0 && customer?.id !== data.id) {
                 getCustomerById(data.id).then((customer) => {
                     setData({ ...customer });
                     handleChangeInSubForm(type, { ...customer });
                 });
-            } else setData(blankForm.customer);
+            }
         };
         getCurrentCustomer();
     }, [data.id]);
+
+    useEffect(() => {
+        setData({ ...customer });
+    }, [customer]);
 
     useEffect(() => {
         getLicenseClasses().then((data) => {

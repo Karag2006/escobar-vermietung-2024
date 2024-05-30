@@ -8,6 +8,7 @@ use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 use Carbon\Carbon;
 use Inertia\Inertia;
 
@@ -100,7 +101,7 @@ class OfferController extends Controller
      */
     public function show(Document $document)
     {
-        //
+        return new DocumentResource($document);
     }
 
     /**
@@ -108,7 +109,8 @@ class OfferController extends Controller
      */
     public function update(UpdateOfferRequest $request, Document $document)
     {
-        //
+        $data = $this->useInput($request->input(), 'update');
+        $document->update($data);
     }
 
     /**
@@ -116,6 +118,6 @@ class OfferController extends Controller
      */
     public function destroy(Document $document)
     {
-        //
+        $document->delete();
     }
 }

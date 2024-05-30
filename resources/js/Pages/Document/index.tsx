@@ -40,7 +40,7 @@ export default function Document({ auth, offerList, type }: DocumentProps) {
         setCurrentID(id);
         if (offerList) {
             getOfferById(id).then((offer) => {
-                setDeleteName(offer.offer_number);
+                setDeleteName(offer.data.offer_number);
             });
         }
         setConfirmModal(true);
