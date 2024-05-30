@@ -27,6 +27,8 @@ class OfferController extends Controller
         return $number;
     }
 
+    // Translate the input into the form that the Database Requires. 
+    // (should happen after Data validation, use Store and Update Requests for validation.)
     private function useInput($input, $mode)
     {
         $output = [];
@@ -65,9 +67,7 @@ class OfferController extends Controller
             $output['contract_bail'] = 100.0;
         }
 
-
         return $output;
-
     }
 
     /**
@@ -84,9 +84,7 @@ class OfferController extends Controller
             'offerList' => $offerList,
             'type' => 'offer'
         ]);
-    }
-
-    
+    }    
 
     /**
      * Store a newly created resource in storage.
@@ -106,14 +104,6 @@ class OfferController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Document $document)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateOfferRequest $request, Document $document)
@@ -128,6 +118,4 @@ class OfferController extends Controller
     {
         //
     }
-
-    
 }

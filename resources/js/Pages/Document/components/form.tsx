@@ -52,28 +52,27 @@ export const DocumentForm = ({
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         if (!currentID) {
             post(`/${documentType}`, {
                 only: [`${documentType}List`, "errors"],
                 onSuccess: () => {
-                    toast.success("Kunde erfolgreich angelegt");
+                    toast.success("Angebot erfolgreich angelegt");
                     close();
                 },
                 onError: () => {
-                    toast.error("Fehler beim anlegen des Kunden");
+                    toast.error("Fehler beim anlegen des Angebot");
                 },
             });
         } else {
-            patch(`/customer/${currentID}`, {
-                only: ["customers", "errors"],
+            patch(`/${documentType}/${currentID}`, {
+                only: [`${documentType}List`, "errors"],
                 onSuccess: () => {
-                    toast.success("Kunde wurde erfolgreich geändert");
+                    toast.success("Angebot wurde erfolgreich geändert");
                     close();
                 },
                 onError: () => {
-                    toast.error("Fehler beim ändern des Kunden");
+                    toast.error("Fehler beim ändern des Angebot");
                 },
             });
         }
@@ -115,7 +114,7 @@ export const DocumentForm = ({
                             className="items-center mt-0"
                             yesLabel="Speichern"
                             noLabel="Abbrechen"
-                            sendForm
+                            yesAction={handleSubmit}
                             noAction={close}
                         />
                     </div>
@@ -164,7 +163,7 @@ export const DocumentForm = ({
                     className="ml-4"
                     yesLabel="Speichern"
                     noLabel="Abbrechen"
-                    sendForm
+                    yesAction={handleSubmit}
                     noAction={close}
                 />
             </form>
