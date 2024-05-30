@@ -1,108 +1,140 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
-import { toast } from "sonner";
 
-import { PickerReturn } from "@/types";
-import {
-    CollectAddressItem,
-    customerType,
-    documentType,
-    SelectorItem,
-} from "@/types/document";
-import { blankForm, documentDataForm, documentForm } from "@/lib/document-form";
+import { documentType } from "@/types/document";
+import { documentSettingsForm } from "@/lib/document-form";
 
+import RichTextEditor from "@/Components/richtext-editor";
 import { InputTP24 } from "@/Components/ui/input-tp24";
-import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
-import { DatePicker } from "@/Components/datePicker";
-import { SelectorCombobox } from "@/Components/selector-combobox";
-import { Combobox } from "@/Components/combobox";
-import { TimePicker } from "@/Components/time-picker";
-import { getCollectAddresses } from "@/data/document";
-import { AddressCombobox } from "../address-combobox";
-import { CurrencyInput } from "../currency-input";
-import { CheckboxTP24 } from "@/Components/checkbox-tp24";
-import { getPaymentTypes, getSettings } from "@/data/settings";
+import { SettingsElement } from "@/Pages/Settings/components/settings-element";
 
-export const SettingsForm = () => {
-    const floatToString = (floatValue: number) => {
-        if (floatValue) return String(floatValue).replace(".", ",");
-        return "";
+interface SettingsFormProps {
+    type: "settings";
+    documentType: documentType;
+    settings: documentSettingsForm;
+    handleChangeInSubForm: (
+        subFormKey: string,
+        subFormData: documentSettingsForm
+    ) => void;
+}
+
+export const SettingsForm = ({
+    settings,
+    type,
+    documentType,
+    handleChangeInSubForm,
+}: SettingsFormProps) => {
+    const { data, setData, patch, processing, errors, reset, clearErrors } =
+        useForm({
+            vat: settings.vat,
+            offer_note: settings.offer_note,
+            reservation_note: settings.reservation_note,
+            contract_note: settings.contract_note,
+            contactdata: settings.contactdata,
+            document_footer: settings.document_footer,
+        });
+
+    const stringToInt = (stringValue: string) => {
+        if (stringValue) return parseInt(stringValue);
+        return 19;
     };
-    const stringToFloat = (stringValue: string) => {
-        if (stringValue) return parseFloat(stringValue.replace(",", "."));
-        return 0.0;
-    };
 
-    const [currencyFields, setCurrencyFields] = useState({
-        test1: "",
-        test2: "",
-        test3: "",
-    });
-    const [returnData, setReturnData] = useState({
-        test1: 0,
-        test2: 0,
-        test3: 0,
-    });
-
-    const handleCurrencyInput = (e: React.FormEvent<HTMLInputElement>) => {
+    const handleChange = (
+        e:
+            | React.FormEvent<HTMLInputElement>
+            | React.FormEvent<HTMLTextAreaElement>
+            | React.FormEvent<HTMLSelectElement>
+    ) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;
-        setCurrencyFields({ ...currencyFields, [key]: value });
-        setReturnData((data) => ({
+
+        if (key === "vat")
+            setData((data) => ({
+                ...data,
+                [key]: stringToInt(value),
+            }));
+        else
+            setData((data) => ({
+                ...data,
+                [key]: value,
+            }));
+
+        handleChangeInSubForm(type, { ...data, [key]: value });
+    };
+
+    const handleRichtextChange = (name: string, html: string) => {
+        setData((data) => ({
             ...data,
-            [key]: stringToFloat(value),
+            [name]: html,
         }));
+        handleChangeInSubForm(type, { ...data, [name]: html });
     };
 
-    const handleValueChanged = (e: React.FormEvent<HTMLInputElement>) => {
-        const key = e.currentTarget.id;
-        const value = e.currentTarget.value;
+    useEffect(() => {
+        setData(settings);
+    }, [settings]);
 
-        if (key === "test1") {
-            const newTest2 = floatToString(2 * stringToFloat(value));
-            setReturnData((data) => ({
-                ...data,
-                test2: stringToFloat(newTest2),
-            }));
-            setCurrencyFields({ ...currencyFields, test2: newTest2 });
-        }
-
-        if (key === "test2") {
-            const newTest3 = 0.3 * returnData.test2;
-            setReturnData((data) => ({
-                ...data,
-                test3: newTest3,
-            }));
-            setCurrencyFields({ ...currencyFields, test3: newTest3 });
-        }
-    };
     return (
-        <div>
-            <CurrencyInput
-                className="w-full"
-                id="test1"
-                value={currencyFields.test1}
-                label="Test 1"
-                onValueChange={handleCurrencyInput}
-                onFinishedValueChange={handleValueChanged}
-            />
-            <CurrencyInput
-                className="w-full"
-                id="test2"
-                value={currencyFields.test2}
-                label="Test 2"
-                onValueChange={handleCurrencyInput}
-                onFinishedValueChange={handleValueChanged}
-            />
-            <CurrencyInput
-                className="w-full"
-                id="test3"
-                value={currencyFields.test3}
-                label="Test 3"
-                onValueChange={handleCurrencyInput}
-                onFinishedValueChange={handleValueChanged}
-                disabled
-            />
+        <div className="flex flex-col gap-4 p-4">
+            <SettingsElement label="Umsatzsteuer">
+                <InputTP24
+                    className="max-w-12"
+                    id="vat"
+                    value={data.vat}
+                    error={errors.vat}
+                    onChange={handleChange}
+                    onFocus={() => clearErrors("vat")}
+                    disabled={processing}
+                    suffix="%"
+                />
+            </SettingsElement>
+            {documentType === "offer" && (
+                <SettingsElement label="Angebot Hinweis-Text">
+                    <RichTextEditor
+                        value={data.offer_note}
+                        onChange={(value) =>
+                            handleRichtextChange("offer_note", value)
+                        }
+                    />
+                </SettingsElement>
+            )}
+            {documentType === "reservation" && (
+                <SettingsElement label="Reservierung Hinweis-Text">
+                    <RichTextEditor
+                        value={data.reservation_note}
+                        onChange={(value) =>
+                            handleRichtextChange("reservation_note", value)
+                        }
+                    />
+                </SettingsElement>
+            )}
+            {documentType === "contract" && (
+                <SettingsElement label="Mietvertrag Hinweis-Text">
+                    <RichTextEditor
+                        value={data.contract_note}
+                        onChange={(value) =>
+                            handleRichtextChange("contract_note", value)
+                        }
+                    />
+                </SettingsElement>
+            )}
+            <SettingsElement label="Adressdaten">
+                <RichTextEditor
+                    value={data.contactdata}
+                    onChange={(value) =>
+                        handleRichtextChange("contactdata", value)
+                    }
+                />
+            </SettingsElement>
+
+            <SettingsElement label="Fußzeile">
+                <RichTextEditor
+                    value={data.document_footer}
+                    onChange={(value) =>
+                        handleRichtextChange("document_footer", value)
+                    }
+                />
+            </SettingsElement>
         </div>
     );
 };

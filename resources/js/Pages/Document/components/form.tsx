@@ -8,6 +8,7 @@ import {
     blankForm,
     documentCustomerForm,
     documentDataForm,
+    documentSettingsForm,
     documentTrailerForm,
 } from "@/lib/document-form";
 import {
@@ -21,6 +22,7 @@ import { customerType, documentType } from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
+import { getSettings } from "@/data/settings";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -42,6 +44,7 @@ export const DocumentForm = ({
             | documentCustomerForm
             | documentTrailerForm
             | documentDataForm
+            | documentSettingsForm
     ) => {
         setData((data) => ({
             ...data,
@@ -83,6 +86,10 @@ export const DocumentForm = ({
                         setData({ ...document })
                     );
                 }
+            } else {
+                getSettings().then((settings) =>
+                    handleChangeInSubForm("settings", settings)
+                );
             }
         };
         getCurrentDocument();
@@ -145,7 +152,12 @@ export const DocumentForm = ({
                         />
                     </TabsContent>
                     <TabsContent value="settings">
-                        <SettingsForm />
+                        <SettingsForm
+                            type="settings"
+                            documentType={documentType}
+                            settings={data.settings}
+                            handleChangeInSubForm={handleChangeInSubForm}
+                        />
                     </TabsContent>
                 </Tabs>
                 <DecisionButtons
