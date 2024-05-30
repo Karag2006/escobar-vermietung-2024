@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
+use App\Http\Resources\DocumentResource;
+use App\Http\Requests\StoreOfferRequest;
+use App\Http\Requests\UpdateOfferRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Inertia\Inertia;
 
 class OfferController extends Controller
@@ -22,6 +27,49 @@ class OfferController extends Controller
         return $number;
     }
 
+    private function useInput($input, $mode)
+    {
+        $output = [];
+        $customer = $input['customer'];
+        $driver = $input['driver'];
+        $trailer = $input['trailer'];
+        $data = $input['data'];
+        $settings = $input['settings'];
+
+        foreach ($customer as $key => $value) {
+            $output['customer_' . $key] = $value;
+        }
+        foreach ($driver as $key => $value) {
+            $output['driver_' . $key] = $value;
+        }
+        foreach ($trailer as $key => $value) {
+            $output['vehicle_' . $key] = $value;
+        }
+        foreach ($data as $key => $value) {
+            $output[$key] = $value;
+        }
+        foreach ($settings as $key => $value) {
+            $output[$key] = $value;
+        }
+
+        if ($mode == 'new') {
+
+            $output['user_id'] = Auth::id();
+
+            $today = Carbon::today()->format('d.m.Y');
+            $output['selectedEquipmentList'] = json_encode($output['selectedEquipmentList']);
+
+            $output['offer_number'] = $this->getNextNumber();
+            $output['current_state'] = "offer";
+            $output['offer_date'] = $today;
+            $output['contract_bail'] = 100.0;
+        }
+
+
+        return $output;
+
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -38,20 +86,15 @@ class OfferController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreOfferRequest $request)
     {
-        //
+        $data = $this->useInput($request->input(), 'new');
+        $document = Document::create($data);
     }
 
     /**
@@ -73,7 +116,7 @@ class OfferController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Document $document)
+    public function update(UpdateOfferRequest $request, Document $document)
     {
         //
     }
@@ -85,4 +128,6 @@ class OfferController extends Controller
     {
         //
     }
+
+    
 }

@@ -101,9 +101,10 @@ export const CustomerForm = ({
     useEffect(() => {
         const getCurrentCustomer = () => {
             if (data.id > 0) {
-                getCustomerById(data.id).then((customer) =>
-                    setData({ ...customer })
-                );
+                getCustomerById(data.id).then((customer) => {
+                    setData({ ...customer });
+                    handleChangeInSubForm(type, { ...customer });
+                });
             } else setData(blankForm.customer);
         };
         getCurrentCustomer();
