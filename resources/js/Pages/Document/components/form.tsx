@@ -3,7 +3,11 @@ import { useForm } from "@inertiajs/react";
 
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
-import { getOfferById, getReservationById } from "@/data/document";
+import {
+    getOfferById,
+    getReservationById,
+    getContractById,
+} from "@/data/document";
 import {
     blankForm,
     documentCustomerForm,
@@ -99,6 +103,11 @@ export const DocumentForm = ({
                 }
                 if (documentType === "reservation") {
                     getReservationById(currentID).then((document) =>
+                        setData({ ...document })
+                    );
+                }
+                if (documentType === "contract") {
+                    getContractById(currentID).then((document) =>
                         setData({ ...document })
                     );
                 }

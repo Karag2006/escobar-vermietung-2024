@@ -4,6 +4,12 @@ import { toast } from "sonner";
 
 import { TriangleAlert } from "lucide-react";
 
+import {
+    getDocumentPluralTypeTranslation,
+    getDocumentTypeArticle,
+    getDocumentTypeTranslation,
+} from "@/lib/utils";
+
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { DataTable } from "@/Components/data-table";
 import { ActionButton } from "@/Components/action-button";
@@ -12,15 +18,15 @@ import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { DecisionButtons } from "@/Components/decision-buttons";
 
 import { DocumentProps } from "@/types/document";
-import { getOfferById, getReservationById } from "@/data/document";
+import {
+    getContractById,
+    getOfferById,
+    getReservationById,
+} from "@/data/document";
 import { DocumentForm } from "./components/form";
 import { offerColumns } from "./offer-columns";
-import {
-    getDocumentPluralTypeTranslation,
-    getDocumentTypeArticle,
-    getDocumentTypeTranslation,
-} from "@/lib/utils";
 import { reservationColumns } from "./reservation-columns";
+import { contractColumns } from "./contract-columns";
 
 export default function Document({
     auth,
@@ -63,6 +69,11 @@ export default function Document({
                 setDeleteName(reservation.data.reservation_number);
             });
         }
+        if (type === "contract") {
+            getContractById(id).then((contract) => {
+                setDeleteName(contract.data.contract_number);
+            });
+        }
         setConfirmModal(true);
     };
 
@@ -78,6 +89,14 @@ export default function Document({
         if (type === "reservation") {
             Form.delete(`/reservation/${id}`, {
                 only: ["reservationList"],
+                onSuccess: (page) => {
+                    onDeleteSuccess();
+                },
+            });
+        }
+        if (type === "contract") {
+            Form.delete(`/contract/${id}`, {
+                only: ["contractList"],
                 onSuccess: (page) => {
                     onDeleteSuccess();
                 },
@@ -120,6 +139,14 @@ export default function Document({
                 <DataTable
                     columns={reservationColumns}
                     data={reservationList}
+                    editModal={editDocumentModal}
+                    deleteModal={deleteModal}
+                />
+            )}
+            {type === "contract" && (
+                <DataTable
+                    columns={contractColumns}
+                    data={contractList}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
                 />

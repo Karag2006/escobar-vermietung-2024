@@ -7,9 +7,9 @@ import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 import { Actions } from "./components/actions";
 import { Document } from "@/types/document";
 
-export const columns: ColumnDef<Document>[] = [
+export const contractColumns: ColumnDef<Document>[] = [
     {
-        accessorKey: "offer_number",
+        accessorKey: "contract_number",
         header: ({ column }) => {
             return <DataTableColumnHeader column={column} title="Nummer" />;
         },
@@ -59,16 +59,16 @@ export const columns: ColumnDef<Document>[] = [
             return <span>{cell.row.original.collect_address.name}</span>;
         },
     },
-    // {
-    //     id: "actions",
-    //     cell: (cell) => {
-    //         return (
-    //             <Actions
-    //                 row={cell.row}
-    //                 editModal={cell.editModal}
-    //                 deleteModal={cell.deleteModal}
-    //             />
-    //         );
-    //     },
-    // },
+    {
+        id: "actions",
+        cell: (cell) => {
+            return (
+                <Actions
+                    row={cell.row}
+                    editModal={cell.editModal}
+                    deleteModal={cell.deleteModal}
+                />
+            );
+        },
+    },
 ];
