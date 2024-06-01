@@ -266,7 +266,9 @@ export const DocumentForm = ({
                 >
                     <p className=" font-bold">
                         Details : <br />
-                        {`${collision.documentType} Nummer ${collision.documentNumber}`}
+                        {`${getDocumentTypeTranslation(
+                            collision.documentType
+                        )} Nummer ${collision.documentNumber}`}
                         <br />
                         {`Kunde : ${collision.customerName}`}
                         <br />

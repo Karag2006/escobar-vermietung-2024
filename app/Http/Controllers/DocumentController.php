@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Carbon\Carbon;
 
 class DocumentController extends Controller
 {
@@ -20,9 +21,7 @@ class DocumentController extends Controller
 
         if (!$request['vehicle_id'] ||
             !$request['collect_date'] ||
-            !$request['return_date'] ||
-            !$request['collect_time'] ||
-            !$request['return_time']
+            !$request['return_date']
         )
         return response()->json(null, Response::HTTP_UNPROCESSABLE_ENTITY);
 
