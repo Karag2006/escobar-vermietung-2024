@@ -4,9 +4,28 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Setting;
 
 class StoreOfferRequest extends FormRequest
 {
+
+    /**
+     * Get the settings that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    private function get_settings()
+    {
+        $settings_array = Setting::first()->get();
+        $settings = $settings_array[0];
+        $license_classes = json_decode($settings["license_classes"]);
+        $payment_types = json_decode($settings["payment_types"]);
+        return [
+            "license_classes" => $license_classes,
+            "payment_types" => $payment_types
+        ];
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,6 +41,8 @@ class StoreOfferRequest extends FormRequest
      */
     public function rules(): array
     {
+        $settings = $this->get_settings();
+
         $regexDate = 'regex:/^(?:[0-9]{2})\.(?:[0-9]{2})\.(?:[0-9]{4})$/';
         $regexPlz = 'regex:/^(?:[0-9]{5})$/';
         $regexTime = 'regex:/^(?:[0-9]{2})\:(?:[0-9]{2})$/';
@@ -43,7 +64,7 @@ class StoreOfferRequest extends FormRequest
             'customer.email' => 'email|nullable',
             'customer.driving_license_no' => 'string|min:6|max:15|nullable',
             'customer.driving_license_class' => [
-                Rule::in(['B', 'BE', 'B96', 'Klasse 3']),
+                Rule::in($settings['license_classes']),
                 'nullable'
             ],
             'customer.comment' => 'string|max:1000|nullable',
@@ -66,7 +87,7 @@ class StoreOfferRequest extends FormRequest
             'driver.email' => 'email|nullable',
             'driver.driving_license_no' => 'string|min:6|max:15|nullable',
             'driver.driving_license_class' => [
-                Rule::in(['B', 'BE', 'B96', 'Klasse 3']),
+                Rule::in($settings['license_classes']),
                 'nullable'
             ],
             'driver.comment' => 'string|max:1000|nullable',
@@ -99,14 +120,14 @@ class StoreOfferRequest extends FormRequest
             'data.reservation_deposit_type' => [
                 'nullable',
                 'required_if:data.reservation_deposit_recieved,true',
-                Rule::in(['Bar', 'EC-Karte', 'Überweisung']),
+                Rule::in($settings['payment_types']),
             ],
             'data.reservation_deposit_recieved' => 'nullable|boolean',
             'data.final_payment_value' => 'required|numeric|lte:data.total_price',
             'data.final_payment_date' => 'nullable|' . $regexDate,
             'data.final_payment_type' => [
                 'nullable',
-                Rule::in(['Bar', 'EC-Karte', 'Überweisung']),
+                Rule::in($settings['payment_types']),
             ],
             'data.final_payment_recieved' => 'nullable|boolean',
             'data.comment' => 'string|max:1000|nullable',

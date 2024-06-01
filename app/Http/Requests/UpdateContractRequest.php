@@ -4,9 +4,27 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Setting;
 
 class UpdateContractRequest extends FormRequest
 {
+    /**
+     * Get the settings that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    private function get_settings()
+    {
+        $settings_array = Setting::first()->get();
+        $settings = $settings_array[0];
+        $license_classes = json_decode($settings["license_classes"]);
+        $payment_types = json_decode($settings["payment_types"]);
+        return [
+            "license_classes" => $license_classes,
+            "payment_types" => $payment_types
+        ];
+    }
+    
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,6 +42,8 @@ class UpdateContractRequest extends FormRequest
      */
     public function rules()
     {
+        $settings = $this->get_settings();
+
         $customerRules = [
             'customer.pass_number' => 'required_without:driver.pass_number|string|min:8|max:30|nullable',
             'customer.name1' => 'required|string|min:5|max:100',
@@ -39,7 +59,7 @@ class UpdateContractRequest extends FormRequest
             'customer.driving_license_no' => 'required_without:driver.driving_license_no|string|min:6|max:15|nullable',
             'customer.driving_license_class' => [
                 'required_with:customer.driving_license_no',
-                Rule::in(['B', 'BE', 'B96', 'Klasse 3']),
+                Rule::in($settings['license_classes']),
                 'nullable'
             ],
             'customer.comment' => 'string|max:1000|nullable',
@@ -60,7 +80,7 @@ class UpdateContractRequest extends FormRequest
             'driver.driving_license_no' => 'required_with:driver.pass_number|string|min:6|max:15|nullable',
             'driver.driving_license_class' => [
                 'required_with:driver.driving_license_no',
-                Rule::in(['B', 'BE', 'B96', 'Klasse 3']),
+                Rule::in($settings['license_classes']),
                 'nullable'
             ],
             'driver.comment' => 'string|max:1000|nullable',
@@ -93,14 +113,14 @@ class UpdateContractRequest extends FormRequest
             'data.reservation_deposit_type' => [
                 'nullable',
                 'required_if:data.reservation_deposit_recieved,true',
-                Rule::in(['Bar', 'EC-Karte', 'Überweisung']),
+                Rule::in($settings['payment_types']),
             ],
             'data.reservation_deposit_recieved' => 'nullable|boolean',
             'data.final_payment_value' => 'required|numeric|lte:data.total_price',
             'data.final_payment_date' => 'required|regex:/^(?:[0-9]{2})\.(?:[0-9]{2})\.(?:[0-9]{4})$/',
             'data.final_payment_type' => [
                 'required',
-                Rule::in(['Bar', 'EC-Karte', 'Überweisung']),
+                Rule::in($settings['payment_types']),
             ],
             'data.final_payment_recieved' => 'nullable|boolean',
             'data.contract_bail' => 'nullable|numeric|required_if:data.ontract_bail_recieved,true',
@@ -108,12 +128,12 @@ class UpdateContractRequest extends FormRequest
             'data.contract_bail_type' => [
                 'nullable',
                 'required_if:data.contract_bail_recieved,true',
-                Rule::in(['Bar', 'EC-Karte', 'Überweisung']),
+                Rule::in($settings['payment_types']),
             ],
             'data.contract_bail_return_type' => [
                 'nullable',
                 'required_if:data.contract_bail_returned,true',
-                Rule::in(['Bar', 'EC-Karte', 'Überweisung']),
+                Rule::in($settings['payment_types']),
             ],
             'data.contract_bail_recieved' => 'nullable|boolean',
             'data.contract_bail_returned' => 'nullable|boolean',

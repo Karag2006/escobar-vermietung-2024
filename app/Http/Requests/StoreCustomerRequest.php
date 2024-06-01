@@ -4,9 +4,25 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Setting;
 
 class StoreCustomerRequest extends FormRequest
 {
+    /**
+     * Get the settings that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    private function get_settings()
+    {
+        $settings_array = Setting::first()->get();
+        $settings = $settings_array[0];
+        $license_classes = json_decode($settings["license_classes"]);
+        return [
+            "license_classes" => $license_classes,
+        ];
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,6 +38,8 @@ class StoreCustomerRequest extends FormRequest
      */
     public function rules(): array
     {
+        $settings = $this->get_settings();
+
         return [
             'pass_number' => 'string|min:8|max:30|nullable',
             'name1' => 'required|string|min:5|max:100',
@@ -36,7 +54,7 @@ class StoreCustomerRequest extends FormRequest
             'email' => 'email|nullable',
             'driving_license_no' => 'string|min:6|max:15|nullable',
             'driving_license_class' => [
-                Rule::in(['B', 'BE', 'B96', 'Klasse 3']),
+                Rule::in($settings['license_classes']),
                 'nullable'
             ],
             'comment' => 'string|max:1000|nullable',
