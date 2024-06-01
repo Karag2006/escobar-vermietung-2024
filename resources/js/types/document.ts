@@ -47,3 +47,22 @@ export const CollectAddressSchema = z.object({
     name: z.string(),
 });
 export type CollectAddressItem = z.infer<typeof CollectAddressSchema>;
+
+export type collisionCheckData = {
+    id?: number;
+    vehicle_id: number;
+    collect_date: string;
+    return_date: string;
+};
+
+export type collisionData = {
+    documentType?: string;
+    documentNumber?: number;
+    startDate?: string;
+    endDate?: string;
+    startTime?: string;
+    endTime?: string;
+    customerName?: string;
+    reservationFeePayed?: boolean;
+    reservationFeeDate?: string;
+};
