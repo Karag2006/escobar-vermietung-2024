@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
 
 import { DecisionButtons } from "@/Components/decision-buttons";
@@ -7,6 +7,7 @@ import {
     getOfferById,
     getReservationById,
     getContractById,
+    collisionCheck,
 } from "@/data/document";
 import {
     blankForm,
@@ -22,12 +23,14 @@ import {
     TabsTrigger,
 } from "@/Components/ui/tabs-tp24";
 import { CustomerForm } from "./sub-forms/customer";
-import { customerType, documentType } from "@/types/document";
+import { collisionData, customerType, documentType } from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
 import { getSettings } from "@/data/settings";
 import { getDocumentTypeTranslation } from "@/lib/utils";
+import { Modal } from "@/Components/wrapper/modal";
+import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -41,6 +44,10 @@ export const DocumentForm = ({
     close,
 }: DocumentFormProps) => {
     const germanDocumentType = getDocumentTypeTranslation(documentType);
+
+    const [collisionDialog, setCollisionDialog] = useState(false);
+    const [collision, setCollision] = useState<collisionData>({});
+
     const { data, setData, post, patch, processing, errors, clearErrors } =
         useForm(blankForm);
 
@@ -60,39 +67,85 @@ export const DocumentForm = ({
 
     const handleSubmit = () => {
         if (!currentID) {
-            post(`/${documentType}`, {
-                only: [`${documentType}List`, "errors"],
-                onSuccess: () => {
-                    toast.success(`${germanDocumentType} erfolgreich angelegt`);
-                    close();
-                },
-                onError: () => {
-                    const article =
-                        documentType === "reservation" ? "der" : "des";
-                    toast.error(
-                        `Fehler beim anlegen ${article} ${germanDocumentType}`
-                    );
-                },
-            });
+            collisionCheck({
+                id: undefined,
+                vehicle_id: data.trailer.id,
+                collect_date: data.data.collect_date,
+                return_date: data.data.return_date,
+            })
+                .then((data) => {
+                    if (data.collision === "no") storeNewDocument();
+                    else {
+                        setCollision(data.collisionData);
+                        setCollisionDialog(true);
+                        // open Dialog informing the user about the collision
+                        // with options to continue saving anyway or cancel to fix first.
+                    }
+                })
+                .catch(() => {
+                    storeNewDocument();
+                });
         } else {
-            patch(`/${documentType}/${currentID}`, {
-                only: [`${documentType}List`, "errors"],
-                onSuccess: () => {
-                    toast.success(
-                        `${germanDocumentType} wurde erfolgreich geändert`
-                    );
-                    close();
-                },
-                onError: () => {
-                    const article =
-                        documentType === "reservation" ? "der" : "des";
-                    toast.error(
-                        `Fehler beim ändern ${article} ${germanDocumentType}`
-                    );
-                },
-            });
+            collisionCheck({
+                id: currentID,
+                vehicle_id: data.trailer.id,
+                collect_date: data.data.collect_date,
+                return_date: data.data.return_date,
+            })
+                .then((data) => {
+                    if (data.collision === "no") updateDocument();
+                    else {
+                        setCollision(data.collisionData);
+                        setCollisionDialog(true);
+                        // open Dialog informing the user about the collision
+                        // with options to continue saving anyway or cancel to fix first.
+                    }
+                })
+                .catch(() => {
+                    updateDocument();
+                });
         }
     };
+
+    const confirmCollision = () => {
+        if (currentID) updateDocument();
+        else storeNewDocument();
+    };
+
+    const storeNewDocument = () => {
+        post(`/${documentType}`, {
+            only: [`${documentType}List`, "errors"],
+            onSuccess: () => {
+                toast.success(`${germanDocumentType} erfolgreich angelegt`);
+                close();
+            },
+            onError: () => {
+                const article = documentType === "reservation" ? "der" : "des";
+                toast.error(
+                    `Fehler beim anlegen ${article} ${germanDocumentType}`
+                );
+            },
+        });
+    };
+
+    const updateDocument = () => {
+        patch(`/${documentType}/${currentID}`, {
+            only: [`${documentType}List`, "errors"],
+            onSuccess: () => {
+                toast.success(
+                    `${germanDocumentType} wurde erfolgreich geändert`
+                );
+                close();
+            },
+            onError: () => {
+                const article = documentType === "reservation" ? "der" : "des";
+                toast.error(
+                    `Fehler beim ändern ${article} ${germanDocumentType}`
+                );
+            },
+        });
+    };
+
     useEffect(() => {
         const getCurrentDocument = () => {
             if (currentID) {
@@ -193,6 +246,47 @@ export const DocumentForm = ({
                     noAction={close}
                 />
             </form>
+            <Modal modalOpen={collisionDialog} openChange={setCollisionDialog}>
+                <ModalCardWrapper
+                    header={
+                        <h3 className="font-semibold text-xl text-gray-800">
+                            Potenzielle Überschneidung!
+                        </h3>
+                    }
+                    showHeader
+                    footer={
+                        <DecisionButtons
+                            yesLabel="Trotzdem Speichern"
+                            noLabel="Abbrechen"
+                            id={currentID}
+                            yesAction={confirmCollision}
+                            noAction={() => setCollisionDialog(false)}
+                        />
+                    }
+                >
+                    <p className=" font-bold">
+                        Details : <br />
+                        {`${collision.documentType} Nummer ${collision.documentNumber}`}
+                        <br />
+                        {`Kunde : ${collision.customerName}`}
+                        <br />
+                        {`Von : ${collision.startDate} - ${collision.startTime}`}
+                        <br />
+                        {`Bis : ${collision.endDate} - ${collision.endTime}`}
+                        <br />
+                        {collision.reservationFeePayed ? (
+                            <span>
+                                {`Anzahlung gezahlt am ${collision.reservationFeeDate}`}
+                            </span>
+                        ) : (
+                            <span>
+                                {`Anzahlung noch offen, Zahlung angegeben bis ${collision.reservationFeeDate}`}
+                            </span>
+                        )}
+                    </p>
+                    Das Dokument kann trotzdem gespeichert werden.
+                </ModalCardWrapper>
+            </Modal>
         </div>
     );
 };
