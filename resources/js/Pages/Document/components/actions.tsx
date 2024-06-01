@@ -8,6 +8,7 @@ import {
     TooltipTrigger,
 } from "@/Components/ui/tooltip";
 import { documentSchema } from "@/types/document";
+import { getDocumentTypeTranslation } from "@/lib/utils";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
@@ -22,13 +23,9 @@ export function Actions<TData>({
 }: ActionsProps<TData>) {
     const document = documentSchema.parse(row.original);
 
-    const translateState = () => {
-        if (document.current_state === "offer") return "Angebot";
-        if (document.current_state === "reservation") return "Reservierung";
-        if (document.current_state === "contract") return "Mietvertrag";
-    };
-
-    const documentState = translateState();
+    const germanCurrentState = getDocumentTypeTranslation(
+        document.current_state
+    );
 
     const handleEdit = () => {
         if (document.id) editModal(document.id);
@@ -58,13 +55,13 @@ export function Actions<TData>({
                             <Printer className="h-5 w-5" />
 
                             <span className="sr-only">
-                                {documentState} als PDF Drucken
+                                {germanCurrentState} als PDF Drucken
                             </span>
                         </Button>
                     </TooltipTrigger>
 
                     <TooltipContent>
-                        {documentState} als PDF Drucken
+                        {germanCurrentState} als PDF Drucken
                     </TooltipContent>
                 </Tooltip>
             </div>
@@ -81,13 +78,14 @@ export function Actions<TData>({
                                 <CircleArrowUp className="h-5 w-5" />
 
                                 <span className="sr-only">
-                                    {documentState} in Reservierung umwandeln
+                                    {germanCurrentState} in Reservierung
+                                    umwandeln
                                 </span>
                             </Button>
                         </TooltipTrigger>
 
                         <TooltipContent>
-                            {documentState} in Reservierung umwandeln
+                            {germanCurrentState} in Reservierung umwandeln
                         </TooltipContent>
                     </Tooltip>
                 </div>
@@ -103,12 +101,14 @@ export function Actions<TData>({
                             <Pencil className="h-5 w-5" />
 
                             <span className="sr-only">
-                                {documentState} bearbeiten
+                                {germanCurrentState} bearbeiten
                             </span>
                         </Button>
                     </TooltipTrigger>
 
-                    <TooltipContent>{documentState} bearbeiten</TooltipContent>
+                    <TooltipContent>
+                        {germanCurrentState} bearbeiten
+                    </TooltipContent>
                 </Tooltip>
             </div>
             <div className="text-red-600">
@@ -122,12 +122,14 @@ export function Actions<TData>({
                             <Trash2 className="h-5 w-5" />
 
                             <span className="sr-only">
-                                {documentState} löschen
+                                {germanCurrentState} löschen
                             </span>
                         </Button>
                     </TooltipTrigger>
 
-                    <TooltipContent>{documentState} löschen</TooltipContent>
+                    <TooltipContent>
+                        {germanCurrentState} löschen
+                    </TooltipContent>
                 </Tooltip>
             </div>
         </div>
