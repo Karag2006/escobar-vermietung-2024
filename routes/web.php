@@ -18,17 +18,10 @@ Route::get('/dashboard', function () {
 
 // Routes requiring users to be authenticated
 Route::middleware('auth')->group(function () {
-    //Profile Routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
-    // User Routes
-    Route::get('/user', [UserController::class, 'index'])->name('user'); // List
-    Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show'); // Get Single user by ID
-    Route::post('/user', [UserController::class, 'store'])->name('user.store'); // Store
-    Route::patch('/user/{user}', [UserController::class, 'update'])->name('user.update');
-    Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.delete');
-
+    Route::get('api/nav', [NavController::class, 'index']);
+    
+    require __DIR__.'/user.php';
+    require __DIR__.'/profile.php';
     require __DIR__.'/customer.php';
     require __DIR__.'/trailer.php';
     require __DIR__.'/equipment.php';
@@ -37,8 +30,8 @@ Route::middleware('auth')->group(function () {
     require __DIR__.'/offer.php';
     require __DIR__.'/reservation.php';
     require __DIR__.'/contract.php';
+    require __DIR__.'/document.php';
     
-    Route::get('api/nav', [NavController::class, 'index']);
 });
 
 require __DIR__.'/auth.php';
