@@ -18,6 +18,10 @@ class TrailerFactory extends Factory
      */
     public function definition(): array
     {
+        $total = $this->faker->numberBetween($min = 750, $max = 3500);
+        $usable = $this->faker->numberBetween($min = 500, $max = $total);
+
+
         return [
             'title' => $this->faker->randomElement(
                 $array = array(
@@ -29,9 +33,9 @@ class TrailerFactory extends Factory
                 )
             ),
             'plateNumber' => "SU - ES " . $this->faker->unique()->numberBetween($min = 100, $max = 9999),
-            'chassisNumber' => $this->faker->md5,
-            'totalWeight' => $this->faker->numberBetween($min = 750, $max = 3500),
-            'usableWeight' => $this->faker->numberBetween($min = 500, $max = 2500),
+            'chassisNumber' => $this->faker->regexify('[a-zA-Z0-9]{20}'),
+            'totalWeight' => $total,
+            'usableWeight' => $usable,
             'loadingSize' => $this->getLoadingSize(),
             'tuev' => Carbon::parse($this->faker->dateTimeBetween($startDate = 'now', $endDate = '+2 years', NULL))->format(config('custom.tuev_format')),
             'comment' => $this->faker->text($maxNbChars = 200),

@@ -18,6 +18,9 @@ class DocumentFactory extends Factory
      */
     public function definition(): array
     {
+        $total = $this->faker->numberBetween($min = 750, $max = 3500);
+        $usable = $this->faker->numberBetween($min = 500, $max = $total);
+
         return [
             'offer_number' => $this->faker->numberBetween($min = 10, $max = 9999),
             'reservation_number' => $this->faker->numberBetween($min = 10, $max = 9999),
@@ -90,9 +93,9 @@ class DocumentFactory extends Factory
                 )
             ),
             'vehicle_plateNumber' => "SU - ES " . $this->faker->unique()->numberBetween($min = 100, $max = 9999),
-            'vehicle_chassisNumber' => $this->faker->md5,
-            'vehicle_totalWeight' => $this->faker->numberBetween($min = 750, $max = 3500),
-            'vehicle_usableWeight' => $this->faker->numberBetween($min = 500, $max = 2500),
+            'vehicle_chassisNumber' => $this->faker->regexify('[a-zA-Z0-9]{20}'),
+            'vehicle_totalWeight' => $total,
+            'vehicle_usableWeight' => $usable,
             'vehicle_loadingSize' => $this->getLoadingSize(),
             'vehicle_comment' => $this->faker->text($maxNbChars = 200),
 

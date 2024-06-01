@@ -34,18 +34,18 @@ class NavSeeder extends Seeder
                 'icon'              => 'book-open',
                 'link'              => 'offer',
             ],
-            // [
-            //     'id'                => 4,
-            //     'name'              => 'Reservierungen',
-            //     'icon'              => 'fas fa-address-card',
-            //     'link'              => '/reservations',
-            // ],
-            // [
-            //     'id'                => 5,
-            //     'name'              => 'Mietverträge',
-            //     'icon'              => 'fas fa-file-signature',
-            //     'link'              => '/contracts',
-            // ],
+            [
+                'id'                => 4,
+                'name'              => 'Reservierungen',
+                'icon'              => 'book-open-check',
+                'link'              => 'reservation',
+            ],
+            [
+                'id'                => 5,
+                'name'              => 'Mietverträge',
+                'icon'              => 'book-open-text',
+                'link'              => 'contract',
+            ],
             [
                 'id'                => 6,
                 'name'              => 'Benutzerverwaltung',
