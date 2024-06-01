@@ -31,6 +31,8 @@ export type Document = z.infer<typeof documentSchema>;
 
 export type DocumentProps = {
     offerList?: Document[];
+    reservationList?: Document[];
+    contractList?: Document[];
     type: documentType;
 } & PageProps;
 

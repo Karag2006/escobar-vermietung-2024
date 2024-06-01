@@ -12,12 +12,27 @@ import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { DecisionButtons } from "@/Components/decision-buttons";
 
 import { DocumentProps } from "@/types/document";
-import { getOfferById } from "@/data/document";
+import { getOfferById, getReservationById } from "@/data/document";
 import { DocumentForm } from "./components/form";
 import { offerColumns } from "./offer-columns";
+import {
+    getDocumentPluralTypeTranslation,
+    getDocumentTypeArticle,
+    getDocumentTypeTranslation,
+} from "@/lib/utils";
+import { reservationColumns } from "./reservation-columns";
 
-export default function Document({ auth, offerList, type }: DocumentProps) {
-    const pageTitle = "Angebote";
+export default function Document({
+    auth,
+    offerList,
+    reservationList,
+    contractList,
+    type,
+}: DocumentProps) {
+    const germanDocumentType = getDocumentTypeTranslation(type);
+    const germanDocumentTypePlural = getDocumentPluralTypeTranslation(type);
+    const germanDocumentTypeArticle = getDocumentTypeArticle(type);
+    const pageTitle = germanDocumentTypePlural;
     const [confirmModal, setConfirmModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [currentID, setCurrentID] = useState(0);
@@ -38,24 +53,41 @@ export default function Document({ auth, offerList, type }: DocumentProps) {
 
     const deleteModal = (id: number) => {
         setCurrentID(id);
-        if (offerList) {
+        if (type === "offer") {
             getOfferById(id).then((offer) => {
                 setDeleteName(offer.data.offer_number);
+            });
+        }
+        if (type === "reservation") {
+            getReservationById(id).then((reservation) => {
+                setDeleteName(reservation.data.reservation_number);
             });
         }
         setConfirmModal(true);
     };
 
     const confirmDelete = (id?: number) => {
-        if (offerList) {
+        if (type === "offer") {
             Form.delete(`/offer/${id}`, {
                 only: ["offerList"],
                 onSuccess: (page) => {
-                    toast.success("Angebot gelöscht");
-                    setConfirmModal(false);
+                    onDeleteSuccess();
                 },
             });
         }
+        if (type === "reservation") {
+            Form.delete(`/reservation/${id}`, {
+                only: ["reservationList"],
+                onSuccess: (page) => {
+                    onDeleteSuccess();
+                },
+            });
+        }
+    };
+
+    const onDeleteSuccess = () => {
+        toast.success(`${germanDocumentType} gelöscht`);
+        setConfirmModal(false);
     };
 
     const cancelDelete = () => {
@@ -68,7 +100,7 @@ export default function Document({ auth, offerList, type }: DocumentProps) {
             header={pageTitle}
             headerAction={
                 <ActionButton
-                    label="Angebot hinzufügen"
+                    label={`${germanDocumentType} hinzufügen`}
                     actionType="add"
                     action={addDocumentModal}
                 />
@@ -76,10 +108,18 @@ export default function Document({ auth, offerList, type }: DocumentProps) {
         >
             <Head title={pageTitle} />
 
-            {offerList && (
+            {type === "offer" && (
                 <DataTable
                     columns={offerColumns}
                     data={offerList}
+                    editModal={editDocumentModal}
+                    deleteModal={deleteModal}
+                />
+            )}
+            {type === "reservation" && (
+                <DataTable
+                    columns={reservationColumns}
+                    data={reservationList}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
                 />
@@ -88,7 +128,7 @@ export default function Document({ auth, offerList, type }: DocumentProps) {
                 <ModalCardWrapper
                     header={
                         <h3 className="font-semibold text-xl text-gray-800">
-                            Angebot löschen
+                            {germanDocumentType} löschen
                         </h3>
                     }
                     showHeader
@@ -103,7 +143,7 @@ export default function Document({ auth, offerList, type }: DocumentProps) {
                     }
                 >
                     <p>
-                        Soll das Angebot{" "}
+                        {`Soll ${germanDocumentTypeArticle} ${germanDocumentType} `}
                         <span className="font-bold">"{deleteName}"</span>{" "}
                         wirklich gelöscht werden?
                     </p>
@@ -115,18 +155,16 @@ export default function Document({ auth, offerList, type }: DocumentProps) {
                 </ModalCardWrapper>
             </Modal>
             <Modal
-                className="xl:max-w-[1400px]"
+                className="xl:max-w-[1600px]"
                 modalOpen={modalOpen}
                 openChange={setModalOpen}
             >
                 <ModalCardWrapper
                     header={
                         <h3 className="font-semibold text-xl text-gray-800">
-                            {type === "offer"
-                                ? currentID === 0
-                                    ? "Angebot Anlegen"
-                                    : "Angebot bearbeiten"
-                                : null}
+                            {currentID === 0
+                                ? `${germanDocumentType} anlegen`
+                                : `${germanDocumentType} bearbeiten`}
                         </h3>
                     }
                     showHeader

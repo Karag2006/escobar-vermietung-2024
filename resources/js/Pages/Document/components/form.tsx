@@ -3,7 +3,7 @@ import { useForm } from "@inertiajs/react";
 
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
-import { getOfferById } from "@/data/document";
+import { getOfferById, getReservationById } from "@/data/document";
 import {
     blankForm,
     documentCustomerForm,
@@ -23,6 +23,7 @@ import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
 import { getSettings } from "@/data/settings";
+import { getDocumentTypeTranslation } from "@/lib/utils";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -35,6 +36,7 @@ export const DocumentForm = ({
     currentID,
     close,
 }: DocumentFormProps) => {
+    const germanDocumentType = getDocumentTypeTranslation(documentType);
     const { data, setData, post, patch, processing, errors, clearErrors } =
         useForm(blankForm);
 
@@ -57,22 +59,32 @@ export const DocumentForm = ({
             post(`/${documentType}`, {
                 only: [`${documentType}List`, "errors"],
                 onSuccess: () => {
-                    toast.success("Angebot erfolgreich angelegt");
+                    toast.success(`${germanDocumentType} erfolgreich angelegt`);
                     close();
                 },
                 onError: () => {
-                    toast.error("Fehler beim anlegen des Angebot");
+                    const article =
+                        documentType === "reservation" ? "der" : "des";
+                    toast.error(
+                        `Fehler beim anlegen ${article} ${germanDocumentType}`
+                    );
                 },
             });
         } else {
             patch(`/${documentType}/${currentID}`, {
                 only: [`${documentType}List`, "errors"],
                 onSuccess: () => {
-                    toast.success("Angebot wurde erfolgreich geändert");
+                    toast.success(
+                        `${germanDocumentType} wurde erfolgreich geändert`
+                    );
                     close();
                 },
                 onError: () => {
-                    toast.error("Fehler beim ändern des Angebot");
+                    const article =
+                        documentType === "reservation" ? "der" : "des";
+                    toast.error(
+                        `Fehler beim ändern ${article} ${germanDocumentType}`
+                    );
                 },
             });
         }
@@ -82,6 +94,11 @@ export const DocumentForm = ({
             if (currentID) {
                 if (documentType === "offer") {
                     getOfferById(currentID).then((document) =>
+                        setData({ ...document })
+                    );
+                }
+                if (documentType === "reservation") {
+                    getReservationById(currentID).then((document) =>
                         setData({ ...document })
                     );
                 }

@@ -1,8 +1,7 @@
 import { Button } from "@/Components/ui/button";
 import { Row } from "@tanstack/react-table";
-import { CircleArrowUp, FileText, Pencil, Trash2 } from "lucide-react";
+import { CircleArrowUp, FileText, Pencil, Printer, Trash2 } from "lucide-react";
 
-import { customerSchema } from "@/types/customer";
 import {
     Tooltip,
     TooltipContent,
@@ -48,7 +47,7 @@ export function Actions<TData>({
     };
     return (
         <div className="flex justify-end gap-4">
-            <div className=" text-primary">
+            <div className=" text-blue-600">
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button
@@ -56,7 +55,7 @@ export function Actions<TData>({
                             size="content"
                             onClick={handlePrint}
                         >
-                            <FileText className="h-5 w-5" />
+                            <Printer className="h-5 w-5" />
 
                             <span className="sr-only">
                                 {documentState} als PDF Drucken
@@ -71,7 +70,7 @@ export function Actions<TData>({
             </div>
             {(document.current_state === "offer" ||
                 document.current_state === "reservation") && (
-                <div className=" text-primary">
+                <div className=" text-blue-700">
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <Button

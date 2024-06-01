@@ -9,3 +9,8 @@ export const getOfferById = async (id: number) => {
     const { data } = await axios.get(`/offer/${id}`);
     return data;
 };
+
+export const getReservationById = async (id: number) => {
+    const { data } = await axios.get(`/reservation/${id}`);
+    return data;
+};
