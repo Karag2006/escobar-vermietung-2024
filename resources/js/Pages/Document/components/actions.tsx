@@ -9,6 +9,8 @@ import {
 } from "@/Components/ui/tooltip";
 import { documentSchema } from "@/types/document";
 import { getDocumentTypeTranslation } from "@/lib/utils";
+import { downloadPDF } from "@/data/document";
+import { router } from "@inertiajs/react";
 
 interface ActionsProps<TData> {
     row: Row<TData>;
@@ -21,22 +23,39 @@ export function Actions<TData>({
     editModal,
     deleteModal,
 }: ActionsProps<TData>) {
-    const document = documentSchema.parse(row.original);
+    const currentDocument = documentSchema.parse(row.original);
 
     const germanCurrentState = getDocumentTypeTranslation(
-        document.current_state
+        currentDocument.current_state
     );
 
     const handleEdit = () => {
-        if (document.id) editModal(document.id);
+        if (currentDocument.id) editModal(currentDocument.id);
     };
 
     const handleDelete = () => {
-        if (document.id) deleteModal(document.id);
+        if (currentDocument.id) deleteModal(currentDocument.id);
     };
 
     const handlePrint = () => {
-        return;
+        if (currentDocument.id) {
+            downloadPDF(currentDocument.id).then((data) => {
+                const fileURL = data;
+                let link = document.createElement("a");
+                const linkParts: [] = fileURL.split("/");
+                link.href = fileURL;
+                link.target = "_blank";
+                link.setAttribute(
+                    "open",
+                    `${currentDocument.current_state}_${
+                        linkParts[linkParts.length - 1]
+                    }`
+                );
+                document.body.appendChild(link);
+
+                link.click();
+            });
+        }
     };
 
     const handleForward = () => {
@@ -65,8 +84,8 @@ export function Actions<TData>({
                     </TooltipContent>
                 </Tooltip>
             </div>
-            {(document.current_state === "offer" ||
-                document.current_state === "reservation") && (
+            {(currentDocument.current_state === "offer" ||
+                currentDocument.current_state === "reservation") && (
                 <div className=" text-blue-700">
                     <Tooltip>
                         <TooltipTrigger asChild>

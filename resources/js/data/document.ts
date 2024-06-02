@@ -28,3 +28,9 @@ export const collisionCheck = async (checkData: collisionCheckData) => {
     const { data } = await axios.post(checkURL, checkData);
     return data;
 };
+
+// download PDF for given Document.
+export const downloadPDF = async (id: number) => {
+    const { data } = await axios.get(`/document/${id}`);
+    return data;
+};

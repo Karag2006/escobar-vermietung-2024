@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DocumentController extends Controller
 {
@@ -61,5 +64,49 @@ class DocumentController extends Controller
             ]
         ];
         return response()->json($data, Response::HTTP_OK);
+    }
+
+    public function downloadPDF(Document $document)
+    {
+        if ($document->current_state === 'offer') {
+            $DEtype = "Angebot";
+            $number = $document->offer_number;
+            $documentDate = $document->offer_date;
+            $note = $document->offer_note;
+            $user = $document->user->name;
+        }
+        if ($document->current_state === 'reservation') {
+            $DEtype = "Reservierung";
+            $number = $document->reservation_number;
+            $documentDate = $document->reservation_date;
+            $note = $document->reservation_note;
+            $user = $document->user->name;
+        }
+        if ($document->current_state === 'contract') {
+            $DEtype = "Mietvertrag";
+            $number = $document->contract_number;
+            $documentDate = $document->contract_date;
+            $note = $document->contract_note;
+            $user = $document->user->name;
+        }
+
+        $yearShort = Carbon::createFromFormat('d.m.Y', $documentDate)->format('y');
+
+        $data = [
+            'document' => $document,
+            'number' => $number,
+            'DEtype' => $DEtype,
+            'documentDate' => $documentDate,
+            'note' => $note,
+            'user' => $user,
+            'yearShort' => $yearShort,
+        ];
+
+        $pdf = Pdf::loadView('DocumentToPDF', $data);
+        $fileName = $document->current_state . '/' . $number . '.pdf';
+        Storage::disk('public')->put($fileName, $pdf->download()->getOriginalContent());
+        $generatedPDFLink = asset('storage/' . $fileName);
+
+        return response()->json($generatedPDFLink, Response::HTTP_OK);
     }
 }

@@ -19,6 +19,9 @@ export const EquipmentSelector = ({
     >([]);
 
     const addToSelectedEquipmentList = (item: EquipmentItem) => {
+        if (!item.number) {
+            item.number = item.defaultNumber;
+        }
         let temp = [item];
         let selected = selectedEquipmentList ? selectedEquipmentList : [];
         setSelectedEquipmentList(selected.concat(temp));
@@ -36,6 +39,7 @@ export const EquipmentSelector = ({
 
     const updateItemInSelectedEquipmentList = (item: EquipmentItem) => {
         let temp = selectedEquipmentList;
+        if (!item.number) item.number = item.defaultNumber;
         const index = temp.findIndex((element) => element.id === item.id);
 
         if (index > -1) {
