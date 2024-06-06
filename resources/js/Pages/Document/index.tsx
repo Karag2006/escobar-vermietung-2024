@@ -110,9 +110,11 @@ export default function Document({
             }
         } else {
             // make collision check
-            // on success save + forward document.
+            // on success forward document.
         }
     };
+
+    const checkCollision = () => {};
 
     const onDeleteSuccess = () => {
         toast.success(`${germanDocumentType} gelöscht`);

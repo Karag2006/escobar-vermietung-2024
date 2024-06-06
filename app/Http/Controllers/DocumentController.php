@@ -31,6 +31,14 @@ class DocumentController extends Controller
         return $value ? Carbon::createFromFormat(config('custom.date_format'), $value)->format('Y-m-d') : null;
     }
 
+    public function collisionCheckData(Document $document) {
+        return response()->json($document->only([
+            'vehicle_id',
+            'collect_date',
+            'return_date'
+        ]), Response::HTTP_OK);
+    }
+
     // function to check if the current Document, potentially conflicts with any other Document on File.
     // Only checks Dates and to be sure will call potential conflict even if the other Document only overlaps in the collect- or return Date.
     public function collisionCheck(Request $request) {
