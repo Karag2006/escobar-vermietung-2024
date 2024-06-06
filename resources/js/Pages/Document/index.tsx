@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { TriangleAlert } from "lucide-react";
 
 import {
+    getDocumentNextTypeTranslation,
     getDocumentPluralTypeTranslation,
     getDocumentTypeArticle,
     getDocumentTypeTranslation,
@@ -38,11 +39,13 @@ export default function Document({
     const germanDocumentType = getDocumentTypeTranslation(type);
     const germanDocumentTypePlural = getDocumentPluralTypeTranslation(type);
     const germanDocumentTypeArticle = getDocumentTypeArticle(type);
+    const germanDocumentNextType = getDocumentNextTypeTranslation(type);
     const pageTitle = germanDocumentTypePlural;
     const [confirmModal, setConfirmModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const [forward, setForward] = useState(false);
     const [currentID, setCurrentID] = useState(0);
-    const [deleteName, setDeleteName] = useState("");
+    const [documentName, setDocumentName] = useState("");
     const Form = useForm({
         id: currentID,
     });
@@ -61,46 +64,53 @@ export default function Document({
         setCurrentID(id);
         if (type === "offer") {
             getOfferById(id).then((offer) => {
-                setDeleteName(offer.data.offer_number);
+                setDocumentName(offer.data.offer_number);
             });
         }
         if (type === "reservation") {
             getReservationById(id).then((reservation) => {
-                setDeleteName(reservation.data.reservation_number);
+                setDocumentName(reservation.data.reservation_number);
             });
         }
         if (type === "contract") {
             getContractById(id).then((contract) => {
-                setDeleteName(contract.data.contract_number);
+                setDocumentName(contract.data.contract_number);
             });
         }
         setConfirmModal(true);
     };
 
-    const confirmDelete = (id?: number) => {
-        if (type === "offer") {
-            Form.delete(`/offer/${id}`, {
-                only: ["offerList"],
-                onSuccess: (page) => {
-                    onDeleteSuccess();
-                },
-            });
-        }
-        if (type === "reservation") {
-            Form.delete(`/reservation/${id}`, {
-                only: ["reservationList"],
-                onSuccess: (page) => {
-                    onDeleteSuccess();
-                },
-            });
-        }
-        if (type === "contract") {
-            Form.delete(`/contract/${id}`, {
-                only: ["contractList"],
-                onSuccess: (page) => {
-                    onDeleteSuccess();
-                },
-            });
+    const confirm = (id?: number) => {
+        if (!forward) {
+            // confirm is used to delete or forward a document.
+            // if we ware not forwarding we are deleting.
+            if (type === "offer") {
+                Form.delete(`/offer/${id}`, {
+                    only: ["offerList"],
+                    onSuccess: (page) => {
+                        onDeleteSuccess();
+                    },
+                });
+            }
+            if (type === "reservation") {
+                Form.delete(`/reservation/${id}`, {
+                    only: ["reservationList"],
+                    onSuccess: (page) => {
+                        onDeleteSuccess();
+                    },
+                });
+            }
+            if (type === "contract") {
+                Form.delete(`/contract/${id}`, {
+                    only: ["contractList"],
+                    onSuccess: (page) => {
+                        onDeleteSuccess();
+                    },
+                });
+            }
+        } else {
+            // make collision check
+            // on success save + forward document.
         }
     };
 
@@ -109,8 +119,23 @@ export default function Document({
         setConfirmModal(false);
     };
 
-    const cancelDelete = () => {
+    const cancelConfirm = () => {
         setConfirmModal(false);
+    };
+
+    const forwardModal = (id: number) => {
+        setCurrentID(id);
+        setForward(true);
+        if (type === "offer") {
+            getOfferById(id).then((offer) => {
+                setDocumentName(offer.data.offer_number);
+            });
+        }
+        if (type === "reservation") {
+            getReservationById(id).then((reservation) => {
+                setDocumentName(reservation.data.reservation_number);
+            });
+        }
     };
 
     return (
@@ -154,26 +179,44 @@ export default function Document({
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
                     header={
-                        <h3 className="font-semibold text-xl text-gray-800">
-                            {germanDocumentType} löschen
-                        </h3>
+                        !forward ? (
+                            <h3 className="font-semibold text-xl text-gray-800">
+                                {germanDocumentType} löschen
+                            </h3>
+                        ) : (
+                            <h3 className="font-semibold text-xl text-gray-800">
+                                In {germanDocumentNextType} umwandeln
+                            </h3>
+                        )
                     }
                     showHeader
                     footer={
                         <DecisionButtons
-                            yesLabel="Löschen"
+                            yesLabel={!forward ? "Löschen" : "Umwandeln"}
                             noLabel="Abbrechen"
                             id={currentID}
-                            yesAction={confirmDelete}
-                            noAction={cancelDelete}
+                            yesAction={confirm}
+                            noAction={cancelConfirm}
                         />
                     }
                 >
-                    <p>
-                        {`Soll ${germanDocumentTypeArticle} ${germanDocumentType} `}
-                        <span className="font-bold">"{deleteName}"</span>{" "}
-                        wirklich gelöscht werden?
-                    </p>
+                    {!forward ? (
+                        <p>
+                            {`Soll ${germanDocumentTypeArticle} ${germanDocumentType} `}
+                            <span className="font-bold">
+                                "Nr: {documentName}"
+                            </span>{" "}
+                            wirklich gelöscht werden?
+                        </p>
+                    ) : (
+                        <p>
+                            {`Soll ${germanDocumentTypeArticle} ${germanDocumentType} Nr: `}
+                            <span className="font-bold">
+                                "Nr: {documentName}"
+                            </span>
+                            {` wirklich in ${germanDocumentNextType} umwandeln?`}
+                        </p>
+                    )}
                     <p className="flex gap-2">
                         <TriangleAlert className="h-5 w-5  text-destructive" />
                         Diese Aktion kann nicht rückgängig gemacht werden!
