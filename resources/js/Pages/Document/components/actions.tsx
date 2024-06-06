@@ -16,12 +16,14 @@ interface ActionsProps<TData> {
     row: Row<TData>;
     editModal: (id: number) => void;
     deleteModal: (id: number) => void;
+    forwardModal?: (id: number) => void;
 }
 
 export function Actions<TData>({
     row,
     editModal,
     deleteModal,
+    forwardModal,
 }: ActionsProps<TData>) {
     const currentDocument = documentSchema.parse(row.original);
 
@@ -59,7 +61,9 @@ export function Actions<TData>({
     };
 
     const handleForward = () => {
-        return;
+        if (forwardModal && currentDocument.id) {
+            forwardModal(currentDocument.id);
+        }
     };
     return (
         <div className="flex justify-end gap-4">

@@ -21,6 +21,11 @@ export const getContractById = async (id: number) => {
     return data;
 };
 
+export const getDocumentCollisionCheckData = async (id: number) => {
+    const { data } = await axios.get(`collisiondata/${id}`);
+    return data;
+};
+
 // check if there is a collision during the period requested.
 export const collisionCheck = async (checkData: collisionCheckData) => {
     // send Data to backend for checking.
@@ -32,5 +37,10 @@ export const collisionCheck = async (checkData: collisionCheckData) => {
 // download PDF for given Document.
 export const downloadPDF = async (id: number) => {
     const { data } = await axios.get(`/document/${id}`);
+    return data;
+};
+
+export const forwardDocument = async (id: number) => {
+    const { data } = await axios.patch(`document/${id}`, {});
     return data;
 };

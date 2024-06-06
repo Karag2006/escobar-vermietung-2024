@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { Head, useForm } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+import { Head, router, useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 
 import { TriangleAlert } from "lucide-react";
 
 import {
+    getDocumentNextTypeTranslation,
     getDocumentPluralTypeTranslation,
     getDocumentTypeArticle,
     getDocumentTypeTranslation,
@@ -17,9 +18,12 @@ import { Modal } from "@/Components/wrapper/modal";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { DecisionButtons } from "@/Components/decision-buttons";
 
-import { DocumentProps } from "@/types/document";
+import { collisionData, DocumentProps } from "@/types/document";
 import {
+    collisionCheck,
+    forwardDocument,
     getContractById,
+    getDocumentCollisionCheckData,
     getOfferById,
     getReservationById,
 } from "@/data/document";
@@ -27,6 +31,7 @@ import { DocumentForm } from "./components/form";
 import { offerColumns } from "./offer-columns";
 import { reservationColumns } from "./reservation-columns";
 import { contractColumns } from "./contract-columns";
+import { CollisionDialog } from "./components/collision-dialog";
 
 export default function Document({
     auth,
@@ -34,15 +39,23 @@ export default function Document({
     reservationList,
     contractList,
     type,
+    ForwardDocument,
 }: DocumentProps) {
     const germanDocumentType = getDocumentTypeTranslation(type);
     const germanDocumentTypePlural = getDocumentPluralTypeTranslation(type);
     const germanDocumentTypeArticle = getDocumentTypeArticle(type);
+    const germanDocumentNextType = getDocumentNextTypeTranslation(type);
     const pageTitle = germanDocumentTypePlural;
     const [confirmModal, setConfirmModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
+    const [forward, setForward] = useState(false);
     const [currentID, setCurrentID] = useState(0);
-    const [deleteName, setDeleteName] = useState("");
+    const [documentName, setDocumentName] = useState("");
+
+    const [collisionDialog, setCollisionDialog] = useState(false);
+    const [collisionId, setCollisionId] = useState(0);
+    const [collision, setCollision] = useState<collisionData | null>(null);
+
     const Form = useForm({
         id: currentID,
     });
@@ -61,47 +74,74 @@ export default function Document({
         setCurrentID(id);
         if (type === "offer") {
             getOfferById(id).then((offer) => {
-                setDeleteName(offer.data.offer_number);
+                setDocumentName(offer.data.offer_number);
             });
         }
         if (type === "reservation") {
             getReservationById(id).then((reservation) => {
-                setDeleteName(reservation.data.reservation_number);
+                setDocumentName(reservation.data.reservation_number);
             });
         }
         if (type === "contract") {
             getContractById(id).then((contract) => {
-                setDeleteName(contract.data.contract_number);
+                setDocumentName(contract.data.contract_number);
             });
         }
         setConfirmModal(true);
     };
 
-    const confirmDelete = (id?: number) => {
-        if (type === "offer") {
-            Form.delete(`/offer/${id}`, {
-                only: ["offerList"],
-                onSuccess: (page) => {
-                    onDeleteSuccess();
-                },
-            });
+    const confirm = (id?: number) => {
+        if (!forward) {
+            // confirm is used to delete or forward a document.
+            // if we ware not forwarding we are deleting.
+            if (type === "offer") {
+                Form.delete(`/offer/${id}`, {
+                    only: ["offerList"],
+                    onSuccess: (page) => {
+                        onDeleteSuccess();
+                    },
+                });
+            }
+            if (type === "reservation") {
+                Form.delete(`/reservation/${id}`, {
+                    only: ["reservationList"],
+                    onSuccess: (page) => {
+                        onDeleteSuccess();
+                    },
+                });
+            }
+            if (type === "contract") {
+                Form.delete(`/contract/${id}`, {
+                    only: ["contractList"],
+                    onSuccess: (page) => {
+                        onDeleteSuccess();
+                    },
+                });
+            }
+        } else {
+            if (id) {
+                setConfirmModal(false);
+                checkCollision(id);
+            }
         }
-        if (type === "reservation") {
-            Form.delete(`/reservation/${id}`, {
-                only: ["reservationList"],
-                onSuccess: (page) => {
-                    onDeleteSuccess();
-                },
+    };
+
+    const checkCollision = (id: number) => {
+        getDocumentCollisionCheckData(id).then((data) => {
+            data.id = id;
+            collisionCheck(data).then((data) => {
+                if (data.collision === "no") doForward(id);
+                else {
+                    setCollisionId(id);
+                    setCollision(data.collisionData);
+                    setCollisionDialog(true);
+                }
             });
-        }
-        if (type === "contract") {
-            Form.delete(`/contract/${id}`, {
-                only: ["contractList"],
-                onSuccess: (page) => {
-                    onDeleteSuccess();
-                },
-            });
-        }
+        });
+    };
+
+    const confirmCollision = (id?: number) => {
+        if (forward && id) doForward(id);
     };
 
     const onDeleteSuccess = () => {
@@ -109,9 +149,46 @@ export default function Document({
         setConfirmModal(false);
     };
 
-    const cancelDelete = () => {
+    const cancelConfirm = () => {
         setConfirmModal(false);
     };
+
+    const forwardModal = (id: number) => {
+        setCurrentID(id);
+        setForward(true);
+        if (type === "offer") {
+            getOfferById(id).then((offer) => {
+                setDocumentName(offer.data.offer_number);
+                setConfirmModal(true);
+            });
+        }
+        if (type === "reservation") {
+            getReservationById(id).then((reservation) => {
+                setDocumentName(reservation.data.reservation_number);
+                setConfirmModal(true);
+            });
+        }
+    };
+
+    const doForward = (id: number) => {
+        forwardDocument(id).then((data) => {
+            router.get(
+                `/${data.current_state}`,
+                {},
+                {
+                    headers: {
+                        forwardDocument: data.id,
+                    },
+                }
+            );
+        });
+    };
+
+    useEffect(() => {
+        if (ForwardDocument && ForwardDocument > 0) {
+            editDocumentModal(ForwardDocument);
+        }
+    }, []);
 
     return (
         <AuthenticatedLayout
@@ -133,6 +210,7 @@ export default function Document({
                     data={offerList}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
+                    forwardModal={forwardModal}
                 />
             )}
             {type === "reservation" && (
@@ -141,6 +219,7 @@ export default function Document({
                     data={reservationList}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
+                    forwardModal={forwardModal}
                 />
             )}
             {type === "contract" && (
@@ -151,29 +230,55 @@ export default function Document({
                     deleteModal={deleteModal}
                 />
             )}
+            {collisionDialog && collision && (
+                <CollisionDialog
+                    id={collisionId}
+                    collision={collision}
+                    setCollisionDialog={setCollisionDialog}
+                    confirmCollision={confirmCollision}
+                />
+            )}
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
                     header={
-                        <h3 className="font-semibold text-xl text-gray-800">
-                            {germanDocumentType} löschen
-                        </h3>
+                        !forward ? (
+                            <h3 className="font-semibold text-xl text-gray-800">
+                                {germanDocumentType} löschen
+                            </h3>
+                        ) : (
+                            <h3 className="font-semibold text-xl text-gray-800">
+                                In {germanDocumentNextType} umwandeln
+                            </h3>
+                        )
                     }
                     showHeader
                     footer={
                         <DecisionButtons
-                            yesLabel="Löschen"
+                            yesLabel={!forward ? "Löschen" : "Umwandeln"}
                             noLabel="Abbrechen"
                             id={currentID}
-                            yesAction={confirmDelete}
-                            noAction={cancelDelete}
+                            yesAction={confirm}
+                            noAction={cancelConfirm}
                         />
                     }
                 >
-                    <p>
-                        {`Soll ${germanDocumentTypeArticle} ${germanDocumentType} `}
-                        <span className="font-bold">"{deleteName}"</span>{" "}
-                        wirklich gelöscht werden?
-                    </p>
+                    {!forward ? (
+                        <p>
+                            {`Soll ${germanDocumentTypeArticle} ${germanDocumentType} `}
+                            <span className="font-bold">
+                                "Nr: {documentName}"
+                            </span>{" "}
+                            wirklich gelöscht werden?
+                        </p>
+                    ) : (
+                        <p>
+                            {`Soll ${germanDocumentTypeArticle} ${germanDocumentType} Nr: `}
+                            <span className="font-bold">
+                                "Nr: {documentName}"
+                            </span>
+                            {` wirklich in ${germanDocumentNextType} umwandeln?`}
+                        </p>
+                    )}
                     <p className="flex gap-2">
                         <TriangleAlert className="h-5 w-5  text-destructive" />
                         Diese Aktion kann nicht rückgängig gemacht werden!

@@ -74,17 +74,31 @@ class OfferController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $offerList = Document::with('collectAddress:id,name')
-            ->select('id', 'offer_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
-            ->where('current_state', 'offer')
-            ->orderBy('offer_number', 'desc')
-            ->get();
+        ->select('id', 'offer_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
+        ->where('current_state', 'offer')
+        ->orderBy('offer_number', 'desc')
+        ->get();
+
+        $headerValue = intval($request->header('Forwarddocument'));
+        if ($headerValue > 0)
+        {
+            
+            return Inertia::render('Document/index', [
+                'offerList' => $offerList,
+                'type' => 'offer',
+                'ForwardDocument' => $headerValue
+            ]);
+        }
+
         return Inertia::render('Document/index', [
             'offerList' => $offerList,
             'type' => 'offer'
+            
         ]);
+
     }    
 
     /**
