@@ -18,9 +18,12 @@ import { Modal } from "@/Components/wrapper/modal";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { DecisionButtons } from "@/Components/decision-buttons";
 
-import { DocumentProps } from "@/types/document";
+import { collisionData, DocumentProps } from "@/types/document";
 import {
+    collisionCheck,
+    forwardDocument,
     getContractById,
+    getDocumentCollisionCheckData,
     getOfferById,
     getReservationById,
 } from "@/data/document";
@@ -28,6 +31,7 @@ import { DocumentForm } from "./components/form";
 import { offerColumns } from "./offer-columns";
 import { reservationColumns } from "./reservation-columns";
 import { contractColumns } from "./contract-columns";
+import { CollisionDialog } from "./components/collision-dialog";
 
 export default function Document({
     auth,
@@ -46,6 +50,11 @@ export default function Document({
     const [forward, setForward] = useState(false);
     const [currentID, setCurrentID] = useState(0);
     const [documentName, setDocumentName] = useState("");
+
+    const [collisionDialog, setCollisionDialog] = useState(false);
+    const [collisionId, setCollisionId] = useState(0);
+    const [collision, setCollision] = useState<collisionData | null>(null);
+
     const Form = useForm({
         id: currentID,
     });
@@ -109,12 +118,30 @@ export default function Document({
                 });
             }
         } else {
-            // make collision check
-            // on success forward document.
+            if (id) {
+                setConfirmModal(false);
+                checkCollision(id);
+            }
         }
     };
 
-    const checkCollision = () => {};
+    const checkCollision = (id: number) => {
+        getDocumentCollisionCheckData(id).then((data) => {
+            data.id = id;
+            collisionCheck(data).then((data) => {
+                if (data.collision === "no") doForward(id);
+                else {
+                    setCollisionId(id);
+                    setCollision(data.collisionData);
+                    setCollisionDialog(true);
+                }
+            });
+        });
+    };
+
+    const confirmCollision = (id?: number) => {
+        if (forward && id) doForward(id);
+    };
 
     const onDeleteSuccess = () => {
         toast.success(`${germanDocumentType} gelöscht`);
@@ -131,13 +158,19 @@ export default function Document({
         if (type === "offer") {
             getOfferById(id).then((offer) => {
                 setDocumentName(offer.data.offer_number);
+                setConfirmModal(true);
             });
         }
         if (type === "reservation") {
             getReservationById(id).then((reservation) => {
                 setDocumentName(reservation.data.reservation_number);
+                setConfirmModal(true);
             });
         }
+    };
+
+    const doForward = (id: number) => {
+        forwardDocument(id);
     };
 
     return (
@@ -160,6 +193,7 @@ export default function Document({
                     data={offerList}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
+                    forwardModal={forwardModal}
                 />
             )}
             {type === "reservation" && (
@@ -168,6 +202,7 @@ export default function Document({
                     data={reservationList}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
+                    forwardModal={forwardModal}
                 />
             )}
             {type === "contract" && (
@@ -176,6 +211,14 @@ export default function Document({
                     data={contractList}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
+                />
+            )}
+            {collisionDialog && collision && (
+                <CollisionDialog
+                    id={collisionId}
+                    collision={collision}
+                    setCollisionDialog={setCollisionDialog}
+                    confirmCollision={confirmCollision}
                 />
             )}
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>

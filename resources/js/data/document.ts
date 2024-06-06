@@ -39,3 +39,8 @@ export const downloadPDF = async (id: number) => {
     const { data } = await axios.get(`/document/${id}`);
     return data;
 };
+
+export const forwardDocument = async (id: number) => {
+    const { data } = await axios.patch(`document/${id}`, {});
+    return data;
+};

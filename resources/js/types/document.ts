@@ -56,7 +56,7 @@ export type collisionCheckData = {
 };
 
 export type collisionData = {
-    documentType?: string;
+    documentType: string;
     documentNumber?: number;
     startDate?: string;
     endDate?: string;
