@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Head, useForm } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+import { Head, router, useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 
 import { TriangleAlert } from "lucide-react";
@@ -39,6 +39,7 @@ export default function Document({
     reservationList,
     contractList,
     type,
+    ForwardDocument,
 }: DocumentProps) {
     const germanDocumentType = getDocumentTypeTranslation(type);
     const germanDocumentTypePlural = getDocumentPluralTypeTranslation(type);
@@ -170,8 +171,24 @@ export default function Document({
     };
 
     const doForward = (id: number) => {
-        forwardDocument(id);
+        forwardDocument(id).then((data) => {
+            router.get(
+                `/${data.current_state}`,
+                {},
+                {
+                    headers: {
+                        forwardDocument: data.id,
+                    },
+                }
+            );
+        });
     };
+
+    useEffect(() => {
+        if (ForwardDocument && ForwardDocument > 0) {
+            editDocumentModal(ForwardDocument);
+        }
+    }, []);
 
     return (
         <AuthenticatedLayout

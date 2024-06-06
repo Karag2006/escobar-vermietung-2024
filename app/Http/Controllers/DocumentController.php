@@ -153,9 +153,22 @@ class DocumentController extends Controller
         // limit the update to only the parameters we just set. 
         $document->update($request->only([$nextDocumentType.'_number', $nextDocumentType.'_date', 'current_state']));
 
-        if($nextDocumentType === 'reservation') 
-            return to_route('reservation');
+        $document = $document->only([
+            'id',
+            'reservation_number',
+            'contract_number',
+            'current_state',
+            'collect_date',
+            'return_date',
+            'customer_name1',
+            'vehicle_title',
+            'vehicle_plateNumber',
+            'selectedEquipmentList'
+        ]);
 
-        return to_route('contract');
+        return response()->json(
+            $document,
+            Response::HTTP_OK
+        );
     }
 }
