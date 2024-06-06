@@ -14,8 +14,29 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class DocumentController extends Controller
 {
+    private function getNextNumber($type, $default){
+        $propertyName = $type."_number";
+        $document = Document::select($propertyName)
+            ->orderByRaw("CASE WHEN ".$propertyName." IS NULL THEN 0 ELSE 1 END DESC")
+            ->orderBy($propertyName, 'desc')
+            ->first();
+        if($document) {
+            return max(($document->{$propertyName} + 1), $default);
+        }
+        return $default;
+    }
+
+
     private function getISODate($value){
         return $value ? Carbon::createFromFormat(config('custom.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function collisionCheckData(Document $document) {
+        return response()->json($document->only([
+            'vehicle_id',
+            'collect_date',
+            'return_date'
+        ]), Response::HTTP_OK);
     }
 
     // function to check if the current Document, potentially conflicts with any other Document on File.
@@ -108,5 +129,46 @@ class DocumentController extends Controller
         $generatedPDFLink = asset('storage/' . $fileName);
 
         return response()->json($generatedPDFLink, Response::HTTP_OK);
+    }
+
+    public function forwardDocument(Request $request, Document $document){
+        $currentDate = Carbon::today()->format('d.m.Y');
+        $nextDocumentType = "";
+        if ($document->current_state == 'offer') {
+            $nextDocumentType = 'reservation';
+            $nextDocumentDefaultNumber = 1;
+        }
+        else {
+            $nextDocumentType = 'contract';
+            $nextDocumentDefaultNumber = 1;
+        }
+
+        $newNumber = $this->getNextNumber($nextDocumentType, $nextDocumentDefaultNumber);
+
+        $request[$nextDocumentType.'_number'] = $newNumber;
+        $request[$nextDocumentType.'_date'] = $currentDate;
+        $request['current_state'] = $nextDocumentType;
+        // The $request is supposed to be empty at start, 
+        // so to make sure no one can insert data thats not supposed to be there,
+        // limit the update to only the parameters we just set. 
+        $document->update($request->only([$nextDocumentType.'_number', $nextDocumentType.'_date', 'current_state']));
+
+        $document = $document->only([
+            'id',
+            'reservation_number',
+            'contract_number',
+            'current_state',
+            'collect_date',
+            'return_date',
+            'customer_name1',
+            'vehicle_title',
+            'vehicle_plateNumber',
+            'selectedEquipmentList'
+        ]);
+
+        return response()->json(
+            $document,
+            Response::HTTP_OK
+        );
     }
 }

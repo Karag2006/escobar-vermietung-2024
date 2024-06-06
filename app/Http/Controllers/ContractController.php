@@ -77,13 +77,24 @@ class ContractController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $contractList = Document::with('collectAddress:id,name')
             ->select('id', 'contract_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
             ->where('current_state', 'contract')
             ->orderBy('contract_number', 'desc')
             ->get();
+
+        $headerValue = intval($request->header('Forwarddocument'));
+        if ($headerValue > 0)
+        {
+            return Inertia::render('Document/index', [
+                'contractList' => $contractList,
+                'type' => 'contract',
+                'ForwardDocument' => $headerValue
+            ]);
+        }
+            
         return Inertia::render('Document/index', [
             'contractList' => $contractList,
             'type' => 'contract'

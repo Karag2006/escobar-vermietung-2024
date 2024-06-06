@@ -34,6 +34,7 @@ export type DocumentProps = {
     reservationList?: Document[];
     contractList?: Document[];
     type: documentType;
+    ForwardDocument?: number;
 } & PageProps;
 
 export const SelectorSchema = z.object({
@@ -56,7 +57,7 @@ export type collisionCheckData = {
 };
 
 export type collisionData = {
-    documentType?: string;
+    documentType: string;
     documentNumber?: number;
     startDate?: string;
     endDate?: string;

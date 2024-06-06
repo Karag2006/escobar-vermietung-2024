@@ -27,11 +27,13 @@ interface DataTableProps<TData, TValue> {
     data: TData[];
     editModal?: (id: number) => void;
     deleteModal?: (id: number) => void;
+    forwardModal?: (id: number) => void;
 }
 declare module "@tanstack/react-table" {
     interface CellContext<TData, TValue> {
         editModal?: (id: number) => void;
         deleteModal?: (id: number) => void;
+        forwardModal?: (id: number) => void;
     }
 }
 
@@ -40,6 +42,7 @@ export function DataTable<TData, TValue>({
     data,
     editModal,
     deleteModal,
+    forwardModal,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -104,6 +107,7 @@ export function DataTable<TData, TValue>({
                                                     ...cell.getContext(),
                                                     editModal,
                                                     deleteModal,
+                                                    forwardModal,
                                                 }
                                             )}
                                         </TableCell>

@@ -35,3 +35,9 @@ export const getDocumentTypeArticle = (type: string) => {
             return "der";
     }
 };
+
+export const getDocumentNextTypeTranslation = (type: string) => {
+    if (type === "offer") return getDocumentTypeTranslation("reservation");
+
+    return getDocumentTypeTranslation("contract");
+};

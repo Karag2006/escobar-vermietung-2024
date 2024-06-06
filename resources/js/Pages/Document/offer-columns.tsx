@@ -67,6 +67,7 @@ export const offerColumns: ColumnDef<Document>[] = [
                     row={cell.row}
                     editModal={cell.editModal}
                     deleteModal={cell.deleteModal}
+                    forwardModal={cell.forwardModal}
                 />
             );
         },
