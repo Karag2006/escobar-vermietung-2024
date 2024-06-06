@@ -6,6 +6,7 @@ use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
+use App\Http\Requests\ForwardDocumentRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -14,6 +15,19 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class DocumentController extends Controller
 {
+    private function getNextNumber($type, $default){
+        $propertyName = $type."_number";
+        $document = Document::select($propertyName)
+            ->orderByRaw("CASE WHEN ".$propertyName." IS NULL THEN 0 ELSE 1 END DESC")
+            ->orderBy($propertyName, 'desc')
+            ->first();
+        if($document) {
+            return max(($document->{$propertyName} + 1), $default);
+        }
+        return $default;
+    }
+
+
     private function getISODate($value){
         return $value ? Carbon::createFromFormat(config('custom.date_format'), $value)->format('Y-m-d') : null;
     }
@@ -108,5 +122,33 @@ class DocumentController extends Controller
         $generatedPDFLink = asset('storage/' . $fileName);
 
         return response()->json($generatedPDFLink, Response::HTTP_OK);
+    }
+
+    public function forwardDocument(Request $request, Document $document){
+        $currentDate = Carbon::today()->format('d.m.Y');
+        $nextDocumentType = "";
+        if ($document->current_state == 'offer') {
+            $nextDocumentType = 'reservation';
+            $nextDocumentDefaultNumber = 1;
+        }
+        else {
+            $nextDocumentType = 'contract';
+            $nextDocumentDefaultNumber = 1;
+        }
+
+        $newNumber = $this->getNextNumber($nextDocumentType, $nextDocumentDefaultNumber);
+
+        $request[$nextDocumentType.'_number'] = $newNumber;
+        $request[$nextDocumentType.'_date'] = $currentDate;
+        $request['current_state'] = $nextDocumentType;
+        // The $request is supposed to be empty at start, 
+        // so to make sure no one can insert data thats not supposed to be there,
+        // limit the update to only the parameters we just set. 
+        $document->update($request->only([$nextDocumentType.'_number', $nextDocumentType.'_date', 'current_state']));
+
+        if($nextDocumentType === 'reservation') 
+            return to_route('reservation');
+
+        return to_route('contract');
     }
 }
