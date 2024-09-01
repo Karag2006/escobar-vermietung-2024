@@ -361,15 +361,105 @@ export const DataForm = ({
                     />
                 </div>
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
-                    <CurrencyInput
-                        id="final_payment_value"
-                        className="w-[calc(25%-1rem)]"
-                        value={currencyFields.final_payment_value}
-                        label="Restzahlung"
-                        onValueChange={handleCurrencyInput}
-                        onFinishedValueChange={handleCurrencyValueChanged}
-                    />
+                    {documentType === "contract" ? (
+                        <>
+                            <CurrencyInput
+                                id="final_payment_value"
+                                value={currencyFields.final_payment_value}
+                                label="Restzahlung"
+                                onValueChange={handleCurrencyInput}
+                                onFinishedValueChange={
+                                    handleCurrencyValueChanged
+                                }
+                            />
+                            <DatePicker
+                                className="w-full"
+                                value={data.final_payment_date}
+                                id="final_payment_date"
+                                fieldName="final_payment_date"
+                                label="Restzahlung - Datum"
+                                onUpdateValue={handlePickerChange}
+                            />
+                            <Combobox
+                                className="w-full"
+                                items={paymentTypes}
+                                label="Zahlungsart Restzahlung"
+                                id="final_payment_type"
+                                value={data.final_payment_type}
+                                onValueChange={handleComboChange}
+                            />
+                            <CheckboxTP24
+                                id="final_payment_recieved"
+                                className="w-full lg:justify-end"
+                                checked={data.final_payment_recieved}
+                                label="Restzahlung eingegangen"
+                                onCheckedChange={handleCheckboxChange}
+                            />
+                        </>
+                    ) : (
+                        <CurrencyInput
+                            id="final_payment_value"
+                            className="w-[calc(25%-1rem)]"
+                            value={currencyFields.final_payment_value}
+                            label="Restzahlung"
+                            onValueChange={handleCurrencyInput}
+                            onFinishedValueChange={handleCurrencyValueChanged}
+                        />
+                    )}
                 </div>
+                {documentType === "contract" ? (
+                    <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
+                        <CurrencyInput
+                            id="contract_bail"
+                            value={currencyFields.contract_bail}
+                            label="Kaution"
+                            onValueChange={handleCurrencyInput}
+                            onFinishedValueChange={handleCurrencyValueChanged}
+                        />
+                        <DatePicker
+                            className="w-full"
+                            value={data.contract_bail_date}
+                            id="contract_bail_date"
+                            fieldName="contract_bail_date"
+                            label="Kaution - Datum"
+                            onUpdateValue={handlePickerChange}
+                        />
+                        <div className="flex flex-col gap-6 w-full">
+                            <Combobox
+                                className="w-full"
+                                items={paymentTypes}
+                                label="Zahlart Kaution"
+                                id="contract_bail_type"
+                                value={data.contract_bail_type}
+                                onValueChange={handleComboChange}
+                            />
+                            <CheckboxTP24
+                                id="contract_bail_recieved"
+                                className="w-full justify-end"
+                                checked={data.contract_bail_recieved}
+                                label="Kaution erhalten"
+                                onCheckedChange={handleCheckboxChange}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-6 w-full">
+                            <Combobox
+                                className="w-full"
+                                items={paymentTypes}
+                                label="Zahlart Kaution Erstattung"
+                                id="contract_bail_return_type"
+                                value={data.contract_bail_return_type}
+                                onValueChange={handleComboChange}
+                            />
+                            <CheckboxTP24
+                                id="contract_bail_returned"
+                                className="w-full justify-end"
+                                checked={data.contract_bail_returned}
+                                label="Kaution erstattet"
+                                onCheckedChange={handleCheckboxChange}
+                            />
+                        </div>
+                    </div>
+                ) : null}
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <EquipmentSelector
                         onListChange={handleEquipmentChange}
