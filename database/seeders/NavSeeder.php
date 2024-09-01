@@ -52,12 +52,6 @@ class NavSeeder extends Seeder
                 'icon'              => 'users-round',
                 'link'              =>  'user',
             ],
-            // [
-            //     'id'                => 9,
-            //     'name'              => 'Anhängerverwaltung',
-            //     'icon'              => 'fas fa-trailer',
-            //     'children'          => '10;11'
-            // ],
             [
                 'id'                => 10,
                 'name'              => 'Anhänger',
@@ -75,6 +69,12 @@ class NavSeeder extends Seeder
                 'name'              => 'Einstellungen',
                 'icon'              => 'settings',
                 'link'              => 'settings',
+            ],
+            [
+                'id'                => 13,
+                'name'              => 'Rechnungskauf Text',
+                'icon'              => 'settings',
+                'link'              => 'json',
             ],
 
         ];

@@ -10,16 +10,18 @@ use Inertia\Inertia;
 
 Route::redirect('/', 'dashboard');
 
-
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/json', function () {
+    return Inertia::render('Json');
+})->name('json');
+
 // Routes requiring users to be authenticated
 Route::middleware('auth')->group(function () {
     Route::get('api/nav', [NavController::class, 'index']);
-    
+
     require __DIR__.'/user.php';
     require __DIR__.'/profile.php';
     require __DIR__.'/customer.php';
@@ -31,7 +33,7 @@ Route::middleware('auth')->group(function () {
     require __DIR__.'/reservation.php';
     require __DIR__.'/contract.php';
     require __DIR__.'/document.php';
-    
+
 });
 
 require __DIR__.'/auth.php';
