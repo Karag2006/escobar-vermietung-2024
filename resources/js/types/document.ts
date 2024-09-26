@@ -67,3 +67,8 @@ export type collisionData = {
     reservationFeePayed?: boolean;
     reservationFeeDate?: string;
 };
+
+export type ErrorObject = {
+    field: string;
+    message: string;
+};

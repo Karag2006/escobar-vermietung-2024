@@ -23,7 +23,12 @@ import {
     TabsTrigger,
 } from "@/Components/ui/tabs-tp24";
 import { CustomerForm } from "./sub-forms/customer";
-import { collisionData, customerType, documentType } from "@/types/document";
+import {
+    collisionData,
+    customerType,
+    documentType,
+    ErrorObject,
+} from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
@@ -49,8 +54,16 @@ export const DocumentForm = ({
     const [collisionDialog, setCollisionDialog] = useState(false);
     const [collision, setCollision] = useState<collisionData | null>(null);
 
-    const { data, setData, post, patch, processing, errors, clearErrors } =
-        useForm(blankForm);
+    const {
+        data,
+        setData,
+        post,
+        patch,
+        processing,
+        errors,
+        setError,
+        clearErrors,
+    } = useForm(blankForm);
 
     const handleChangeInSubForm = (
         subFormKey: string,
@@ -68,43 +81,58 @@ export const DocumentForm = ({
 
     const handleSubmit = () => {
         if (!currentID) {
-            collisionCheck({
-                id: undefined,
-                vehicle_id: data.trailer.id,
-                collect_date: data.data.collect_date,
-                return_date: data.data.return_date,
-            })
-                .then((data) => {
-                    if (data.collision === "no") storeNewDocument();
-                    else {
-                        setCollision(data.collisionData);
-                        setCollisionDialog(true);
-                        // open Dialog informing the user about the collision
-                        // with options to continue saving anyway or cancel to fix first.
-                    }
+            if (
+                data.trailer.id &&
+                data.data.collect_date &&
+                data.data.return_date
+            ) {
+                collisionCheck({
+                    id: undefined,
+                    vehicle_id: data.trailer.id,
+                    collect_date: data.data.collect_date,
+                    return_date: data.data.return_date,
                 })
-                .catch(() => {
-                    storeNewDocument();
-                });
+                    .then((data) => {
+                        if (data.collision === "no") storeNewDocument();
+                        else {
+                            setCollision(data.collisionData);
+                            setCollisionDialog(true);
+                            // open Dialog informing the user about the collision
+                            // with options to continue saving anyway or cancel to fix first.
+                        }
+                    })
+                    .catch(() => {
+                        storeNewDocument();
+                    });
+            } else {
+                storeNewDocument();
+                // this will fail but will generate the appropriate error object.
+            }
         } else {
-            collisionCheck({
-                id: currentID,
-                vehicle_id: data.trailer.id,
-                collect_date: data.data.collect_date,
-                return_date: data.data.return_date,
-            })
-                .then((data) => {
-                    if (data.collision === "no") updateDocument();
-                    else {
-                        setCollision(data.collisionData);
-                        setCollisionDialog(true);
-                        // open Dialog informing the user about the collision
-                        // with options to continue saving anyway or cancel to fix first.
-                    }
+            if (
+                data.trailer.id &&
+                data.data.collect_date &&
+                data.data.return_date
+            ) {
+                collisionCheck({
+                    id: currentID,
+                    vehicle_id: data.trailer.id,
+                    collect_date: data.data.collect_date,
+                    return_date: data.data.return_date,
                 })
-                .catch(() => {
-                    updateDocument();
-                });
+                    .then((data) => {
+                        if (data.collision === "no") updateDocument();
+                        else {
+                            setCollision(data.collisionData);
+                            setCollisionDialog(true);
+                            // open Dialog informing the user about the collision
+                            // with options to continue saving anyway or cancel to fix first.
+                        }
+                    })
+                    .catch(() => {
+                        updateDocument();
+                    });
+            } else updateDocument();
         }
     };
 
@@ -120,11 +148,37 @@ export const DocumentForm = ({
                 toast.success(`${germanDocumentType} erfolgreich angelegt`);
                 close();
             },
-            onError: () => {
+            onError: (error) => {
                 const article = documentType === "reservation" ? "der" : "des";
                 toast.error(
                     `Fehler beim anlegen ${article} ${germanDocumentType}`
                 );
+
+                if (error) {
+                    let customerEntries: string[][] = [];
+                    let driverEntries: string[][] = [];
+                    let trailerEntries: string[][] = [];
+                    let dataEntries: string[][] = [];
+                    Object.entries(error).forEach((err) => {
+                        const dotIndex = err[0].indexOf(".");
+                        const bagName = err[0].substring(0, dotIndex);
+                        const fieldName = err[0].substring(dotIndex + 1);
+                        const message = err[1];
+                        if (bagName === "customer")
+                            customerEntries.push([fieldName, message]);
+                        if (bagName === "driver")
+                            driverEntries.push([fieldName, message]);
+                        if (bagName === "trailer")
+                            trailerEntries.push([fieldName, message]);
+                        if (bagName === "data")
+                            dataEntries.push([fieldName, message]);
+                    });
+
+                    setError("customer", Object.fromEntries(customerEntries));
+                    setError("driver", Object.fromEntries(driverEntries));
+                    setError("trailer", Object.fromEntries(trailerEntries));
+                    setError("data", Object.fromEntries(dataEntries));
+                }
             },
         });
     };
@@ -203,6 +257,7 @@ export const DocumentForm = ({
                             type={customerType.CUSTOMER}
                             documentType={documentType}
                             customer={data.customer}
+                            customerErrors={errors?.customer}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>

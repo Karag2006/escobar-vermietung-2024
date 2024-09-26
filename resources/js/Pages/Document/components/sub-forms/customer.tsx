@@ -11,12 +11,18 @@ import { DatePicker } from "@/Components/datePicker";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
 import { getLicenseClasses } from "@/data/settings";
-import { customerType, documentType, SelectorItem } from "@/types/document";
+import {
+    customerType,
+    documentType,
+    ErrorObject,
+    SelectorItem,
+} from "@/types/document";
 import { blankForm, documentCustomerForm } from "@/lib/document-form";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { Combobox } from "@/Components/combobox";
 
 interface CustomerFormProps {
+    customerErrors?: documentCustomerForm;
     type: customerType;
     documentType: documentType;
     customer: documentCustomerForm;
@@ -29,6 +35,7 @@ interface CustomerFormProps {
 export const CustomerForm = ({
     type,
     documentType,
+    customerErrors,
     customer,
     handleChangeInSubForm,
 }: CustomerFormProps) => {
@@ -44,6 +51,7 @@ export const CustomerForm = ({
         patch,
         processing,
         errors,
+        setError,
         reset,
         clearErrors,
     } = useForm(customer);
@@ -153,7 +161,7 @@ export const CustomerForm = ({
                         label="Name / Firma *"
                         id="name1"
                         value={data.name1}
-                        error={errors.name1}
+                        error={errors.name1 || customerErrors?.name1}
                         onChange={handleChange}
                         onFocus={() => clearErrors("name1")}
                         disabled={processing}
