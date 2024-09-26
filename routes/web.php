@@ -15,7 +15,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/json', function () {
-    return Inertia::render('Json');
+    return Inertia::render('Json/index');
 })->name('json');
 
 // Routes requiring users to be authenticated
