@@ -14,3 +14,21 @@ export type CustomerItem = z.infer<typeof customerSchema>;
 export type CustomerProps = {
     customers: CustomerItem[];
 } & PageProps;
+
+export type CustomerError = {
+    id?: string;
+    pass_number?: string;
+    name1?: string;
+    name2?: string;
+    birth_date?: string;
+    birth_city?: string;
+    street?: string;
+    plz?: string;
+    city?: string;
+    phone?: string;
+    email?: string;
+    driving_license_no?: string;
+    driving_license_class?: string;
+    car_number?: string;
+    comment?: string;
+};

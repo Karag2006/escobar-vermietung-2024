@@ -33,7 +33,7 @@ import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
 import { getSettings } from "@/data/settings";
-import { getDocumentTypeTranslation } from "@/lib/utils";
+import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
 import { Modal } from "@/Components/wrapper/modal";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { CollisionDialog } from "./collision-dialog";
@@ -53,17 +53,14 @@ export const DocumentForm = ({
 
     const [collisionDialog, setCollisionDialog] = useState(false);
     const [collision, setCollision] = useState<collisionData | null>(null);
+    const [dataErrors, setDataErrors] = useState({
+        customer: {},
+        driver: {},
+        trailer: {},
+        data: {},
+    });
 
-    const {
-        data,
-        setData,
-        post,
-        patch,
-        processing,
-        errors,
-        setError,
-        clearErrors,
-    } = useForm(blankForm);
+    const { data, setData, post, patch, processing } = useForm(blankForm);
 
     const handleChangeInSubForm = (
         subFormKey: string,
@@ -174,10 +171,21 @@ export const DocumentForm = ({
                             dataEntries.push([fieldName, message]);
                     });
 
-                    setError("customer", Object.fromEntries(customerEntries));
-                    setError("driver", Object.fromEntries(driverEntries));
-                    setError("trailer", Object.fromEntries(trailerEntries));
-                    setError("data", Object.fromEntries(dataEntries));
+                    console.log(
+                        isObjectEmpty(Object.fromEntries(driverEntries))
+                    );
+
+                    setDataErrors({
+                        customer: Object.fromEntries(customerEntries),
+                        driver: Object.fromEntries(driverEntries),
+                        trailer: Object.fromEntries(trailerEntries),
+                        data: Object.fromEntries(dataEntries),
+                    });
+
+                    // setError("customer", Object.fromEntries(customerEntries));
+                    // setError("driver", Object.fromEntries(driverEntries));
+                    // setError("trailer", Object.fromEntries(trailerEntries));
+                    // setError("data", Object.fromEntries(dataEntries));
                 }
             },
         });
@@ -234,10 +242,44 @@ export const DocumentForm = ({
                 <Tabs defaultValue="customer">
                     <div className="flex justify-between items-center">
                         <TabsList>
-                            <TabsTrigger value="customer">Kunde</TabsTrigger>
-                            <TabsTrigger value="driver">Fahrer</TabsTrigger>
-                            <TabsTrigger value="trailer">Anhänger</TabsTrigger>
-                            <TabsTrigger value="data">
+                            <TabsTrigger
+                                value="customer"
+                                data-error={
+                                    !isObjectEmpty(dataErrors?.customer)
+                                        ? "active"
+                                        : ""
+                                }
+                            >
+                                Kunde
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="driver"
+                                data-error={
+                                    !isObjectEmpty(dataErrors?.driver)
+                                        ? "active"
+                                        : ""
+                                }
+                            >
+                                Fahrer
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="trailer"
+                                data-error={
+                                    !isObjectEmpty(dataErrors?.trailer)
+                                        ? "active"
+                                        : ""
+                                }
+                            >
+                                Anhänger
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="data"
+                                data-error={
+                                    !isObjectEmpty(dataErrors?.data)
+                                        ? "active"
+                                        : ""
+                                }
+                            >
                                 Vertragsdaten
                             </TabsTrigger>
                             <TabsTrigger value="settings">
@@ -257,7 +299,7 @@ export const DocumentForm = ({
                             type={customerType.CUSTOMER}
                             documentType={documentType}
                             customer={data.customer}
-                            customerErrors={errors?.customer}
+                            customerErrors={dataErrors?.customer}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -266,6 +308,7 @@ export const DocumentForm = ({
                             type={customerType.DRIVER}
                             documentType={documentType}
                             customer={data.driver}
+                            customerErrors={dataErrors?.driver}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -274,6 +317,7 @@ export const DocumentForm = ({
                             type="trailer"
                             documentType={documentType}
                             trailer={data.trailer}
+                            trailerErrors={dataErrors?.trailer}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -282,6 +326,7 @@ export const DocumentForm = ({
                             type="data"
                             documentType={documentType}
                             document={data}
+                            dataErrors={dataErrors?.data}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>

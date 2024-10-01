@@ -20,9 +20,10 @@ import {
 import { blankForm, documentCustomerForm } from "@/lib/document-form";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { Combobox } from "@/Components/combobox";
+import { CustomerError } from "@/types/customer";
 
 interface CustomerFormProps {
-    customerErrors?: documentCustomerForm;
+    customerErrors?: CustomerError;
     type: customerType;
     documentType: documentType;
     customer: documentCustomerForm;
