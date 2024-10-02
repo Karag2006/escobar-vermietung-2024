@@ -15,11 +15,13 @@ import { getTrailerById, getTrailerSelectors, getTuev } from "@/data/trailer";
 import { MonthPicker } from "@/Components/datePicker/month-picker";
 import { LoadingSizeInput } from "@/Pages/Trailer/components/loading-size-input";
 import { TuevBatch } from "@/Pages/Trailer/components/tuev-batch";
+import { TrailerErrors } from "@/types/trailer";
 
 interface TrailerFormProps {
     type: "trailer";
     documentType: documentType;
     trailer: documentTrailerForm;
+    trailerErrors: TrailerErrors;
     tuevCompareDate?: string;
     handleChangeInSubForm: (
         subFormKey: string,
@@ -31,6 +33,7 @@ export const TrailerForm = ({
     type,
     tuevCompareDate,
     documentType,
+    trailerErrors,
     trailer,
     handleChangeInSubForm,
 }: TrailerFormProps) => {
@@ -160,7 +163,7 @@ export const TrailerForm = ({
                         label="Anhängerbezeichnung *"
                         id="title"
                         value={data.title}
-                        error={errors.title}
+                        error={errors.title || trailerErrors.title}
                         onChange={handleChange}
                         onFocus={() => clearErrors("title")}
                         disabled={processing}
@@ -169,18 +172,9 @@ export const TrailerForm = ({
                         label="Kennzeichen *"
                         id="plateNumber"
                         value={data.plateNumber}
-                        error={errors.plateNumber}
+                        error={errors.plateNumber || trailerErrors.plateNumber}
                         onChange={handleChange}
                         onFocus={() => clearErrors("plateNumber")}
-                        disabled={processing}
-                    />
-                    <InputTP24
-                        label="Fahrgestellnummer *"
-                        id="chassisNumber"
-                        value={data.chassisNumber}
-                        error={errors.chassisNumber}
-                        onFocus={() => clearErrors("chassisNumber")}
-                        onChange={handleChange}
                         disabled={processing}
                     />
                 </div>
@@ -191,7 +185,9 @@ export const TrailerForm = ({
                             label="zulässiges Gesamtgewicht *"
                             id="totalWeight"
                             value={data.totalWeight}
-                            error={errors.totalWeight}
+                            error={
+                                errors.totalWeight || trailerErrors.totalWeight
+                            }
                             onChange={handleChange}
                             onFocus={() => clearErrors("totalWeight")}
                             disabled={processing}
@@ -201,7 +197,10 @@ export const TrailerForm = ({
                             label="Nutzlast *"
                             id="usableWeight"
                             value={data.usableWeight}
-                            error={errors.usableWeight}
+                            error={
+                                errors.usableWeight ||
+                                trailerErrors.usableWeight
+                            }
                             onFocus={() => clearErrors("usableWeight")}
                             onChange={handleChange}
                             disabled={processing}
@@ -209,7 +208,7 @@ export const TrailerForm = ({
                     </div>
                     <LoadingSizeInput
                         value={data.loading_size}
-                        errors={errors}
+                        errors={errors || trailerErrors}
                         clearErrors={clearErrors}
                         handleChangeSize={handleChangeSize}
                         processing={processing}
@@ -222,7 +221,7 @@ export const TrailerForm = ({
                     label="Kommentar"
                     id="comment"
                     value={data.comment}
-                    error={errors.comment}
+                    error={errors.comment || trailerErrors.comment}
                     onChange={handleChange}
                     onFocus={() => clearErrors("comment")}
                     disabled={processing}

@@ -153,7 +153,9 @@ export const CustomerForm = ({
                         label="Personalausweis Nr."
                         id="pass_number"
                         value={data.pass_number}
-                        error={errors.pass_number}
+                        error={
+                            errors.pass_number || customerErrors?.pass_number
+                        }
                         onFocus={() => clearErrors("pass_number")}
                         onChange={handleChange}
                         disabled={processing}
@@ -171,7 +173,7 @@ export const CustomerForm = ({
                         label="Name 2"
                         id="name2"
                         value={data.name2}
-                        error={errors.name2}
+                        error={errors.name2 || customerErrors?.name2}
                         onChange={handleChange}
                         onFocus={() => clearErrors("name2")}
                         disabled={processing}
@@ -181,7 +183,7 @@ export const CustomerForm = ({
                         id="birth_date"
                         fieldName="birth_date"
                         value={data.birth_date}
-                        error={errors.birth_date}
+                        error={errors.birth_date || customerErrors?.birth_date}
                         removeError={() => clearErrors("birth_date")}
                         onUpdateValue={handlePickerChange}
                         disabled={processing}
@@ -190,7 +192,7 @@ export const CustomerForm = ({
                         label="Geburtsort"
                         id="birth_city"
                         value={data.birth_city}
-                        error={errors.birth_city}
+                        error={errors.birth_city || customerErrors?.birth_city}
                         onChange={handleChange}
                         onFocus={() => clearErrors("birth_city")}
                         disabled={processing}
@@ -203,7 +205,7 @@ export const CustomerForm = ({
                             label="Postleitzahl"
                             id="plz"
                             value={data.plz}
-                            error={errors.plz}
+                            error={errors.plz || customerErrors?.plz}
                             onChange={handleChange}
                             onFocus={() => clearErrors("plz")}
                             disabled={processing}
@@ -213,7 +215,7 @@ export const CustomerForm = ({
                             label="Ort"
                             id="city"
                             value={data.city}
-                            error={errors.city}
+                            error={errors.city || customerErrors?.city}
                             onChange={handleChange}
                             onFocus={() => clearErrors("city")}
                             disabled={processing}
@@ -224,7 +226,7 @@ export const CustomerForm = ({
                         label="Strasse"
                         id="street"
                         value={data.street}
-                        error={errors.street}
+                        error={errors.street || customerErrors?.street}
                         onChange={handleChange}
                         onFocus={() => clearErrors("street")}
                         disabled={processing}
@@ -233,7 +235,7 @@ export const CustomerForm = ({
                         label="Telefonnummer"
                         id="phone"
                         value={data.phone}
-                        error={errors.phone}
+                        error={errors.phone || customerErrors?.phone}
                         onChange={handleChange}
                         onFocus={() => clearErrors("phone")}
                         disabled={processing}
@@ -242,7 +244,7 @@ export const CustomerForm = ({
                         label="Kennzeichen vom Zugfahrzeug"
                         id="car_number"
                         value={data.car_number}
-                        error={errors.car_number}
+                        error={errors.car_number || customerErrors?.car_number}
                         onChange={handleChange}
                         onFocus={() => clearErrors("car_number")}
                         disabled={processing}
@@ -251,7 +253,7 @@ export const CustomerForm = ({
                         label="E-Mail Adresse"
                         id="email"
                         value={data.email}
-                        error={errors.email}
+                        error={errors.email || customerErrors?.email}
                         onChange={handleChange}
                         onFocus={() => clearErrors("email")}
                         disabled={processing}
@@ -264,7 +266,10 @@ export const CustomerForm = ({
                     label="Führerschein Nr."
                     id="driving_license_no"
                     value={data.driving_license_no}
-                    error={errors.driving_license_no}
+                    error={
+                        errors.driving_license_no ||
+                        customerErrors?.driving_license_no
+                    }
                     onChange={handleChange}
                     onFocus={() => clearErrors("driving_license_no")}
                     disabled={processing}
@@ -275,7 +280,10 @@ export const CustomerForm = ({
                     label="Führerschein Klasse"
                     id="driving_license_class"
                     value={data.driving_license_class}
-                    error={errors.driving_license_class}
+                    error={
+                        errors.driving_license_class ||
+                        customerErrors?.driving_license_class
+                    }
                     removeError={() => clearErrors("driving_license_class")}
                     onValueChange={handlePickerChange}
                 />
@@ -286,7 +294,7 @@ export const CustomerForm = ({
                     label="Kommentar"
                     id="comment"
                     value={data.comment}
-                    error={errors.comment}
+                    error={errors.comment || customerErrors?.comment}
                     onChange={handleChange}
                     onFocus={() => clearErrors("comment")}
                     disabled={processing}

@@ -6,6 +6,8 @@ import { PickerReturn } from "@/types";
 import {
     CollectAddressItem,
     customerType,
+    DataError,
+    DataErrors,
     documentType,
     SelectorItem,
 } from "@/types/document";
@@ -30,6 +32,7 @@ interface DataFormProps {
     type: "data";
     documentType: documentType;
     document: documentForm;
+    dataErrors: DataErrors;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentDataForm
@@ -40,6 +43,7 @@ export const DataForm = ({
     type,
     document,
     documentType,
+    dataErrors,
     handleChangeInSubForm,
 }: DataFormProps) => {
     const floatToString = (floatValue: number) => {
@@ -261,6 +265,7 @@ export const DataForm = ({
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <DatePicker
                         value={data.collect_date}
+                        error={errors.collect_date || dataErrors.collect_date}
                         id="collect_date"
                         label="Abholung - Datum *"
                         fieldName="collect_date"
@@ -270,12 +275,14 @@ export const DataForm = ({
                         value={data.collect_time}
                         id="collect_time"
                         label="Abholung - Uhrzeit *"
+                        error={errors.collect_time || dataErrors.collect_time}
                         fieldName="collect_time"
                         onUpdateValue={handlePickerChange}
                     />
                     <DatePicker
                         value={data.return_date}
                         id="return_date"
+                        error={errors.return_date || dataErrors.return_date}
                         label="Rückgabe - Datum *"
                         fieldName="return_date"
                         onUpdateValue={handlePickerChange}
@@ -283,6 +290,7 @@ export const DataForm = ({
                     <TimePicker
                         value={data.return_time}
                         id="return_time"
+                        error={errors.return_time || dataErrors.return_time}
                         label="Rückgabe - Uhrzeit *"
                         fieldName="return_time"
                         onUpdateValue={handlePickerChange}
@@ -295,7 +303,10 @@ export const DataForm = ({
                         label="Abhol Anschrift *"
                         id="collect_address_id"
                         value={data.collect_address_id}
-                        error={errors.collect_address_id}
+                        error={
+                            errors.collect_address_id ||
+                            dataErrors.collect_address_id
+                        }
                         removeError={() => clearErrors("collect_address_id")}
                         onValueChange={handlePickerChange}
                     />
@@ -307,6 +318,7 @@ export const DataForm = ({
                     <CurrencyInput
                         id="total_price"
                         value={currencyFields.total_price}
+                        error={errors.total_price || dataErrors.total_price}
                         label="Preis (Brutto) *"
                         onValueChange={handleCurrencyInput}
                         onFinishedValueChange={handleCurrencyValueChanged}
@@ -333,12 +345,20 @@ export const DataForm = ({
                         id="reservation_deposit_value"
                         value={currencyFields.reservation_deposit_value}
                         label="Anzahlung"
+                        error={
+                            errors.reservation_deposit_value ||
+                            dataErrors.reservation_deposit_value
+                        }
                         onValueChange={handleCurrencyInput}
                         onFinishedValueChange={handleCurrencyValueChanged}
                     />
                     <DatePicker
                         className="w-full"
                         value={data.reservation_deposit_date}
+                        error={
+                            errors.reservation_deposit_date ||
+                            dataErrors.reservation_deposit_date
+                        }
                         id="reservation_deposit_date"
                         fieldName="reservation_deposit_date"
                         label="Anzahlung - bis Datum"
@@ -347,6 +367,10 @@ export const DataForm = ({
                     <Combobox
                         className="w-full"
                         items={paymentTypes}
+                        error={
+                            errors.reservation_deposit_type ||
+                            dataErrors.reservation_deposit_type
+                        }
                         label="Zahlungsart Anzahlung"
                         id="reservation_deposit_type"
                         value={data.reservation_deposit_type}
@@ -356,6 +380,10 @@ export const DataForm = ({
                         id="reservation_deposit_recieved"
                         className="w-full lg:justify-end"
                         checked={data.reservation_deposit_recieved}
+                        error={
+                            errors.reservation_deposit_recieved ||
+                            dataErrors.reservation_deposit_recieved
+                        }
                         label="Anzahlung eingegangen"
                         onCheckedChange={handleCheckboxChange}
                     />
@@ -366,6 +394,10 @@ export const DataForm = ({
                             <CurrencyInput
                                 id="final_payment_value"
                                 value={currencyFields.final_payment_value}
+                                error={
+                                    errors.final_payment_value ||
+                                    dataErrors.final_payment_value
+                                }
                                 label="Restzahlung"
                                 onValueChange={handleCurrencyInput}
                                 onFinishedValueChange={
@@ -375,6 +407,10 @@ export const DataForm = ({
                             <DatePicker
                                 className="w-full"
                                 value={data.final_payment_date}
+                                error={
+                                    errors.final_payment_date ||
+                                    dataErrors.final_payment_date
+                                }
                                 id="final_payment_date"
                                 fieldName="final_payment_date"
                                 label="Restzahlung - Datum"
@@ -386,12 +422,20 @@ export const DataForm = ({
                                 label="Zahlungsart Restzahlung"
                                 id="final_payment_type"
                                 value={data.final_payment_type}
+                                error={
+                                    errors.final_payment_type ||
+                                    dataErrors.final_payment_type
+                                }
                                 onValueChange={handleComboChange}
                             />
                             <CheckboxTP24
                                 id="final_payment_recieved"
                                 className="w-full lg:justify-end"
                                 checked={data.final_payment_recieved}
+                                error={
+                                    errors.final_payment_recieved ||
+                                    dataErrors.final_payment_recieved
+                                }
                                 label="Restzahlung eingegangen"
                                 onCheckedChange={handleCheckboxChange}
                             />
@@ -401,6 +445,10 @@ export const DataForm = ({
                             id="final_payment_value"
                             className="w-[calc(25%-1rem)]"
                             value={currencyFields.final_payment_value}
+                            error={
+                                errors.final_payment_value ||
+                                dataErrors.final_payment_value
+                            }
                             label="Restzahlung"
                             onValueChange={handleCurrencyInput}
                             onFinishedValueChange={handleCurrencyValueChanged}
@@ -412,6 +460,9 @@ export const DataForm = ({
                         <CurrencyInput
                             id="contract_bail"
                             value={currencyFields.contract_bail}
+                            error={
+                                errors.contract_bail || dataErrors.contract_bail
+                            }
                             label="Kaution"
                             onValueChange={handleCurrencyInput}
                             onFinishedValueChange={handleCurrencyValueChanged}
@@ -419,6 +470,10 @@ export const DataForm = ({
                         <DatePicker
                             className="w-full"
                             value={data.contract_bail_date}
+                            error={
+                                errors.contract_bail_date ||
+                                dataErrors.contract_bail_date
+                            }
                             id="contract_bail_date"
                             fieldName="contract_bail_date"
                             label="Kaution - Datum"
@@ -431,12 +486,20 @@ export const DataForm = ({
                                 label="Zahlart Kaution"
                                 id="contract_bail_type"
                                 value={data.contract_bail_type}
+                                error={
+                                    errors.contract_bail_type ||
+                                    dataErrors.contract_bail_type
+                                }
                                 onValueChange={handleComboChange}
                             />
                             <CheckboxTP24
                                 id="contract_bail_recieved"
                                 className="w-full justify-end"
                                 checked={data.contract_bail_recieved}
+                                error={
+                                    errors.contract_bail_recieved ||
+                                    dataErrors.contract_bail_recieved
+                                }
                                 label="Kaution erhalten"
                                 onCheckedChange={handleCheckboxChange}
                             />
@@ -448,12 +511,20 @@ export const DataForm = ({
                                 label="Zahlart Kaution Erstattung"
                                 id="contract_bail_return_type"
                                 value={data.contract_bail_return_type}
+                                error={
+                                    errors.contract_bail_return_type ||
+                                    dataErrors.contract_bail_return_type
+                                }
                                 onValueChange={handleComboChange}
                             />
                             <CheckboxTP24
                                 id="contract_bail_returned"
                                 className="w-full justify-end"
                                 checked={data.contract_bail_returned}
+                                error={
+                                    errors.contract_bail_returned ||
+                                    dataErrors.contract_bail_returned
+                                }
                                 label="Kaution erstattet"
                                 onCheckedChange={handleCheckboxChange}
                             />
@@ -472,7 +543,7 @@ export const DataForm = ({
                         label="Kommentar"
                         id="comment"
                         value={data.comment}
-                        error={errors.comment}
+                        error={errors.comment || dataErrors.comment}
                         onChange={handleChange}
                         onFocus={() => clearErrors("comment")}
                         disabled={processing}

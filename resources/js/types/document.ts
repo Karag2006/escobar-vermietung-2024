@@ -68,7 +68,37 @@ export type collisionData = {
     reservationFeeDate?: string;
 };
 
-export type ErrorObject = {
-    field: string;
-    message: string;
+export type DataErrors = {
+    id?: string;
+    offer_number?: string;
+    reservation_number?: string;
+    contract_number?: string;
+    offer_date?: string;
+    reservation_date?: string;
+    contract_date?: string;
+    current_state?: string;
+    collect_date?: string;
+    return_date?: string;
+    collect_time?: string;
+    return_time?: string;
+    total_price?: string;
+    netto_price?: string;
+    tax_value?: string;
+    reservation_deposit_value?: string;
+    reservation_deposit_date?: string;
+    reservation_deposit_type?: string;
+    reservation_deposit_recieved?: string;
+    final_payment_value?: string;
+    final_payment_date?: string;
+    final_payment_type?: string;
+    final_payment_recieved?: string;
+    contract_bail?: string;
+    contract_bail_date?: string;
+    contract_bail_type?: string;
+    contract_bail_return_type?: string;
+    contract_bail_recieved?: string;
+    contract_bail_returned?: string;
+    comment?: string;
+    user_id?: string;
+    collect_address_id?: string;
 };

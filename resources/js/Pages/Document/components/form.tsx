@@ -23,12 +23,7 @@ import {
     TabsTrigger,
 } from "@/Components/ui/tabs-tp24";
 import { CustomerForm } from "./sub-forms/customer";
-import {
-    collisionData,
-    customerType,
-    documentType,
-    ErrorObject,
-} from "@/types/document";
+import { collisionData, customerType, documentType } from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
