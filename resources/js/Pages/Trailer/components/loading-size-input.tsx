@@ -1,15 +1,16 @@
 import { InputTP24 } from "@/Components/ui/input-tp24";
+import { TrailerField } from "@/types/trailer";
 import { useEffect, useState } from "react";
 
 interface LoadingSizeInputProps {
-    value: string[];
+    value: string[] | number[];
     errors?: {
-        "loading_size.0": string;
-        "loading_size.1": string;
-        "loading_size.2": string;
+        "loading_size.0"?: string;
+        "loading_size.1"?: string;
+        "loading_size.2"?: string;
     };
     processing?: boolean;
-    clearErrors: (key: string) => void;
+    clearErrors?: (key: TrailerField) => void;
     handleChangeSize: (size: {
         length: string;
         width: string;
@@ -35,8 +36,8 @@ export const LoadingSizeInput = ({
         height: "",
     });
 
-    const clearE = (key: string) => {
-        clearErrors(key);
+    const clearE = (key: TrailerField) => {
+        clearErrors && clearErrors(key);
         if (key === "loading_size.0")
             setLocalErrors({ ...localErrors, length: "" });
         if (key === "loading_size.1")
@@ -58,9 +59,10 @@ export const LoadingSizeInput = ({
     useEffect(() => {
         if (value) {
             setLocalValue({
-                length: value[0] ? value[0] : "",
-                width: value[1] ? value[1] : "",
-                height: value[2] ? value[2] : "",
+                // casting numbers to string to have a constant type for the value
+                length: value[0] ? value[0] + "" : "",
+                width: value[1] ? value[1] + "" : "",
+                height: value[2] ? value[2] + "" : "",
             });
         }
         if (
@@ -70,9 +72,13 @@ export const LoadingSizeInput = ({
                 errors["loading_size.2"])
         ) {
             setLocalErrors({
-                length: errors["loading_size.0"],
-                width: errors["loading_size.1"],
-                height: errors["loading_size.2"],
+                length: errors["loading_size.0"]
+                    ? errors["loading_size.0"]
+                    : "",
+                width: errors["loading_size.1"] ? errors["loading_size.1"] : "",
+                height: errors["loading_size.2"]
+                    ? errors["loading_size.2"]
+                    : "",
             });
         }
     }, [value, errors]);

@@ -95,7 +95,7 @@ export type documentCustomerForm = typeof blankForm.customer;
 export type documentTrailerForm = typeof blankForm.trailer;
 
 export type documentDataForm = typeof blankForm.data & {
-    selectedEquipmentList: EquipmentItem[];
+    selectedEquipmentList?: EquipmentItem[];
 };
 
 export type documentSettingsForm = typeof blankForm.settings;

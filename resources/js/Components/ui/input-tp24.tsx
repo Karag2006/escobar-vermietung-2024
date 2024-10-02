@@ -1,11 +1,13 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { ErrorObject } from "@/types/document";
 
 export interface InputProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
+    documentError?: ErrorObject;
     suffix?: React.ReactNode;
     suffixClasses?: string;
     prefixElement?: React.ReactNode;
@@ -19,6 +21,7 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
             type,
             label,
             error,
+            documentError,
             id,
             value,
             disabled,
@@ -67,6 +70,9 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
                     className={cn(
                         "w-full border-b-[1px] border-b-gray-300 focus:outline-0 group-hover:border-b-gray-600 focus:border-b-blue-400 bg-transparent px-1 pb-1 pt-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none  disabled:cursor-not-allowed",
                         error && error !== "" && "border-destructive",
+                        documentError &&
+                            documentError.field === id &&
+                            "border-destructive",
                         prefixElement && prefixElement !== "" ? "pl-5" : ""
                     )}
                     ref={ref}
@@ -74,8 +80,11 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
                     value={value}
                     {...props}
                 />
-                {error && error !== "" && (
-                    <p className="text-sm text-destructive mt-2">{error}</p>
+                {((error && error !== "") ||
+                    (documentError && documentError.field === id)) && (
+                    <p className="text-sm text-destructive mt-2">
+                        {error || documentError?.message}
+                    </p>
                 )}
                 {suffix && suffix !== "" && (
                     <div
