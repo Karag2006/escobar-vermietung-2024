@@ -7,6 +7,7 @@ import {
     CollectAddressItem,
     customerType,
     DataErrors,
+    DataField,
     documentType,
     SelectorItem,
 } from "@/types/document";
@@ -32,6 +33,7 @@ interface DataFormProps {
     documentType: documentType;
     document: documentForm;
     dataErrors: DataErrors;
+    clearDataError: (key: DataField) => void;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentDataForm
@@ -44,6 +46,7 @@ export const DataForm = ({
     documentType,
     dataErrors,
     handleChangeInSubForm,
+    clearDataError,
 }: DataFormProps) => {
     const floatToString = (floatValue: number) => {
         if (floatValue) return floatValue.toFixed(2).replace(".", ",");
@@ -249,6 +252,11 @@ export const DataForm = ({
         handleChangeInSubForm(type, { ...data, [key]: checked });
     };
 
+    const handleClearError = (key: DataField) => {
+        clearErrors(key);
+        clearDataError(key);
+    };
+
     useEffect(() => {
         getCollectAddresses().then((data) => {
             setCollectAdresses(data);
@@ -268,6 +276,7 @@ export const DataForm = ({
                         id="collect_date"
                         label="Abholung - Datum *"
                         fieldName="collect_date"
+                        removeError={() => handleClearError("collect_date")}
                         onUpdateValue={handlePickerChange}
                     />
                     <TimePicker
@@ -276,6 +285,7 @@ export const DataForm = ({
                         label="Abholung - Uhrzeit *"
                         error={errors.collect_time || dataErrors.collect_time}
                         fieldName="collect_time"
+                        removeError={() => handleClearError("collect_time")}
                         onUpdateValue={handlePickerChange}
                     />
                     <DatePicker
@@ -284,6 +294,7 @@ export const DataForm = ({
                         error={errors.return_date || dataErrors.return_date}
                         label="Rückgabe - Datum *"
                         fieldName="return_date"
+                        removeError={() => handleClearError("return_date")}
                         onUpdateValue={handlePickerChange}
                     />
                     <TimePicker
@@ -292,6 +303,7 @@ export const DataForm = ({
                         error={errors.return_time || dataErrors.return_time}
                         label="Rückgabe - Uhrzeit *"
                         fieldName="return_time"
+                        removeError={() => handleClearError("return_time")}
                         onUpdateValue={handlePickerChange}
                     />
                 </div>
@@ -306,7 +318,9 @@ export const DataForm = ({
                             errors.collect_address_id ||
                             dataErrors.collect_address_id
                         }
-                        removeError={() => clearErrors("collect_address_id")}
+                        removeError={() =>
+                            handleClearError("collect_address_id")
+                        }
                         onValueChange={handlePickerChange}
                     />
                     <div className="w-full"></div>
@@ -361,6 +375,9 @@ export const DataForm = ({
                         id="reservation_deposit_date"
                         fieldName="reservation_deposit_date"
                         label="Anzahlung - bis Datum"
+                        removeError={() =>
+                            handleClearError("reservation_deposit_date")
+                        }
                         onUpdateValue={handlePickerChange}
                     />
                     <Combobox
@@ -373,6 +390,9 @@ export const DataForm = ({
                         label="Zahlungsart Anzahlung"
                         id="reservation_deposit_type"
                         value={data.reservation_deposit_type}
+                        removeError={() =>
+                            handleClearError("reservation_deposit_type")
+                        }
                         onValueChange={handleComboChange}
                     />
                     <CheckboxTP24
@@ -413,6 +433,9 @@ export const DataForm = ({
                                 id="final_payment_date"
                                 fieldName="final_payment_date"
                                 label="Restzahlung - Datum"
+                                removeError={() =>
+                                    handleClearError("final_payment_date")
+                                }
                                 onUpdateValue={handlePickerChange}
                             />
                             <Combobox
@@ -424,6 +447,9 @@ export const DataForm = ({
                                 error={
                                     errors.final_payment_type ||
                                     dataErrors.final_payment_type
+                                }
+                                removeError={() =>
+                                    handleClearError("final_payment_type")
                                 }
                                 onValueChange={handleComboChange}
                             />
@@ -476,6 +502,9 @@ export const DataForm = ({
                             id="contract_bail_date"
                             fieldName="contract_bail_date"
                             label="Kaution - Datum"
+                            removeError={() =>
+                                handleClearError("contract_bail_date")
+                            }
                             onUpdateValue={handlePickerChange}
                         />
                         <div className="flex flex-col gap-6 w-full">
@@ -488,6 +517,9 @@ export const DataForm = ({
                                 error={
                                     errors.contract_bail_type ||
                                     dataErrors.contract_bail_type
+                                }
+                                removeError={() =>
+                                    handleClearError("contract_bail_type")
                                 }
                                 onValueChange={handleComboChange}
                             />
@@ -513,6 +545,11 @@ export const DataForm = ({
                                 error={
                                     errors.contract_bail_return_type ||
                                     dataErrors.contract_bail_return_type
+                                }
+                                removeError={() =>
+                                    handleClearError(
+                                        "contract_bail_return_type"
+                                    )
                                 }
                                 onValueChange={handleComboChange}
                             />
@@ -544,7 +581,7 @@ export const DataForm = ({
                         value={data.comment}
                         error={errors.comment || dataErrors.comment}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("comment")}
+                        onFocus={() => handleClearError("comment")}
                         disabled={processing}
                     />
                 </div>

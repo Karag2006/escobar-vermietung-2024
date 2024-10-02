@@ -32,3 +32,5 @@ export type CustomerError = {
     car_number?: string;
     comment?: string;
 };
+
+export type CustomerField = keyof CustomerError;

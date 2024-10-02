@@ -28,5 +28,8 @@ export type TrailerErrors = {
     "loading_size.0"?: string;
     "loading_size.1"?: string;
     "loading_size.2"?: string;
+    loading_size?: string;
     comment?: string;
 };
+
+export type TrailerField = keyof TrailerErrors;

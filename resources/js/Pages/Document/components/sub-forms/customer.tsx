@@ -8,20 +8,21 @@ import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 
 import { DatePicker } from "@/Components/datePicker";
-import { DecisionButtons } from "@/Components/decision-buttons";
+
 import { toast } from "sonner";
 import { getLicenseClasses } from "@/data/settings";
 import { customerType, documentType, SelectorItem } from "@/types/document";
-import { blankForm, documentCustomerForm } from "@/lib/document-form";
+import { documentCustomerForm } from "@/lib/document-form";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { Combobox } from "@/Components/combobox";
-import { CustomerError } from "@/types/customer";
+import { CustomerError, CustomerField } from "@/types/customer";
 
 interface CustomerFormProps {
     customerErrors?: CustomerError;
     type: customerType;
     documentType: documentType;
     customer: documentCustomerForm;
+    clearCustomerError: (key: CustomerField) => void;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentCustomerForm
@@ -34,23 +35,15 @@ export const CustomerForm = ({
     customerErrors,
     customer,
     handleChangeInSubForm,
+    clearCustomerError,
 }: CustomerFormProps) => {
     const [customerList, setCustomerList] = useState<SelectorItem[]>([]);
     const [drivingLicenseClasses, setDrivingLicenseClasses] = useState<
         string[]
     >([]);
 
-    const {
-        data,
-        setData,
-        post,
-        patch,
-        processing,
-        errors,
-        setError,
-        reset,
-        clearErrors,
-    } = useForm(customer);
+    const { data, setData, post, patch, processing, errors, clearErrors } =
+        useForm(customer);
 
     const handlePickerChange = (result: PickerReturn) => {
         const key = result.id;
@@ -104,6 +97,12 @@ export const CustomerForm = ({
             });
         }
     };
+
+    const handleClearError = (key: CustomerField) => {
+        clearErrors(key);
+        clearCustomerError(key);
+    };
+
     useEffect(() => {
         const getCurrentCustomer = () => {
             if (data.id > 0 && customer?.id !== data.id) {
@@ -151,7 +150,7 @@ export const CustomerForm = ({
                         error={
                             errors.pass_number || customerErrors?.pass_number
                         }
-                        onFocus={() => clearErrors("pass_number")}
+                        onFocus={() => handleClearError("pass_number")}
                         onChange={handleChange}
                         disabled={processing}
                     />
@@ -161,7 +160,7 @@ export const CustomerForm = ({
                         value={data.name1}
                         error={errors.name1 || customerErrors?.name1}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("name1")}
+                        onFocus={() => handleClearError("name1")}
                         disabled={processing}
                     />
                     <InputTP24
@@ -170,7 +169,7 @@ export const CustomerForm = ({
                         value={data.name2}
                         error={errors.name2 || customerErrors?.name2}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("name2")}
+                        onFocus={() => handleClearError("name2")}
                         disabled={processing}
                     />
                     <DatePicker
@@ -179,7 +178,7 @@ export const CustomerForm = ({
                         fieldName="birth_date"
                         value={data.birth_date}
                         error={errors.birth_date || customerErrors?.birth_date}
-                        removeError={() => clearErrors("birth_date")}
+                        removeError={() => handleClearError("birth_date")}
                         onUpdateValue={handlePickerChange}
                         disabled={processing}
                     />
@@ -189,7 +188,7 @@ export const CustomerForm = ({
                         value={data.birth_city}
                         error={errors.birth_city || customerErrors?.birth_city}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("birth_city")}
+                        onFocus={() => handleClearError("birth_city")}
                         disabled={processing}
                     />
                 </div>
@@ -202,7 +201,7 @@ export const CustomerForm = ({
                             value={data.plz}
                             error={errors.plz || customerErrors?.plz}
                             onChange={handleChange}
-                            onFocus={() => clearErrors("plz")}
+                            onFocus={() => handleClearError("plz")}
                             disabled={processing}
                         />
                         <InputTP24
@@ -212,7 +211,7 @@ export const CustomerForm = ({
                             value={data.city}
                             error={errors.city || customerErrors?.city}
                             onChange={handleChange}
-                            onFocus={() => clearErrors("city")}
+                            onFocus={() => handleClearError("city")}
                             disabled={processing}
                         />
                     </div>
@@ -223,7 +222,7 @@ export const CustomerForm = ({
                         value={data.street}
                         error={errors.street || customerErrors?.street}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("street")}
+                        onFocus={() => handleClearError("street")}
                         disabled={processing}
                     />
                     <InputTP24
@@ -232,7 +231,7 @@ export const CustomerForm = ({
                         value={data.phone}
                         error={errors.phone || customerErrors?.phone}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("phone")}
+                        onFocus={() => handleClearError("phone")}
                         disabled={processing}
                     />
                     <InputTP24
@@ -241,7 +240,7 @@ export const CustomerForm = ({
                         value={data.car_number}
                         error={errors.car_number || customerErrors?.car_number}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("car_number")}
+                        onFocus={() => handleClearError("car_number")}
                         disabled={processing}
                     />
                     <InputTP24
@@ -250,7 +249,7 @@ export const CustomerForm = ({
                         value={data.email}
                         error={errors.email || customerErrors?.email}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("email")}
+                        onFocus={() => handleClearError("email")}
                         disabled={processing}
                     />
                 </div>
@@ -266,7 +265,7 @@ export const CustomerForm = ({
                         customerErrors?.driving_license_no
                     }
                     onChange={handleChange}
-                    onFocus={() => clearErrors("driving_license_no")}
+                    onFocus={() => handleClearError("driving_license_no")}
                     disabled={processing}
                 />
                 <Combobox
@@ -279,7 +278,9 @@ export const CustomerForm = ({
                         errors.driving_license_class ||
                         customerErrors?.driving_license_class
                     }
-                    removeError={() => clearErrors("driving_license_class")}
+                    removeError={() =>
+                        handleClearError("driving_license_class")
+                    }
                     onValueChange={handlePickerChange}
                 />
             </div>
@@ -291,7 +292,7 @@ export const CustomerForm = ({
                     value={data.comment}
                     error={errors.comment || customerErrors?.comment}
                     onChange={handleChange}
-                    onFocus={() => clearErrors("comment")}
+                    onFocus={() => handleClearError("comment")}
                     disabled={processing}
                 />
             </div>

@@ -102,3 +102,5 @@ export type DataErrors = {
     user_id?: string;
     collect_address_id?: string;
 };
+
+export type DataField = keyof DataErrors;

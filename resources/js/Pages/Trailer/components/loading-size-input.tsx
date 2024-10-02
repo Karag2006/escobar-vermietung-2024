@@ -1,4 +1,5 @@
 import { InputTP24 } from "@/Components/ui/input-tp24";
+import { TrailerField } from "@/types/trailer";
 import { useEffect, useState } from "react";
 
 interface LoadingSizeInputProps {
@@ -9,7 +10,7 @@ interface LoadingSizeInputProps {
         "loading_size.2"?: string;
     };
     processing?: boolean;
-    clearErrors?: (key: string) => void;
+    clearErrors?: (key: TrailerField) => void;
     handleChangeSize: (size: {
         length: string;
         width: string;
@@ -35,7 +36,7 @@ export const LoadingSizeInput = ({
         height: "",
     });
 
-    const clearE = (key: string) => {
+    const clearE = (key: TrailerField) => {
         clearErrors && clearErrors(key);
         if (key === "loading_size.0")
             setLocalErrors({ ...localErrors, length: "" });

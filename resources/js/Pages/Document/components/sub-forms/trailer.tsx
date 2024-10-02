@@ -13,7 +13,7 @@ import { SelectorCombobox } from "@/Components/selector-combobox";
 import { getTrailerById, getTrailerSelectors, getTuev } from "@/data/trailer";
 import { LoadingSizeInput } from "@/Pages/Trailer/components/loading-size-input";
 import { TuevBatch } from "@/Pages/Trailer/components/tuev-batch";
-import { TrailerErrors } from "@/types/trailer";
+import { TrailerErrors, TrailerField } from "@/types/trailer";
 
 interface TrailerFormProps {
     type: "trailer";
@@ -21,6 +21,7 @@ interface TrailerFormProps {
     trailer: documentTrailerForm;
     trailerErrors: TrailerErrors;
     tuevCompareDate?: string;
+    clearTrailerError: (key: TrailerField) => void;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentTrailerForm
@@ -31,6 +32,7 @@ export const TrailerForm = ({
     type,
     tuevCompareDate,
     trailerErrors,
+    clearTrailerError,
     trailer,
     handleChangeInSubForm,
 }: TrailerFormProps) => {
@@ -115,6 +117,11 @@ export const TrailerForm = ({
             });
         }
     };
+
+    const handleClearError = (key: TrailerField) => {
+        clearTrailerError(key);
+    };
+
     useEffect(() => {
         const getCurrentTrailer = () => {
             if (data.id > 0 && trailer.id !== data.id) {
@@ -162,7 +169,7 @@ export const TrailerForm = ({
                         value={data.title}
                         error={errors.title || trailerErrors.title}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("title")}
+                        onFocus={() => handleClearError("title")}
                         disabled={processing}
                     />
                     <InputTP24
@@ -171,7 +178,7 @@ export const TrailerForm = ({
                         value={data.plateNumber}
                         error={errors.plateNumber || trailerErrors.plateNumber}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("plateNumber")}
+                        onFocus={() => handleClearError("plateNumber")}
                         disabled={processing}
                     />
                 </div>
@@ -186,7 +193,7 @@ export const TrailerForm = ({
                                 errors.totalWeight || trailerErrors.totalWeight
                             }
                             onChange={handleChange}
-                            onFocus={() => clearErrors("totalWeight")}
+                            onFocus={() => handleClearError("totalWeight")}
                             disabled={processing}
                         />
                         <InputTP24
@@ -198,7 +205,7 @@ export const TrailerForm = ({
                                 errors.usableWeight ||
                                 trailerErrors.usableWeight
                             }
-                            onFocus={() => clearErrors("usableWeight")}
+                            onFocus={() => handleClearError("usableWeight")}
                             onChange={handleChange}
                             disabled={processing}
                         />
@@ -210,6 +217,7 @@ export const TrailerForm = ({
                             "loading_size.1": trailerErrors["loading_size.1"],
                             "loading_size.2": trailerErrors["loading_size.2"],
                         }}
+                        clearErrors={handleClearError}
                         handleChangeSize={handleChangeSize}
                         processing={processing}
                     />
@@ -223,7 +231,7 @@ export const TrailerForm = ({
                     value={data.comment}
                     error={errors.comment || trailerErrors.comment}
                     onChange={handleChange}
-                    onFocus={() => clearErrors("comment")}
+                    onFocus={() => handleClearError("comment")}
                     disabled={processing}
                 />
             </div>

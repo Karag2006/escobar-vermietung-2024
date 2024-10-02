@@ -23,7 +23,12 @@ import {
     TabsTrigger,
 } from "@/Components/ui/tabs-tp24";
 import { CustomerForm } from "./sub-forms/customer";
-import { collisionData, customerType, documentType } from "@/types/document";
+import {
+    collisionData,
+    customerType,
+    DataField,
+    documentType,
+} from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
@@ -32,6 +37,8 @@ import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
 import { Modal } from "@/Components/wrapper/modal";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { CollisionDialog } from "./collision-dialog";
+import { CustomerField } from "@/types/customer";
+import { TrailerField } from "@/types/trailer";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -204,6 +211,19 @@ export const DocumentForm = ({
         });
     };
 
+    const handleClearError = (
+        subForm: "customer" | "trailer" | "driver" | "data",
+        field: CustomerField | TrailerField | DataField
+    ) => {
+        setDataErrors((errors) => ({
+            ...errors,
+            [subForm]: {
+                ...errors[subForm],
+                [field]: undefined,
+            },
+        }));
+    };
+
     useEffect(() => {
         const getCurrentDocument = () => {
             if (currentID) {
@@ -295,6 +315,9 @@ export const DocumentForm = ({
                             documentType={documentType}
                             customer={data.customer}
                             customerErrors={dataErrors?.customer}
+                            clearCustomerError={(field: CustomerField) =>
+                                handleClearError("customer", field)
+                            }
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -302,6 +325,9 @@ export const DocumentForm = ({
                         <CustomerForm
                             type={customerType.DRIVER}
                             documentType={documentType}
+                            clearCustomerError={(field: CustomerField) =>
+                                handleClearError("driver", field)
+                            }
                             customer={data.driver}
                             customerErrors={dataErrors?.driver}
                             handleChangeInSubForm={handleChangeInSubForm}
@@ -313,6 +339,9 @@ export const DocumentForm = ({
                             documentType={documentType}
                             trailer={data.trailer}
                             trailerErrors={dataErrors?.trailer}
+                            clearTrailerError={(field: TrailerField) =>
+                                handleClearError("trailer", field)
+                            }
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -322,6 +351,9 @@ export const DocumentForm = ({
                             documentType={documentType}
                             document={data}
                             dataErrors={dataErrors?.data}
+                            clearDataError={(field: DataField) =>
+                                handleClearError("data", field)
+                            }
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
