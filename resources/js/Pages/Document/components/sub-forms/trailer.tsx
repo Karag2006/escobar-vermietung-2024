@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { getCustomerById, getCustomerSelectors } from "@/data/customer";
 import { PickerReturn } from "@/types";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 
 import { toast } from "sonner";
-import { customerType, documentType, SelectorItem } from "@/types/document";
-import { blankForm, documentTrailerForm } from "@/lib/document-form";
+import { documentType, SelectorItem } from "@/types/document";
+import { documentTrailerForm } from "@/lib/document-form";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { getTrailerById, getTrailerSelectors, getTuev } from "@/data/trailer";
-import { MonthPicker } from "@/Components/datePicker/month-picker";
 import { LoadingSizeInput } from "@/Pages/Trailer/components/loading-size-input";
 import { TuevBatch } from "@/Pages/Trailer/components/tuev-batch";
 import { TrailerErrors } from "@/types/trailer";
@@ -32,7 +30,6 @@ interface TrailerFormProps {
 export const TrailerForm = ({
     type,
     tuevCompareDate,
-    documentType,
     trailerErrors,
     trailer,
     handleChangeInSubForm,
@@ -208,8 +205,11 @@ export const TrailerForm = ({
                     </div>
                     <LoadingSizeInput
                         value={data.loading_size}
-                        errors={errors || trailerErrors}
-                        clearErrors={clearErrors}
+                        errors={{
+                            "loading_size.0": trailerErrors["loading_size.0"],
+                            "loading_size.1": trailerErrors["loading_size.1"],
+                            "loading_size.2": trailerErrors["loading_size.2"],
+                        }}
                         handleChangeSize={handleChangeSize}
                         processing={processing}
                     />

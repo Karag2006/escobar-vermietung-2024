@@ -6,7 +6,6 @@ import { PickerReturn } from "@/types";
 import {
     CollectAddressItem,
     customerType,
-    DataError,
     DataErrors,
     documentType,
     SelectorItem,
@@ -534,7 +533,7 @@ export const DataForm = ({
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <EquipmentSelector
                         onListChange={handleEquipmentChange}
-                        selectedList={data.selectedEquipmentList}
+                        selectedList={data.selectedEquipmentList || []}
                     />
                 </div>
                 <div className="flex gap-10 flex-col lg:flex-row lg:justify-between">

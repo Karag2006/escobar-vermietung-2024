@@ -11,12 +11,7 @@ import { DatePicker } from "@/Components/datePicker";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
 import { getLicenseClasses } from "@/data/settings";
-import {
-    customerType,
-    documentType,
-    ErrorObject,
-    SelectorItem,
-} from "@/types/document";
+import { customerType, documentType, SelectorItem } from "@/types/document";
 import { blankForm, documentCustomerForm } from "@/lib/document-form";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { Combobox } from "@/Components/combobox";
