@@ -37,6 +37,10 @@ export type DocumentProps = {
     ForwardDocument?: number;
 } & PageProps;
 
+export type ReservationTableProps = {
+    reservationList: Document[];
+} & PageProps;
+
 export const SelectorSchema = z.object({
     id: z.number(),
     selector: z.string(),
