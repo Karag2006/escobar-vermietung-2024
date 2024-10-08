@@ -1,5 +1,6 @@
 import { PageProps } from "@/types";
 import { z } from "zod";
+import { TrailerItem } from "./trailer";
 
 export enum customerType {
     CUSTOMER = "customer",
@@ -39,6 +40,8 @@ export type DocumentProps = {
 
 export type ReservationTableProps = {
     reservationList: Document[];
+    trailers: TrailerItem[];
+    month: string;
 } & PageProps;
 
 export const SelectorSchema = z.object({
