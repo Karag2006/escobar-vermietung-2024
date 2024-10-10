@@ -20,11 +20,15 @@ export const documentSchema = z.object({
     contract_number: z.number().optional().nullable(),
     collect_date: z.string(),
     return_date: z.string(),
+    collect_time: z.string(),
+    return_time: z.string(),
     customer_name1: z.string(),
+    vehicle_id: z.number(),
     vehicle_title: z.string(),
     vehicle_plateNumber: z.string(),
     collect_address_id: z.number(),
     current_state: z.string(),
+    added: z.boolean().optional().nullable(),
     collect_address: z.object({ id: z.number(), name: z.string() }),
 });
 

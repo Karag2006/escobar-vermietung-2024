@@ -12,19 +12,16 @@ interface TableProps {
 }
 
 export const Table = ({ date, reservationList, trailers }: TableProps) => {
-    let listOfDays = [];
-    const numberOfDays = getDaysInMonth(date);
-
-    for (let index = 1; index <= numberOfDays; index++) {
-        listOfDays.push(index);
-    }
     return (
         <div className="flex flex-col gap-4">
             {trailers.map((trailer) => (
                 <TrailerRow
+                    key={"trailer-" + trailer.id}
                     date={date}
                     trailer={trailer}
-                    // reservationList={reservationList}
+                    documents={reservationList.filter(
+                        (doc) => doc.vehicle_id === trailer.id
+                    )}
                 />
             ))}
         </div>

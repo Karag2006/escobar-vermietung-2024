@@ -7,13 +7,19 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/Components/ui/tooltip";
+import { Document } from "@/types/document";
 
 interface CalendarDayProps {
     day: Date;
     trailerId?: number | null;
+    documents?: Document[];
 }
 
-export const CalendarDay = ({ day, trailerId }: CalendarDayProps) => {
+export const CalendarDay = ({
+    day,
+    trailerId,
+    documents,
+}: CalendarDayProps) => {
     const hd = new Holidays("DE", "RP");
     const holiday = hd.isHoliday(day);
     const isHoliday = holiday && holiday[0].type === "public" ? true : false;
@@ -54,9 +60,30 @@ export const CalendarDay = ({ day, trailerId }: CalendarDayProps) => {
                         isWeekend(day) ? "bg-slate-500/15" : ""
                     )}
                 >
-                    <div className="w-full"></div>
-                    <div className="w-full"></div>
-                    <div className="w-full"></div>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <div className={cn("w-full")}></div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Kein Feiertag</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <div className="w-full"></div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Kein Feiertag</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <div className="w-full"></div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Kein Feiertag</p>
+                        </TooltipContent>
+                    </Tooltip>
                 </div>
             )}
         </div>
