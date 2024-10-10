@@ -1,7 +1,9 @@
-import { cn } from "@/lib/utils";
+import { getDaysInMonth } from "date-fns";
+
+import { TrailerRow } from "./trailerRow";
+
 import { Document } from "@/types/document";
 import { TrailerItem } from "@/types/trailer";
-import { eachDayOfInterval, format, getDaysInMonth } from "date-fns";
 
 interface TableProps {
     date: Date;
@@ -19,21 +21,11 @@ export const Table = ({ date, reservationList, trailers }: TableProps) => {
     return (
         <div className="flex flex-col gap-4">
             {trailers.map((trailer) => (
-                <div className="flex border-black border pl-2">
-                    <div className="w-[10rem]">{trailer.title}</div>
-                    <div className="w-[7rem]">{trailer.plateNumber}</div>
-                    {listOfDays.map((day) => (
-                        <div
-                            className={cn(
-                                "w-9 border-black border text-center",
-                                "trailer-" + trailer.id,
-                                "day-" + day
-                            )}
-                        >
-                            {day}
-                        </div>
-                    ))}
-                </div>
+                <TrailerRow
+                    date={date}
+                    trailer={trailer}
+                    // reservationList={reservationList}
+                />
             ))}
         </div>
     );

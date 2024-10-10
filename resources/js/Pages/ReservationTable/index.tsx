@@ -5,6 +5,7 @@ import { Head } from "@inertiajs/react";
 import { ActionButton } from "@/Components/action-button";
 import { Table } from "./components/table";
 import { format, isDate, parse } from "date-fns";
+import { de } from "date-fns/locale";
 
 const ReservationTable = ({
     auth,
@@ -17,8 +18,8 @@ const ReservationTable = ({
         ? parse(month + "-01", "yyyy-MM-dd", new Date())
         : new Date();
 
-    const displayMonth = format(displayDate, "MMMM");
-    const displayYear = format(displayDate, "yyyy");
+    const displayMonth = format(displayDate, "MMMM", { locale: de });
+    const displayYear = format(displayDate, "yyyy", { locale: de });
     return (
         <AuthenticatedLayout
             user={auth.user}
