@@ -1,6 +1,7 @@
 import { format, isWeekend } from "date-fns";
 
 import { cn } from "@/lib/utils";
+import Holidays from "date-holidays";
 
 interface CalendarDayProps {
     day: Date;
@@ -8,7 +9,9 @@ interface CalendarDayProps {
 }
 
 export const CalendarDay = ({ day, trailerId }: CalendarDayProps) => {
+    const hd = new Holidays("DE", "RP");
     const dayNumber = format(day, "d");
+    const holiday = hd.isHoliday(day);
     return (
         <div
             className={cn(
@@ -21,7 +24,10 @@ export const CalendarDay = ({ day, trailerId }: CalendarDayProps) => {
             <div
                 className={cn(
                     "absolute top-0 left-0 flex w-full h-full",
-                    isWeekend(day) ? "bg-slate-500/20" : ""
+                    holiday && holiday[0].type === "public"
+                        ? "bg-red-500/15"
+                        : "",
+                    isWeekend(day) ? "bg-slate-500/15" : ""
                 )}
             >
                 <div className="w-full"></div>

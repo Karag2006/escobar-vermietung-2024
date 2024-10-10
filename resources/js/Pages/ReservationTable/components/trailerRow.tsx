@@ -3,7 +3,6 @@ import { eachDayOfInterval, lastDayOfMonth, startOfMonth } from "date-fns";
 import { CalendarDay } from "./CalendarDay";
 
 import { TrailerItem } from "@/types/trailer";
-
 interface RowProps {
     date: Date;
     trailer: TrailerItem;
