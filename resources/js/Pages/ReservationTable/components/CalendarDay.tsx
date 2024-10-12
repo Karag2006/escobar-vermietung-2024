@@ -8,6 +8,7 @@ import {
     TooltipTrigger,
 } from "@/Components/ui/tooltip";
 import { Document } from "@/types/document";
+import { CalendarDayOverlay } from "./CalendarDayOverlay";
 
 interface CalendarDayProps {
     day: Date;
@@ -25,6 +26,7 @@ export const CalendarDay = ({
     const isHoliday = holiday && holiday[0].type === "public" ? true : false;
 
     const dayNumber = format(day, "d");
+
     return (
         <div
             className={cn(
@@ -37,54 +39,24 @@ export const CalendarDay = ({
             {isHoliday ? (
                 <Tooltip>
                     <TooltipTrigger>
-                        <div
-                            className={cn(
-                                "absolute top-0 left-0 flex w-full h-full",
-                                isHoliday ? "bg-red-500/15" : "",
-                                isWeekend(day) ? "bg-slate-500/15" : ""
-                            )}
-                        >
-                            <div className="w-full"></div>
-                            <div className="w-full"></div>
-                            <div className="w-full"></div>
-                        </div>
+                        <CalendarDayOverlay
+                            day={day}
+                            documents={documents}
+                            isHoliday={isHoliday}
+                            isWeekend={isWeekend(day)}
+                        />
                     </TooltipTrigger>
                     <TooltipContent>
                         <p>{holiday && holiday[0].name}</p>
                     </TooltipContent>
                 </Tooltip>
             ) : (
-                <div
-                    className={cn(
-                        "absolute top-0 left-0 flex w-full h-full",
-                        isWeekend(day) ? "bg-slate-500/15" : ""
-                    )}
-                >
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <div className={cn("w-full")}></div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Kein Feiertag</p>
-                        </TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <div className="w-full"></div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Kein Feiertag</p>
-                        </TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <div className="w-full"></div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Kein Feiertag</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </div>
+                <CalendarDayOverlay
+                    day={day}
+                    documents={documents}
+                    isHoliday={isHoliday}
+                    isWeekend={isWeekend(day)}
+                />
             )}
         </div>
     );

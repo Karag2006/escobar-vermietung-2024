@@ -29,6 +29,7 @@ export const documentSchema = z.object({
     collect_address_id: z.number(),
     current_state: z.string(),
     added: z.boolean().optional().nullable(),
+    colorClass: z.string().optional().nullable(),
     collect_address: z.object({ id: z.number(), name: z.string() }),
 });
 
