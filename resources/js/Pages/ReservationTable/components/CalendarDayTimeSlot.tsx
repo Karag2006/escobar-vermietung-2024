@@ -11,6 +11,17 @@ interface CalendarDayTimeSlotProps {
 }
 
 export const CalendarDayTimeSlot = ({ document }: CalendarDayTimeSlotProps) => {
+    const markerClass = () => {
+        if (!document) {
+            return "bg-blue-500/60";
+        }
+        if (document.current_state === "offer")
+            return document.colorClass + "/20";
+        if (document.current_state === "reservation")
+            return document.colorClass + "/40";
+        if (document.current_state === "contract")
+            return document.colorClass + "/60";
+    };
     if (!document) {
         return <div className={cn("w-full h-full")}></div>;
     }
@@ -18,7 +29,7 @@ export const CalendarDayTimeSlot = ({ document }: CalendarDayTimeSlotProps) => {
     return (
         <Tooltip>
             <TooltipTrigger className="w-full">
-                <div className={cn("w-full h-full", document.colorClass)}></div>
+                <div className={cn("w-full h-full", markerClass())}></div>
             </TooltipTrigger>
             <TooltipContent>
                 <div>
