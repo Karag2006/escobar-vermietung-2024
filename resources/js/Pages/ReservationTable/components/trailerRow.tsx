@@ -22,6 +22,16 @@ interface RowProps {
 }
 
 export const TrailerRow = ({ date, trailer, documents }: RowProps) => {
+    let listOfColorClasses = [
+        "bg-red-500",
+        "bg-green-500",
+        "bg-blue-500",
+        "bg-yellow-500",
+        "bg-indigo-500",
+        "bg-purple-500",
+        "bg-pink-500",
+    ];
+    let colorClassIndex = 0;
     let listOfDays = eachDayOfInterval({
         start: startOfMonth(date),
         end: lastDayOfMonth(date),
@@ -35,41 +45,18 @@ export const TrailerRow = ({ date, trailer, documents }: RowProps) => {
     });
 
     return (
-        <div className="flex border-black border pl-2">
-            <div className="w-[10rem]">{trailer.title}</div>
-            <div className="w-[7rem]">{trailer.plateNumber}</div>
-            {listOfDays.map((day) => {
-                let documentsForDay: Document[] = [];
-                if (!sortedDocuments || sortedDocuments.length === 0)
-                    // If there is no documents for this trailer every day can be generated without a document List
-                    return (
-                        <CalendarDay
-                            key={
-                                "trailer-" +
-                                trailer.id +
-                                "_day-" +
-                                format(day, "d")
-                            }
-                            day={day}
-                            trailerId={trailer.id}
-                        />
-                    );
-                // In all other cases, its possible that there are multiple documents for one day.
-                let dayFinished = false;
-                while (!dayFinished && sortedDocuments.length > 0) {
-                    // A day is finished if there are no more documents or the current document finishes after this day.
-
-                    if (
-                        isBefore(
-                            day,
-                            parse(
-                                sortedDocuments[0].collect_date,
-                                "dd.MM.yyyy",
-                                new Date()
-                            )
-                        )
-                    )
-                        // If the first document is after the current day, no document is added to the current day
+        <div className="2xl:flex border-black border pl-2">
+            <div className="w-[17rem] flex">
+                <div className="w-[10rem] text-ellipsis">{trailer.title}</div>
+                <div className="w-[7rem] text-ellipsis">
+                    {trailer.plateNumber}
+                </div>
+            </div>
+            <div className="flex">
+                {listOfDays.map((day) => {
+                    let documentsForDay: Document[] = [];
+                    if (!sortedDocuments || sortedDocuments.length === 0)
+                        // If there is no documents for this trailer every day can be generated without a document List
                         return (
                             <CalendarDay
                                 key={
@@ -82,81 +69,123 @@ export const TrailerRow = ({ date, trailer, documents }: RowProps) => {
                                 trailerId={trailer.id}
                             />
                         );
+                    // In all other cases, its possible that there are multiple documents for one day.
+                    let dayFinished = false;
+                    while (!dayFinished && sortedDocuments.length > 0) {
+                        // A day is finished if there are no more documents or the current document finishes after this day.
 
-                    if (
-                        isSameDay(
-                            day,
-                            parse(
-                                sortedDocuments[0].collect_date,
-                                "dd.MM.yyyy",
-                                new Date()
-                            )
-                        )
-                    ) {
-                        // If the document starts on this day, it is added to the list of documents for this day
-                        sortedDocuments[0].added = true;
-                        documentsForDay.push(sortedDocuments[0]);
                         if (
-                            isSameDay(
+                            isBefore(
                                 day,
                                 parse(
-                                    sortedDocuments[0].return_date,
+                                    sortedDocuments[0].collect_date,
                                     "dd.MM.yyyy",
                                     new Date()
                                 )
                             )
-                        ) {
-                            // If the document ends on this day, it is removed from the list of documents
-                            sortedDocuments.shift();
-                        } else {
-                            // If the document does not end on this day, the day is finished
-                            dayFinished = true;
-                        }
-                    } else if (
-                        isAfter(
-                            day,
-                            parse(
-                                sortedDocuments[0].collect_date,
-                                "dd.MM.yyyy",
-                                new Date()
-                            )
                         )
-                    ) {
-                        // If the document starts before this day, and was not removed from the list yet, it is added to the list of documents for this day
-                        documentsForDay.push(sortedDocuments[0]);
+                            // If the first document is after the current day, no document is added to the current day
+                            return (
+                                <CalendarDay
+                                    key={
+                                        "trailer-" +
+                                        trailer.id +
+                                        "_day-" +
+                                        format(day, "d")
+                                    }
+                                    day={day}
+                                    trailerId={trailer.id}
+                                />
+                            );
 
                         if (
                             isSameDay(
                                 day,
                                 parse(
-                                    sortedDocuments[0].return_date,
+                                    sortedDocuments[0].collect_date,
                                     "dd.MM.yyyy",
                                     new Date()
                                 )
                             )
                         ) {
-                            // If the document ends on this day, it is removed from the list of documents
-                            sortedDocuments.shift();
-                        } else {
-                            // If the document does not end on this day, the day is finished
-                            dayFinished = true;
-                        }
-                    }
-                    return (
-                        <CalendarDay
-                            key={
-                                "trailer-" +
-                                trailer.id +
-                                "_day-" +
-                                format(day, "d")
+                            // If the document starts on this day, it is added to the list of documents for this day
+                            sortedDocuments[0].added = true;
+                            sortedDocuments[0].colorClass =
+                                listOfColorClasses[
+                                    colorClassIndex % listOfColorClasses.length
+                                ];
+                            colorClassIndex++;
+                            documentsForDay.push(sortedDocuments[0]);
+                            if (
+                                isSameDay(
+                                    day,
+                                    parse(
+                                        sortedDocuments[0].return_date,
+                                        "dd.MM.yyyy",
+                                        new Date()
+                                    )
+                                )
+                            ) {
+                                // If the document ends on this day, it is removed from the list of documents
+                                sortedDocuments.shift();
+                            } else {
+                                // If the document does not end on this day, the day is finished
+                                dayFinished = true;
                             }
-                            day={day}
-                            trailerId={trailer.id}
-                            documents={documentsForDay}
-                        />
-                    );
-                }
-            })}
+                        } else if (
+                            isAfter(
+                                day,
+                                parse(
+                                    sortedDocuments[0].collect_date,
+                                    "dd.MM.yyyy",
+                                    new Date()
+                                )
+                            )
+                        ) {
+                            // If the document starts before this day, and was not removed from the list yet, it is added to the list of documents for this day
+                            documentsForDay.push(sortedDocuments[0]);
+                            if (!sortedDocuments[0].colorClass) {
+                                sortedDocuments[0].colorClass =
+                                    listOfColorClasses[
+                                        colorClassIndex %
+                                            listOfColorClasses.length
+                                    ];
+                                colorClassIndex++;
+                            }
+
+                            if (
+                                isSameDay(
+                                    day,
+                                    parse(
+                                        sortedDocuments[0].return_date,
+                                        "dd.MM.yyyy",
+                                        new Date()
+                                    )
+                                )
+                            ) {
+                                // If the document ends on this day, it is removed from the list of documents
+                                sortedDocuments.shift();
+                            } else {
+                                // If the document does not end on this day, the day is finished
+                                dayFinished = true;
+                            }
+                        }
+                        return (
+                            <CalendarDay
+                                key={
+                                    "trailer-" +
+                                    trailer.id +
+                                    "_day-" +
+                                    format(day, "d")
+                                }
+                                day={day}
+                                trailerId={trailer.id}
+                                documents={documentsForDay}
+                            />
+                        );
+                    }
+                })}
+            </div>
         </div>
     );
 };

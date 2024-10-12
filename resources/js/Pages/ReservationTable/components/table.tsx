@@ -1,4 +1,4 @@
-import { getDaysInMonth } from "date-fns";
+import { getDaysInMonth, parse } from "date-fns";
 
 import { TrailerRow } from "./trailerRow";
 
@@ -12,6 +12,20 @@ interface TableProps {
 }
 
 export const Table = ({ date, reservationList, trailers }: TableProps) => {
+    const documentList = reservationList.map((doc) => {
+        doc.collectTimestamp = parse(
+            doc.collect_date + " " + doc.collect_time,
+            "dd.MM.yyyy HH:mm",
+            new Date()
+        );
+        doc.returnTimestamp = parse(
+            doc.return_date + " " + doc.return_time,
+            "dd.MM.yyyy HH:mm",
+            new Date()
+        );
+        return doc;
+    });
+
     return (
         <div className="flex flex-col gap-4">
             {trailers.map((trailer) => (
@@ -19,7 +33,7 @@ export const Table = ({ date, reservationList, trailers }: TableProps) => {
                     key={"trailer-" + trailer.id}
                     date={date}
                     trailer={trailer}
-                    documents={reservationList.filter(
+                    documents={documentList.filter(
                         (doc) => doc.vehicle_id === trailer.id
                     )}
                 />
