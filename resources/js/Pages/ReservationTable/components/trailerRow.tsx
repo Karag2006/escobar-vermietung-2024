@@ -25,13 +25,13 @@ export const TrailerRow = ({ date, trailer, documents }: RowProps) => {
     let listOfColorClasses = [
         "bg-red-500",
         "bg-green-500",
+        "bg-indigo-500",
+        "bg-pink-500",
         "bg-blue-500",
         "bg-yellow-500",
-        "bg-indigo-500",
         "bg-purple-500",
-        "bg-pink-500",
     ];
-    let colorClassIndex = 0;
+    let colorClassIndex = Math.floor(Math.random() * listOfColorClasses.length);
     let listOfDays = eachDayOfInterval({
         start: startOfMonth(date),
         end: lastDayOfMonth(date),

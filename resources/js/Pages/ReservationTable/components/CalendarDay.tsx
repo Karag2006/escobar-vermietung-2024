@@ -36,28 +36,13 @@ export const CalendarDay = ({
             )}
         >
             {dayNumber}
-            {isHoliday ? (
-                <Tooltip>
-                    <TooltipTrigger>
-                        <CalendarDayOverlay
-                            day={day}
-                            documents={documents}
-                            isHoliday={isHoliday}
-                            isWeekend={isWeekend(day)}
-                        />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>{holiday && holiday[0].name}</p>
-                    </TooltipContent>
-                </Tooltip>
-            ) : (
-                <CalendarDayOverlay
-                    day={day}
-                    documents={documents}
-                    isHoliday={isHoliday}
-                    isWeekend={isWeekend(day)}
-                />
-            )}
+
+            <CalendarDayOverlay
+                day={day}
+                documents={documents}
+                isHoliday={isHoliday}
+                isWeekend={isWeekend(day)}
+            />
         </div>
     );
 };
