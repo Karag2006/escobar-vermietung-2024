@@ -134,14 +134,7 @@ const ReservationTable = ({
                 modalOpen={modalOpen}
                 openChange={setModalOpen}
             >
-                <ModalCardWrapper
-                    header={
-                        <h3 className="font-semibold text-xl text-gray-800">
-                            Reservierung anlegen
-                        </h3>
-                    }
-                    showHeader
-                >
+                <ModalCardWrapper>
                     <QuickReservationModal
                         currentID={currentID}
                         close={() => setModalOpen(false)}

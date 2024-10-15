@@ -79,6 +79,7 @@ export const blankForm = {
         comment: "",
         user_id: "",
         collect_address_id: 0,
+        selectedEquipmentList: [],
     },
     settings: {
         vat: 19,

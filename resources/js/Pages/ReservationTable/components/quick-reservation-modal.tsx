@@ -8,7 +8,7 @@ import { getSettings } from "@/data/settings";
 import { blankForm } from "@/lib/document-form";
 import { getCustomerById, getCustomerSelectors } from "@/data/customer";
 import { getTrailerById, getTrailerSelectors } from "@/data/trailer";
-import { getCollectAddresses } from "@/data/document";
+import { collisionCheck, getCollectAddresses } from "@/data/document";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { PickerReturn } from "@/types";
 import { InputTP24 } from "@/Components/ui/input-tp24";
@@ -21,7 +21,9 @@ import {
     floatToString,
     stringToFloat,
 } from "@/lib/curency-functions";
-import { set } from "date-fns";
+import { DecisionButtons } from "@/Components/decision-buttons";
+import { toast } from "sonner";
+import { isObjectEmpty } from "@/lib/utils";
 
 interface QuickReservationModalProps {
     currentID: number;
@@ -32,6 +34,7 @@ export const QuickReservationModal = ({
     currentID,
     close,
 }: QuickReservationModalProps) => {
+    const germanDocumentType = "Reservierung";
     const { data, setData, post, patch, processing } = useForm(blankForm);
     const [customerList, setCustomerList] = useState<SelectorItem[]>([]);
     const [localCustomerId, setLocalCustomerId] = useState(0);
@@ -40,6 +43,8 @@ export const QuickReservationModal = ({
     const [collectAdresses, setCollectAdresses] = useState<
         CollectAddressItem[]
     >([]);
+
+    const [localPrice, setLocalPrice] = useState("");
 
     const handleCustomerChange = (
         e:
@@ -70,23 +75,6 @@ export const QuickReservationModal = ({
         }));
     };
 
-    const handleTrailerChange = (
-        e:
-            | React.FormEvent<HTMLInputElement>
-            | React.FormEvent<HTMLTextAreaElement>
-            | React.FormEvent<HTMLSelectElement>
-    ) => {
-        const key = e.currentTarget.id;
-        const value = e.currentTarget.value;
-        setData((data) => ({
-            ...data,
-            trailer: {
-                ...data.trailer,
-                [key]: value,
-            },
-        }));
-    };
-
     const handleTrailerPickerChange = (result: PickerReturn) => {
         const key = result.id;
         const value = result.value;
@@ -111,26 +99,11 @@ export const QuickReservationModal = ({
         }));
     };
 
-    const handleDataChange = (
-        e:
-            | React.FormEvent<HTMLInputElement>
-            | React.FormEvent<HTMLTextAreaElement>
-            | React.FormEvent<HTMLSelectElement>
-    ) => {
-        const key = e.currentTarget.id;
-        const value = e.currentTarget.value;
-        setData((data) => ({
-            ...data,
-            data: {
-                ...data.data,
-                [key]: value,
-            },
-        }));
-    };
-
     const handleCurrencyInput = (e: React.FormEvent<HTMLInputElement>) => {
         const key = e.currentTarget.id;
         const value = e.currentTarget.value;
+
+        setLocalPrice(value);
 
         setData((data) => ({
             ...data,
@@ -156,6 +129,7 @@ export const QuickReservationModal = ({
                 data.settings.vat,
                 false
             );
+            setLocalPrice(floatToString(values.totalValue));
             setData((data) => ({
                 ...data,
                 data: {
@@ -172,6 +146,131 @@ export const QuickReservationModal = ({
                 },
             }));
         }
+    };
+
+    const handleSubmit = () => {
+        if (!currentID) {
+            if (
+                data.trailer.id &&
+                data.data.collect_date &&
+                data.data.return_date
+            ) {
+                collisionCheck({
+                    id: undefined,
+                    vehicle_id: data.trailer.id,
+                    collect_date: data.data.collect_date,
+                    return_date: data.data.return_date,
+                })
+                    .then((data) => {
+                        if (data.collision === "no") storeNewDocument();
+                        else {
+                            // setCollision(data.collisionData);
+                            // setCollisionDialog(true);
+                            // open Dialog informing the user about the collision
+                            // with options to continue saving anyway or cancel to fix first.
+                        }
+                    })
+                    .catch(() => {
+                        storeNewDocument();
+                    });
+            } else {
+                storeNewDocument();
+                // this will fail but will generate the appropriate error object.
+            }
+        } else {
+            if (
+                data.trailer.id &&
+                data.data.collect_date &&
+                data.data.return_date
+            ) {
+                collisionCheck({
+                    id: currentID,
+                    vehicle_id: data.trailer.id,
+                    collect_date: data.data.collect_date,
+                    return_date: data.data.return_date,
+                })
+                    .then((data) => {
+                        if (data.collision === "no") updateDocument();
+                        else {
+                            // setCollision(data.collisionData);
+                            // setCollisionDialog(true);
+                            // open Dialog informing the user about the collision
+                            // with options to continue saving anyway or cancel to fix first.
+                        }
+                    })
+                    .catch(() => {
+                        updateDocument();
+                    });
+            } else updateDocument();
+        }
+    };
+
+    const storeNewDocument = () => {
+        post(`/reservation`, {
+            only: [`reservationList`, "errors"],
+            onSuccess: () => {
+                close();
+                toast.success(`${germanDocumentType} erfolgreich angelegt`);
+            },
+            onError: (error) => {
+                console.log("error");
+
+                const article = "der";
+                toast.error(
+                    `Fehler beim anlegen ${article} ${germanDocumentType}`
+                );
+
+                if (error) {
+                    let customerEntries: string[][] = [];
+                    let driverEntries: string[][] = [];
+                    let trailerEntries: string[][] = [];
+                    let dataEntries: string[][] = [];
+                    Object.entries(error).forEach((err) => {
+                        const dotIndex = err[0].indexOf(".");
+                        const bagName = err[0].substring(0, dotIndex);
+                        const fieldName = err[0].substring(dotIndex + 1);
+                        const message = err[1];
+                        if (bagName === "customer")
+                            customerEntries.push([fieldName, message]);
+                        if (bagName === "driver")
+                            driverEntries.push([fieldName, message]);
+                        if (bagName === "trailer")
+                            trailerEntries.push([fieldName, message]);
+                        if (bagName === "data")
+                            dataEntries.push([fieldName, message]);
+                    });
+
+                    console.log(
+                        isObjectEmpty(Object.fromEntries(driverEntries))
+                    );
+
+                    // setDataErrors({
+                    //     customer: Object.fromEntries(customerEntries),
+                    //     driver: Object.fromEntries(driverEntries),
+                    //     trailer: Object.fromEntries(trailerEntries),
+                    //     data: Object.fromEntries(dataEntries),
+                    // });
+                }
+            },
+        });
+    };
+
+    const updateDocument = () => {
+        patch(`/reservation/${currentID}`, {
+            only: [`reservationList`, "errors"],
+            onSuccess: () => {
+                toast.success(
+                    `${germanDocumentType} wurde erfolgreich geändert`
+                );
+                close();
+            },
+            onError: () => {
+                const article = "der";
+                toast.error(
+                    `Fehler beim ändern ${article} ${germanDocumentType}`
+                );
+            },
+        });
     };
 
     useEffect(() => {
@@ -224,6 +323,37 @@ export const QuickReservationModal = ({
 
     return (
         <div className="p-4 w-full flex flex-col gap-8">
+            <div className="flex gap-8 justify-between mb-4">
+                <h2 className="text-xl font-bold">Reservierung anlegen</h2>
+                <DecisionButtons
+                    className="ml-4"
+                    yesLabel="Speichern"
+                    noLabel="Abbrechen"
+                    yesAction={handleSubmit}
+                    noAction={close}
+                />
+            </div>
+            <div className="flex gap-8">
+                <div className="md:w-[calc(50%-1.25rem)]">
+                    <SelectorCombobox
+                        id="id"
+                        value={data.trailer.id}
+                        items={trailerList}
+                        onValueChange={handleTrailerPickerChange}
+                        label={"Anhänger auswählen *"}
+                    />
+                </div>
+            </div>
+            <div className="flex gap-8">
+                <AddressCombobox
+                    className="w-[20rem]"
+                    items={collectAdresses}
+                    label="Abhol Anschrift *"
+                    id="collect_address_id"
+                    value={data.data.collect_address_id}
+                    onValueChange={handleDataPickerChange}
+                />
+            </div>
             <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                 <DatePicker
                     value={data.data.collect_date}
@@ -257,7 +387,7 @@ export const QuickReservationModal = ({
             <div className="flex gap-8">
                 <InputTP24
                     className="md:w-[calc(50%-1.25rem)]"
-                    label="Name des Kunden"
+                    label="Name des Kunden *"
                     id="name1"
                     value={data.customer.name1}
                     onChange={handleCustomerChange}
@@ -274,33 +404,15 @@ export const QuickReservationModal = ({
                     />
                 </div>
             </div>
-            <div className="flex gap-8">
-                <div className="md:w-[calc(50%-1.25rem)]">
-                    <SelectorCombobox
-                        id="id"
-                        value={data.trailer.id}
-                        items={trailerList}
-                        onValueChange={handleTrailerPickerChange}
-                        label={"Anhänger auswählen"}
-                    />
-                </div>
-            </div>
+
             <div className="flex gap-8 justify-between">
                 <CurrencyInput
                     className="w-[20rem]"
                     id="total_price"
-                    value={floatToString(data.data.total_price)}
+                    value={localPrice}
                     label="Preis (Brutto) *"
                     onValueChange={handleCurrencyInput}
                     onFinishedValueChange={handleCurrencyValueChanged}
-                />
-                <AddressCombobox
-                    className="w-[20rem]"
-                    items={collectAdresses}
-                    label="Abhol Anschrift *"
-                    id="collect_address_id"
-                    value={data.data.collect_address_id}
-                    onValueChange={handleDataPickerChange}
                 />
             </div>
         </div>
