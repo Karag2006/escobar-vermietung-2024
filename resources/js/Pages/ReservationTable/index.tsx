@@ -16,6 +16,10 @@ import {
     TooltipTrigger,
 } from "@/Components/ui/tooltip";
 
+import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
+import { Modal } from "@/Components/wrapper/modal";
+import { QuickReservationModal } from "./components/quick-reservation-modal";
+
 const ReservationTable = ({
     auth,
     reservationList,
@@ -28,6 +32,9 @@ const ReservationTable = ({
     };
 
     const [picker, setPicker] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [currentID, setCurrentID] = useState(0);
+
     const togglePicker = () => {
         setPicker(!picker);
     };
@@ -38,6 +45,16 @@ const ReservationTable = ({
         : new Date();
 
     const displayDate = format(monthDate, "MMMM / yyyy", { locale: de });
+
+    const addDocumentModal = () => {
+        setCurrentID(0);
+        setModalOpen(true);
+    };
+    const editDocumentModal = (id: number) => {
+        setCurrentID(id);
+        setModalOpen(true);
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -46,7 +63,9 @@ const ReservationTable = ({
                 <ActionButton
                     label="spontan Reservierung"
                     actionType="add"
-                    action={() => {}}
+                    action={() => {
+                        addDocumentModal();
+                    }}
                 />
             }
             headerCenter={
@@ -109,6 +128,26 @@ const ReservationTable = ({
                 reservationList={reservationList}
                 trailers={trailers}
             />
+
+            <Modal
+                className="xl:max-w-[1600px]"
+                modalOpen={modalOpen}
+                openChange={setModalOpen}
+            >
+                <ModalCardWrapper
+                    header={
+                        <h3 className="font-semibold text-xl text-gray-800">
+                            Reservierung anlegen
+                        </h3>
+                    }
+                    showHeader
+                >
+                    <QuickReservationModal
+                        currentID={currentID}
+                        close={() => setModalOpen(false)}
+                    />
+                </ModalCardWrapper>
+            </Modal>
         </AuthenticatedLayout>
     );
 };
