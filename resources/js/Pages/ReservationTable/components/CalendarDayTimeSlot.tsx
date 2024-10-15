@@ -4,7 +4,9 @@ import {
     TooltipTrigger,
 } from "@/Components/ui/tooltip";
 import { cn } from "@/lib/utils";
+
 import { Document } from "@/types/document";
+import { DocumentTooltip } from "./documentTooltip";
 
 interface CalendarDayTimeSlotProps {
     document?: Document;
@@ -20,6 +22,7 @@ export const CalendarDayTimeSlot = ({ document }: CalendarDayTimeSlotProps) => {
             return document?.colorClass + "/60";
     };
     const documentColorClass = markerClass();
+
     if (!document) {
         return <div className={cn("w-full h-full")}></div>;
     }
@@ -30,9 +33,7 @@ export const CalendarDayTimeSlot = ({ document }: CalendarDayTimeSlotProps) => {
                 <div className={cn("w-full h-full", documentColorClass)}></div>
             </TooltipTrigger>
             <TooltipContent>
-                <div>
-                    <p>{document.customer_name1}</p>
-                </div>
+                <DocumentTooltip document={document} />
             </TooltipContent>
         </Tooltip>
     );

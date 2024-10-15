@@ -32,6 +32,7 @@ export const documentSchema = z.object({
     collectTimestamp: z.date().optional().nullable(),
     returnTimestamp: z.date().optional().nullable(),
     colorClass: z.string().optional().nullable(),
+    total_price: z.number().optional().nullable(),
     collect_address: z.object({ id: z.number(), name: z.string() }),
 });
 
