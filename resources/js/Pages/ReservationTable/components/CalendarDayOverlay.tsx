@@ -1,7 +1,14 @@
 import { cn } from "@/lib/utils";
 import { Document, DocumentFunctions } from "@/types/document";
 import { CalendarDayTimeSlot } from "./CalendarDayTimeSlot";
-import { isAfter, isBefore, parse } from "date-fns";
+import {
+    isAfter,
+    isBefore,
+    parse,
+    isWithinInterval,
+    startOfDay,
+    endOfDay,
+} from "date-fns";
 import { is } from "date-fns/locale";
 
 interface CalendarDayOverlayProps {
@@ -19,9 +26,13 @@ export const CalendarDayOverlay = ({
     documents,
     documentFunctions,
 }: CalendarDayOverlayProps) => {
+    const dayStart = startOfDay(day);
     const divideTimeOne = parse("10:00", "HH:mm", new Date(day));
     const divideTimeTwo = parse("16:00", "HH:mm", new Date(day));
-    const endOfDay = parse("23:59", "HH:mm", new Date(day));
+    const dayEnd = endOfDay(day);
+    const intervalOne = { start: dayStart, end: divideTimeOne };
+    const intervalTwo = { start: divideTimeOne, end: divideTimeTwo };
+    const intervalThree = { start: divideTimeTwo, end: dayEnd };
 
     // mögliche Situationen:
     //  - 3 Dokumente an einem Tag:
@@ -83,14 +94,38 @@ export const CalendarDayOverlay = ({
                 )}
             >
                 <CalendarDayTimeSlot
+                    first={
+                        documents[0].collectTimestamp
+                            ? isWithinInterval(
+                                  documents[0].collectTimestamp,
+                                  intervalOne
+                              )
+                            : false
+                    }
                     document={documents[0]}
                     documentFunctions={documentFunctions}
                 />
                 <CalendarDayTimeSlot
+                    first={
+                        documents[1].collectTimestamp
+                            ? isWithinInterval(
+                                  documents[1].collectTimestamp,
+                                  intervalTwo
+                              )
+                            : false
+                    }
                     document={documents[1]}
                     documentFunctions={documentFunctions}
                 />
                 <CalendarDayTimeSlot
+                    first={
+                        documents[2].collectTimestamp
+                            ? isWithinInterval(
+                                  documents[2].collectTimestamp,
+                                  intervalThree
+                              )
+                            : false
+                    }
                     document={documents[2]}
                     documentFunctions={documentFunctions}
                 />
@@ -111,6 +146,14 @@ export const CalendarDayOverlay = ({
             {firstDocument?.collectTimestamp &&
             isBefore(firstDocument.collectTimestamp, divideTimeOne) ? (
                 <CalendarDayTimeSlot
+                    first={
+                        firstDocument.collectTimestamp
+                            ? isWithinInterval(
+                                  firstDocument.collectTimestamp,
+                                  intervalOne
+                              )
+                            : false
+                    }
                     document={firstDocument}
                     documentFunctions={documentFunctions}
                 />
@@ -122,12 +165,28 @@ export const CalendarDayOverlay = ({
             isBefore(firstDocument.collectTimestamp, divideTimeTwo) &&
             isAfter(firstDocument.returnTimestamp, divideTimeOne) ? (
                 <CalendarDayTimeSlot
+                    first={
+                        firstDocument.collectTimestamp
+                            ? isWithinInterval(
+                                  firstDocument.collectTimestamp,
+                                  intervalTwo
+                              )
+                            : false
+                    }
                     document={firstDocument}
                     documentFunctions={documentFunctions}
                 />
             ) : secondDocument?.collectTimestamp &&
               isBefore(secondDocument.collectTimestamp, divideTimeTwo) ? (
                 <CalendarDayTimeSlot
+                    first={
+                        secondDocument.collectTimestamp
+                            ? isWithinInterval(
+                                  secondDocument.collectTimestamp,
+                                  intervalTwo
+                              )
+                            : false
+                    }
                     document={secondDocument}
                     documentFunctions={documentFunctions}
                 />
@@ -136,17 +195,33 @@ export const CalendarDayOverlay = ({
             )}
             {firstDocument?.collectTimestamp &&
             firstDocument?.returnTimestamp &&
-            isBefore(firstDocument.collectTimestamp, endOfDay) &&
+            isBefore(firstDocument.collectTimestamp, dayEnd) &&
             isAfter(firstDocument.returnTimestamp, divideTimeTwo) ? (
                 <CalendarDayTimeSlot
+                    first={
+                        firstDocument.collectTimestamp
+                            ? isWithinInterval(
+                                  firstDocument.collectTimestamp,
+                                  intervalThree
+                              )
+                            : false
+                    }
                     document={firstDocument}
                     documentFunctions={documentFunctions}
                 />
             ) : secondDocument?.collectTimestamp &&
               secondDocument?.returnTimestamp &&
-              isBefore(secondDocument.collectTimestamp, endOfDay) &&
+              isBefore(secondDocument.collectTimestamp, dayEnd) &&
               isAfter(secondDocument.returnTimestamp, divideTimeTwo) ? (
                 <CalendarDayTimeSlot
+                    first={
+                        secondDocument.collectTimestamp
+                            ? isWithinInterval(
+                                  secondDocument.collectTimestamp,
+                                  intervalThree
+                              )
+                            : false
+                    }
                     document={secondDocument}
                     documentFunctions={documentFunctions}
                 />

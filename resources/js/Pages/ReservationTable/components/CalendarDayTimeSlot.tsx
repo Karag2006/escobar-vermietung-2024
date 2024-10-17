@@ -7,13 +7,16 @@ import { cn } from "@/lib/utils";
 
 import { Document, DocumentFunctions } from "@/types/document";
 import { DocumentTooltip } from "./documentTooltip";
+import { WarningMarker } from "./warning-marker";
 
 interface CalendarDayTimeSlotProps {
+    first?: boolean;
     document?: Document;
     documentFunctions?: DocumentFunctions;
 }
 
 export const CalendarDayTimeSlot = ({
+    first,
     document,
     documentFunctions,
 }: CalendarDayTimeSlotProps) => {
@@ -43,7 +46,13 @@ export const CalendarDayTimeSlot = ({
     return (
         <Tooltip>
             <TooltipTrigger className="w-full">
-                <div className={cn("w-full h-full", documentColorClass)}></div>
+                <div
+                    className={cn("w-full h-full relative", documentColorClass)}
+                >
+                    {first && document.collect_address.id !== 1 ? (
+                        <WarningMarker />
+                    ) : null}
+                </div>
             </TooltipTrigger>
             <TooltipContent>
                 <DocumentTooltip
