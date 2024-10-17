@@ -6,6 +6,13 @@ export const getCollectAddresses = async () => {
     return data;
 };
 
+// Falls der aktuelle status eines Dokuments nicht bekannt ist,
+// benötigen wir trotzdem eine Funktion um das Dokument allein anhand seiner ID zu laden.
+export const getDocumentById = async (id: number) => {
+    const { data } = await axios.get(route("getDocument", id));
+    return data;
+};
+
 export const getOfferById = async (id: number) => {
     const { data } = await axios.get(`/offer/${id}`);
     return data;
@@ -29,7 +36,7 @@ export const getDocumentCollisionCheckData = async (id: number) => {
 // check if there is a collision during the period requested.
 export const collisionCheck = async (checkData: collisionCheckData) => {
     // send Data to backend for checking.
-    const checkURL = "collisionCheck";
+    const checkURL = route("collisionCheck");
     const { data } = await axios.post(checkURL, checkData);
     return data;
 };

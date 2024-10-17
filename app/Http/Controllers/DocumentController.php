@@ -6,6 +6,7 @@ use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
+use App\Http\Resources\DocumentResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -58,7 +59,7 @@ class DocumentController extends Controller
             // - Document rental period is not already in the past.
             // - Document deals with the same Trailer
             // - Document's collect Date happens before this documents return Date
-            //  && Document's return Date happens after this documents collect Date. 
+            //  && Document's return Date happens after this documents collect Date.
         $collisionDocument = Document::whereNot('id', $request['id'])
             ->whereNot('return_date', '<', $currentDate)
             ->where('vehicle_id', $request['vehicle_id'])
@@ -85,6 +86,14 @@ class DocumentController extends Controller
             ]
         ];
         return response()->json($data, Response::HTTP_OK);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Document $document)
+    {
+        return new DocumentResource($document);
     }
 
     public function downloadPDF(Document $document)
@@ -148,9 +157,9 @@ class DocumentController extends Controller
         $request[$nextDocumentType.'_number'] = $newNumber;
         $request[$nextDocumentType.'_date'] = $currentDate;
         $request['current_state'] = $nextDocumentType;
-        // The $request is supposed to be empty at start, 
+        // The $request is supposed to be empty at start,
         // so to make sure no one can insert data thats not supposed to be there,
-        // limit the update to only the parameters we just set. 
+        // limit the update to only the parameters we just set.
         $document->update($request->only([$nextDocumentType.'_number', $nextDocumentType.'_date', 'current_state']));
 
         $document = $document->only([

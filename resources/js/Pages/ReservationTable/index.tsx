@@ -133,19 +133,20 @@ const ReservationTable = ({
                     forward: () => {},
                 }}
             />
-
-            <Modal
-                className="xl:max-w-[1600px]"
-                modalOpen={modalOpen}
-                openChange={setModalOpen}
-            >
-                <ModalCardWrapper>
-                    <QuickReservationModal
-                        currentID={currentID}
-                        close={() => setModalOpen(false)}
-                    />
-                </ModalCardWrapper>
-            </Modal>
+            {modalOpen ? (
+                <Modal
+                    className="xl:max-w-[1600px]"
+                    modalOpen={modalOpen}
+                    openChange={setModalOpen}
+                >
+                    <ModalCardWrapper>
+                        <QuickReservationModal
+                            currentID={currentID}
+                            close={() => setModalOpen(false)}
+                        />
+                    </ModalCardWrapper>
+                </Modal>
+            ) : null}
         </AuthenticatedLayout>
     );
 };

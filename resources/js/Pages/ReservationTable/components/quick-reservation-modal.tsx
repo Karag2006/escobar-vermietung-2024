@@ -1,4 +1,8 @@
-import { CollectAddressItem, SelectorItem } from "@/types/document";
+import {
+    CollectAddressItem,
+    documentType,
+    SelectorItem,
+} from "@/types/document";
 
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
@@ -8,7 +12,14 @@ import { getSettings } from "@/data/settings";
 import { blankForm } from "@/lib/document-form";
 import { getCustomerById, getCustomerSelectors } from "@/data/customer";
 import { getTrailerById, getTrailerSelectors } from "@/data/trailer";
-import { collisionCheck, getCollectAddresses } from "@/data/document";
+import {
+    collisionCheck,
+    getCollectAddresses,
+    getContractById,
+    getDocumentById,
+    getOfferById,
+    getReservationById,
+} from "@/data/document";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { PickerReturn } from "@/types";
 import { InputTP24 } from "@/Components/ui/input-tp24";
@@ -27,6 +38,7 @@ import { isObjectEmpty } from "@/lib/utils";
 
 interface QuickReservationModalProps {
     currentID: number;
+
     close: () => void;
 }
 
@@ -44,7 +56,9 @@ export const QuickReservationModal = ({
         CollectAddressItem[]
     >([]);
 
-    const [localPrice, setLocalPrice] = useState("");
+    const [localPrice, setLocalPrice] = useState(
+        floatToString(data.data.total_price)
+    );
 
     const handleCustomerChange = (
         e:
@@ -256,13 +270,13 @@ export const QuickReservationModal = ({
     };
 
     const updateDocument = () => {
-        patch(`/reservation/${currentID}`, {
+        patch(`/${data.data.current_state}/${currentID}`, {
             only: [`reservationList`, "errors"],
             onSuccess: () => {
+                close();
                 toast.success(
                     `${germanDocumentType} wurde erfolgreich geändert`
                 );
-                close();
             },
             onError: () => {
                 const article = "der";
@@ -274,6 +288,7 @@ export const QuickReservationModal = ({
     };
 
     useEffect(() => {
+        // Use Effects die nur beim laden der Komponente ausgeführt werden:
         getSettings().then((settings) =>
             setData((data) => ({
                 ...data,
@@ -289,6 +304,14 @@ export const QuickReservationModal = ({
         getCollectAddresses().then((data) => {
             setCollectAdresses(data);
         });
+        // Wenn das Modal mit einer ID geladen wird sind wir im Edit Mode
+        // Dann benötigen wir die gesamten Daten des dazu gehörenden Dokument.
+        if (currentID > 0) {
+            getDocumentById(currentID).then((document) => {
+                setData({ ...document });
+                setLocalPrice(floatToString(document.data.total_price));
+            });
+        }
     }, []);
 
     useEffect(() => {
@@ -302,6 +325,11 @@ export const QuickReservationModal = ({
                     }));
                 });
             }
+            if (!data.customer.id || data.customer.id <= 0)
+                setData((data) => ({
+                    ...data,
+                    customer: { ...blankForm.customer },
+                }));
         };
         getCurrentCustomer();
     }, [data.customer.id]);
