@@ -13,15 +13,21 @@ import {
 import { CalendarDay } from "./CalendarDay";
 
 import { TrailerItem } from "@/types/trailer";
-import { Document } from "@/types/document";
+import { Document, DocumentFunctions } from "@/types/document";
 import { log } from "console";
 interface RowProps {
     date: Date;
     trailer: TrailerItem;
     documents?: Document[];
+    documentFunctions: DocumentFunctions;
 }
 
-export const TrailerRow = ({ date, trailer, documents }: RowProps) => {
+export const TrailerRow = ({
+    date,
+    trailer,
+    documents,
+    documentFunctions,
+}: RowProps) => {
     let listOfColorClasses = [
         "bg-red-500",
         "bg-green-500",
@@ -181,6 +187,7 @@ export const TrailerRow = ({ date, trailer, documents }: RowProps) => {
                                 day={day}
                                 trailerId={trailer.id}
                                 documents={documentsForDay}
+                                documentFunctions={documentFunctions}
                             />
                         );
                     }

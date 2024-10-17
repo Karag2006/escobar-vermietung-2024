@@ -1,12 +1,17 @@
 import { getDocumentTypeTranslation } from "@/lib/utils";
-import { Document } from "@/types/document";
+import { Document, DocumentFunctions } from "@/types/document";
 import { DocumentTooltipInfoItem } from "./document-tooltip-info-item";
+import { DocumentTooltipActions } from "./document-tooltip-actions";
 
 interface DocumentTooltipProps {
     document: Document;
+    documentFunctions: DocumentFunctions;
 }
 
-export const DocumentTooltip = ({ document }: DocumentTooltipProps) => {
+export const DocumentTooltip = ({
+    document,
+    documentFunctions,
+}: DocumentTooltipProps) => {
     return (
         <div className="p-2 border border-black">
             <DocumentTooltipInfoItem
@@ -32,6 +37,12 @@ export const DocumentTooltip = ({ document }: DocumentTooltipProps) => {
             <DocumentTooltipInfoItem
                 label="Rückgabe"
                 value={`${document.return_date} - ${document.return_time}`}
+            />
+
+            <DocumentTooltipActions
+                documentId={document.id}
+                documentState={document.current_state}
+                documentFunctions={documentFunctions}
             />
         </div>
     );

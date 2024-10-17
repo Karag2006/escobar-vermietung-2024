@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Document } from "@/types/document";
+import { Document, DocumentFunctions } from "@/types/document";
 import { CalendarDayTimeSlot } from "./CalendarDayTimeSlot";
 import { isAfter, isBefore, parse } from "date-fns";
 import { is } from "date-fns/locale";
@@ -9,6 +9,7 @@ interface CalendarDayOverlayProps {
     isHoliday?: boolean;
     isWeekend?: boolean;
     documents?: Document[];
+    documentFunctions?: DocumentFunctions;
 }
 
 export const CalendarDayOverlay = ({
@@ -16,6 +17,7 @@ export const CalendarDayOverlay = ({
     isHoliday,
     isWeekend,
     documents,
+    documentFunctions,
 }: CalendarDayOverlayProps) => {
     const divideTimeOne = parse("10:00", "HH:mm", new Date(day));
     const divideTimeTwo = parse("16:00", "HH:mm", new Date(day));
@@ -80,9 +82,18 @@ export const CalendarDayOverlay = ({
                     isWeekend ? "bg-slate-500/15" : ""
                 )}
             >
-                <CalendarDayTimeSlot document={documents[0]} />
-                <CalendarDayTimeSlot document={documents[1]} />
-                <CalendarDayTimeSlot document={documents[2]} />
+                <CalendarDayTimeSlot
+                    document={documents[0]}
+                    documentFunctions={documentFunctions}
+                />
+                <CalendarDayTimeSlot
+                    document={documents[1]}
+                    documentFunctions={documentFunctions}
+                />
+                <CalendarDayTimeSlot
+                    document={documents[2]}
+                    documentFunctions={documentFunctions}
+                />
             </div>
         );
     }
@@ -99,7 +110,10 @@ export const CalendarDayOverlay = ({
         >
             {firstDocument?.collectTimestamp &&
             isBefore(firstDocument.collectTimestamp, divideTimeOne) ? (
-                <CalendarDayTimeSlot document={firstDocument} />
+                <CalendarDayTimeSlot
+                    document={firstDocument}
+                    documentFunctions={documentFunctions}
+                />
             ) : (
                 <CalendarDayTimeSlot />
             )}
@@ -107,10 +121,16 @@ export const CalendarDayOverlay = ({
             firstDocument?.returnTimestamp &&
             isBefore(firstDocument.collectTimestamp, divideTimeTwo) &&
             isAfter(firstDocument.returnTimestamp, divideTimeOne) ? (
-                <CalendarDayTimeSlot document={firstDocument} />
+                <CalendarDayTimeSlot
+                    document={firstDocument}
+                    documentFunctions={documentFunctions}
+                />
             ) : secondDocument?.collectTimestamp &&
               isBefore(secondDocument.collectTimestamp, divideTimeTwo) ? (
-                <CalendarDayTimeSlot document={secondDocument} />
+                <CalendarDayTimeSlot
+                    document={secondDocument}
+                    documentFunctions={documentFunctions}
+                />
             ) : (
                 <CalendarDayTimeSlot />
             )}
@@ -118,12 +138,18 @@ export const CalendarDayOverlay = ({
             firstDocument?.returnTimestamp &&
             isBefore(firstDocument.collectTimestamp, endOfDay) &&
             isAfter(firstDocument.returnTimestamp, divideTimeTwo) ? (
-                <CalendarDayTimeSlot document={firstDocument} />
+                <CalendarDayTimeSlot
+                    document={firstDocument}
+                    documentFunctions={documentFunctions}
+                />
             ) : secondDocument?.collectTimestamp &&
               secondDocument?.returnTimestamp &&
               isBefore(secondDocument.collectTimestamp, endOfDay) &&
               isAfter(secondDocument.returnTimestamp, divideTimeTwo) ? (
-                <CalendarDayTimeSlot document={secondDocument} />
+                <CalendarDayTimeSlot
+                    document={secondDocument}
+                    documentFunctions={documentFunctions}
+                />
             ) : (
                 <CalendarDayTimeSlot />
             )}

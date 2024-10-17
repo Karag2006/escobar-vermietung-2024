@@ -5,14 +5,27 @@ import {
 } from "@/Components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
-import { Document } from "@/types/document";
+import { Document, DocumentFunctions } from "@/types/document";
 import { DocumentTooltip } from "./documentTooltip";
 
 interface CalendarDayTimeSlotProps {
     document?: Document;
+    documentFunctions?: DocumentFunctions;
 }
 
-export const CalendarDayTimeSlot = ({ document }: CalendarDayTimeSlotProps) => {
+export const CalendarDayTimeSlot = ({
+    document,
+    documentFunctions,
+}: CalendarDayTimeSlotProps) => {
+    // Der Timeslot bekommt nur documentFunctions übergeben, wenn es ein Dokument zum Darstellen gibt.
+    // nur dann existiert auch ein Tooltip. => der Tooltip hat immer zugriff auf die documentFunctions.
+    // um type errors zu vermeiden senden wir placeholder functions an die nicht existierenden Tooltips ohne documentFunctions.
+    const placeholderFunctions = {
+        edit: () => {},
+        delete: () => {},
+        forward: () => {},
+    };
+
     const markerClass = () => {
         if (document?.current_state === "offer")
             return document?.colorClass + "/20";
@@ -33,7 +46,14 @@ export const CalendarDayTimeSlot = ({ document }: CalendarDayTimeSlotProps) => {
                 <div className={cn("w-full h-full", documentColorClass)}></div>
             </TooltipTrigger>
             <TooltipContent>
-                <DocumentTooltip document={document} />
+                <DocumentTooltip
+                    document={document}
+                    documentFunctions={
+                        documentFunctions
+                            ? documentFunctions
+                            : placeholderFunctions
+                    }
+                />
             </TooltipContent>
         </Tooltip>
     );

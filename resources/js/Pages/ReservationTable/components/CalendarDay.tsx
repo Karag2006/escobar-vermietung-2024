@@ -7,19 +7,21 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/Components/ui/tooltip";
-import { Document } from "@/types/document";
+import { Document, DocumentFunctions } from "@/types/document";
 import { CalendarDayOverlay } from "./CalendarDayOverlay";
 
 interface CalendarDayProps {
     day: Date;
     trailerId?: number | null;
     documents?: Document[];
+    documentFunctions?: DocumentFunctions;
 }
 
 export const CalendarDay = ({
     day,
     trailerId,
     documents,
+    documentFunctions,
 }: CalendarDayProps) => {
     const hd = new Holidays("DE", "RP");
     const holiday = hd.isHoliday(day);
@@ -42,6 +44,7 @@ export const CalendarDay = ({
                 documents={documents}
                 isHoliday={isHoliday}
                 isWeekend={isWeekend(day)}
+                documentFunctions={documentFunctions}
             />
         </div>
     );

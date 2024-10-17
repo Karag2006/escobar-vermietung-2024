@@ -127,6 +127,11 @@ const ReservationTable = ({
                 date={monthDate}
                 reservationList={reservationList}
                 trailers={trailers}
+                documentFunctions={{
+                    edit: editDocumentModal,
+                    delete: () => {},
+                    forward: () => {},
+                }}
             />
 
             <Modal

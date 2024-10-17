@@ -27,7 +27,7 @@ class ReservationTableController extends Controller
 
         // get List of Documents
         $reservations = Document::with('collectAddress:id,name')
-        ->select('reservation_number', 'offer_number', 'contract_number', 'current_state', 'total_price', 'customer_name1', 'vehicle_id', 'vehicle_title', 'vehicle_plateNumber', 'collect_date', 'collect_time', 'return_date', 'return_time', 'collect_address_id')
+        ->select('id', 'reservation_number', 'offer_number', 'contract_number', 'current_state', 'total_price', 'customer_name1', 'vehicle_id', 'vehicle_title', 'vehicle_plateNumber', 'collect_date', 'collect_time', 'return_date', 'return_time', 'collect_address_id')
         ->whereDate('collect_date', '<=', $targetMonthEnd)
         ->whereDate('return_date', '>=', $targetMonthBegin)
         ->get();

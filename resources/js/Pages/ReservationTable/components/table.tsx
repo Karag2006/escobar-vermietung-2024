@@ -2,16 +2,22 @@ import { getDaysInMonth, parse } from "date-fns";
 
 import { TrailerRow } from "./trailerRow";
 
-import { Document } from "@/types/document";
+import { Document, DocumentFunctions } from "@/types/document";
 import { TrailerItem } from "@/types/trailer";
 
 interface TableProps {
     date: Date;
     reservationList: Document[];
     trailers: TrailerItem[];
+    documentFunctions: DocumentFunctions;
 }
 
-export const Table = ({ date, reservationList, trailers }: TableProps) => {
+export const Table = ({
+    date,
+    reservationList,
+    trailers,
+    documentFunctions,
+}: TableProps) => {
     const documentList = reservationList.map((doc) => {
         doc.collectTimestamp = parse(
             doc.collect_date + " " + doc.collect_time,
@@ -36,6 +42,7 @@ export const Table = ({ date, reservationList, trailers }: TableProps) => {
                     documents={documentList.filter(
                         (doc) => doc.vehicle_id === trailer.id
                     )}
+                    documentFunctions={documentFunctions}
                 />
             ))}
         </div>
