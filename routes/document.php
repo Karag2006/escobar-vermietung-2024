@@ -8,7 +8,9 @@ Route::post('collisionCheck', [DocumentController::class, 'collisionCheck'])->na
 Route::get('document/{document}', [DocumentController::class, 'downloadPDF'])->name('downloadPDF');
 Route::patch('document/{document}', [DocumentController::class, 'forwardDocument'])->name('forwardDocument');
 
-Route::get('document/general/{document}', [DocumentController::class, 'show'])->name('getDocument');
+Route::get('document/general/{document}', [DocumentController::class, 'show'])->name('document.show');
+Route::post('document/general', [DocumentController::class, 'store'])->name('document.store');
+Route::patch('document/general/{document}', [DocumentController::class, 'update'])->name('document.update');
 
 Route::get('reservationtable/{month}', [ReservationTableController::class, 'index'])->name('reservationTable');
 ?>

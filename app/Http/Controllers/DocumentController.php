@@ -12,9 +12,60 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
+
+    // Translate the input into the form that the Database Requires.
+    // (should happen after Data validation, use Store and Update Requests for validation.)
+    private function useInput($input, $mode, $type)
+    {
+        $output = [];
+        $customer = $input['customer'];
+        $driver = $input['driver'];
+        $trailer = $input['trailer'];
+        $data = $input['data'];
+        $settings = $input['settings'];
+
+        foreach ($customer as $key => $value) {
+            $output['customer_' . $key] = $value;
+        }
+        foreach ($driver as $key => $value) {
+            $output['driver_' . $key] = $value;
+        }
+        foreach ($trailer as $key => $value) {
+            $output['vehicle_' . $key] = $value;
+        }
+        foreach ($data as $key => $value) {
+            $output[$key] = $value;
+        }
+        foreach ($settings as $key => $value) {
+            $output[$key] = $value;
+        }
+
+        if ($mode == 'new') {
+
+            $output['user_id'] = Auth::id();
+
+            $today = Carbon::today()->format('d.m.Y');
+            $output['selectedEquipmentList'] = json_encode($output['selectedEquipmentList']);
+
+            $output['reservation_number'] = $this->getNextNumber($type, 265382);
+            $output['current_state'] = "reservation";
+            $output['reservation_date'] = $today;
+            $output['contract_bail'] = 100.0;
+        }
+
+        return $output;
+    }
+
+    public function getHighestNumber()
+    {
+
+        return response()->json($this->getNextNumber('reservation', 265382), Response::HTTP_OK);
+    }
+
     private function getNextNumber($type, $default){
         $propertyName = $type."_number";
         $document = Document::select($propertyName)
@@ -94,6 +145,27 @@ class DocumentController extends Controller
     public function show(Document $document)
     {
         return new DocumentResource($document);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreDocumentRequest $request)
+    {
+        $data = $this->useInput($request->input(), 'new', 'reservation');
+        $document = Document::create($data);
+        return response()->json($document, Response::HTTP_CREATED);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateDocumentRequest $request, Document $document)
+    {
+        $data = $this->useInput($request->input(), 'update', $request->current_state);
+        $document->update($data);
+        return response()->json($document, Response::HTTP_OK);
     }
 
     public function downloadPDF(Document $document)

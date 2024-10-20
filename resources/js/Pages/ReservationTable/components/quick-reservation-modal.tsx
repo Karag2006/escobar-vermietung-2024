@@ -1,11 +1,6 @@
-import {
-    CollectAddressItem,
-    documentType,
-    SelectorItem,
-} from "@/types/document";
+import { CollectAddressItem, SelectorItem } from "@/types/document";
 
 import { useEffect, useState } from "react";
-import { useForm } from "@inertiajs/react";
 
 import { getSettings } from "@/data/settings";
 
@@ -15,10 +10,9 @@ import { getTrailerById, getTrailerSelectors } from "@/data/trailer";
 import {
     collisionCheck,
     getCollectAddresses,
-    getContractById,
     getDocumentById,
-    getOfferById,
-    getReservationById,
+    storeDocument,
+    updateDocument,
 } from "@/data/document";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { PickerReturn } from "@/types";
@@ -34,20 +28,22 @@ import {
 } from "@/lib/curency-functions";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
-import { isObjectEmpty } from "@/lib/utils";
+import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
+import { router } from "@inertiajs/react";
 
 interface QuickReservationModalProps {
     currentID: number;
-
+    currentMonth: string;
     close: () => void;
 }
 
 export const QuickReservationModal = ({
     currentID,
+    currentMonth,
     close,
 }: QuickReservationModalProps) => {
     const germanDocumentType = "Reservierung";
-    const { data, setData, post, patch, processing } = useForm(blankForm);
+    const [data, setData] = useState(blankForm);
     const [customerList, setCustomerList] = useState<SelectorItem[]>([]);
     const [localCustomerId, setLocalCustomerId] = useState(0);
     const [trailerList, setTrailerList] = useState<SelectorItem[]>([]);
@@ -204,7 +200,7 @@ export const QuickReservationModal = ({
                     return_date: data.data.return_date,
                 })
                     .then((data) => {
-                        if (data.collision === "no") updateDocument();
+                        if (data.collision === "no") documentUpdate();
                         else {
                             // setCollision(data.collisionData);
                             // setCollisionDialog(true);
@@ -213,78 +209,79 @@ export const QuickReservationModal = ({
                         }
                     })
                     .catch(() => {
-                        updateDocument();
+                        documentUpdate();
                     });
-            } else updateDocument();
+            } else documentUpdate();
         }
     };
 
     const storeNewDocument = () => {
-        post(`/reservation`, {
-            only: [`reservationList`, "errors"],
-            onSuccess: () => {
-                close();
-                toast.success(`${germanDocumentType} erfolgreich angelegt`);
-            },
-            onError: (error) => {
-                console.log("error");
+        storeDocument(data)
+            .then((data) => {
+                toast.success(`Reservierung erfolgreich angelegt`);
+            })
+            .catch((error) => {
+                console.log("error: ", error);
 
                 const article = "der";
-                toast.error(
-                    `Fehler beim anlegen ${article} ${germanDocumentType}`
+                toast.error(`Fehler beim anlegen ${article} Reservierung`);
+
+                // if (error) {
+                //     let customerEntries: string[][] = [];
+                //     let driverEntries: string[][] = [];
+                //     let trailerEntries: string[][] = [];
+                //     let dataEntries: string[][] = [];
+                //     Object.entries(error).forEach((err) => {
+                //         const dotIndex = err[0].indexOf(".");
+                //         const bagName = err[0].substring(0, dotIndex);
+                //         const fieldName = err[0].substring(dotIndex + 1);
+                //         const message = err[1];
+                //         if (bagName === "customer")
+                //             customerEntries.push([fieldName, message]);
+                //         if (bagName === "driver")
+                //             driverEntries.push([fieldName, message]);
+                //         if (bagName === "trailer")
+                //             trailerEntries.push([fieldName, message]);
+                //         if (bagName === "data")
+                //             dataEntries.push([fieldName, message]);
+            })
+            .finally(() => {
+                close();
+                router.visit(
+                    route("reservationTable", { month: currentMonth })
                 );
+            });
 
-                if (error) {
-                    let customerEntries: string[][] = [];
-                    let driverEntries: string[][] = [];
-                    let trailerEntries: string[][] = [];
-                    let dataEntries: string[][] = [];
-                    Object.entries(error).forEach((err) => {
-                        const dotIndex = err[0].indexOf(".");
-                        const bagName = err[0].substring(0, dotIndex);
-                        const fieldName = err[0].substring(dotIndex + 1);
-                        const message = err[1];
-                        if (bagName === "customer")
-                            customerEntries.push([fieldName, message]);
-                        if (bagName === "driver")
-                            driverEntries.push([fieldName, message]);
-                        if (bagName === "trailer")
-                            trailerEntries.push([fieldName, message]);
-                        if (bagName === "data")
-                            dataEntries.push([fieldName, message]);
-                    });
+        //     console.log(
+        //         isObjectEmpty(Object.fromEntries(driverEntries))
+        //     );
 
-                    console.log(
-                        isObjectEmpty(Object.fromEntries(driverEntries))
-                    );
-
-                    // setDataErrors({
-                    //     customer: Object.fromEntries(customerEntries),
-                    //     driver: Object.fromEntries(driverEntries),
-                    //     trailer: Object.fromEntries(trailerEntries),
-                    //     data: Object.fromEntries(dataEntries),
-                    // });
-                }
-            },
-        });
+        // setDataErrors({
+        //     customer: Object.fromEntries(customerEntries),
+        //     driver: Object.fromEntries(driverEntries),
+        //     trailer: Object.fromEntries(trailerEntries),
+        //     data: Object.fromEntries(dataEntries),
+        // });
     };
 
-    const updateDocument = () => {
-        patch(`/${data.data.current_state}/${currentID}`, {
-            only: [`reservationList`, "errors"],
-            onSuccess: () => {
-                close();
+    const documentUpdate = () => {
+        updateDocument(currentID, data)
+            .then((data) => {
+                // router.reload({ preserveState: false });
                 toast.success(
-                    `${germanDocumentType} wurde erfolgreich geändert`
+                    `${getDocumentTypeTranslation(
+                        data?.current_state
+                    )} erfolgreich aktualisiert`
                 );
-            },
-            onError: () => {
-                const article = "der";
-                toast.error(
-                    `Fehler beim ändern ${article} ${germanDocumentType}`
+            })
+            .catch((error) => {})
+            .finally(() => {
+                close();
+                router.visit(
+                    route("reservationTable", { month: currentMonth }),
+                    { preserveScroll: true }
                 );
-            },
-        });
+            });
     };
 
     useEffect(() => {
@@ -419,7 +416,6 @@ export const QuickReservationModal = ({
                     id="name1"
                     value={data.customer.name1}
                     onChange={handleCustomerChange}
-                    disabled={processing}
                 />
                 <span>oder: </span>
                 <div className="md:w-[calc(50%-1.25rem)]">

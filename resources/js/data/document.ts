@@ -1,4 +1,4 @@
-import { collisionCheckData } from "@/types/document";
+import { collisionCheckData, Document } from "@/types/document";
 import axios from "axios";
 
 export const getCollectAddresses = async () => {
@@ -9,7 +9,7 @@ export const getCollectAddresses = async () => {
 // Falls der aktuelle status eines Dokuments nicht bekannt ist,
 // benötigen wir trotzdem eine Funktion um das Dokument allein anhand seiner ID zu laden.
 export const getDocumentById = async (id: number) => {
-    const { data } = await axios.get(route("getDocument", id));
+    const { data } = await axios.get(route("document.show", id));
     return data;
 };
 
@@ -25,6 +25,19 @@ export const getReservationById = async (id: number) => {
 
 export const getContractById = async (id: number) => {
     const { data } = await axios.get(`/contract/${id}`);
+    return data;
+};
+
+export const storeDocument = async (documentData: any) => {
+    const { data } = await axios.post(route("document.store"), documentData);
+    return data;
+};
+
+export const updateDocument = async (id: number, documentData: any) => {
+    const { data } = await axios.patch(
+        route("document.update", id),
+        documentData
+    );
     return data;
 };
 

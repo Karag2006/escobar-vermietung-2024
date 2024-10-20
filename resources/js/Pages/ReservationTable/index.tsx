@@ -141,6 +141,7 @@ const ReservationTable = ({
                 >
                     <ModalCardWrapper>
                         <QuickReservationModal
+                            currentMonth={format(monthDate, "yyyy-MM")}
                             currentID={currentID}
                             close={() => setModalOpen(false)}
                         />
