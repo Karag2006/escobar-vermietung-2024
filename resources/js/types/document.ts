@@ -122,6 +122,6 @@ export type DataField = keyof DataErrors;
 
 export type DocumentFunctions = {
     edit: (id: number) => void;
-    delete: (id: number) => void;
+    delete: (id: number, type: string, Nr: number) => void;
     forward: (id: number) => void;
 };

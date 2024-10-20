@@ -168,6 +168,14 @@ class DocumentController extends Controller
         return response()->json($document, Response::HTTP_OK);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Document $document)
+    {
+        $document->delete();
+    }
+
     public function downloadPDF(Document $document)
     {
         if ($document->current_state === 'offer') {

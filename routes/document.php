@@ -11,6 +11,7 @@ Route::patch('document/{document}', [DocumentController::class, 'forwardDocument
 Route::get('document/general/{document}', [DocumentController::class, 'show'])->name('document.show');
 Route::post('document/general', [DocumentController::class, 'store'])->name('document.store');
 Route::patch('document/general/{document}', [DocumentController::class, 'update'])->name('document.update');
+Route::delete('document/general/{document}', [DocumentController::class, 'destroy'])->name('document.delete');
 
 Route::get('reservationtable/{month}', [ReservationTableController::class, 'index'])->name('reservationTable');
 ?>

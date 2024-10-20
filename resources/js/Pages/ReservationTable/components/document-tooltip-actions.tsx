@@ -7,12 +7,14 @@ interface DocumentTooltipActionsProps {
     documentId?: number | null;
     documentState: string;
     documentFunctions: DocumentFunctions;
+    documentNr?: number | null;
 }
 
 export const DocumentTooltipActions = ({
     documentId,
     documentState,
     documentFunctions,
+    documentNr,
 }: DocumentTooltipActionsProps) => {
     return (
         <div className="mt-2 flex gap-4 justify-between">
@@ -33,7 +35,12 @@ export const DocumentTooltipActions = ({
                 size="sm"
                 onClick={
                     documentId
-                        ? () => documentFunctions.delete(documentId)
+                        ? () =>
+                              documentFunctions.delete(
+                                  documentId,
+                                  documentState,
+                                  documentNr ? documentNr : 0
+                              )
                         : () => console.log("error")
                 }
                 aria-label="Löschen"

@@ -12,6 +12,13 @@ export const DocumentTooltip = ({
     document,
     documentFunctions,
 }: DocumentTooltipProps) => {
+    const current_state = document.current_state;
+    const documentNr =
+        current_state === "offer"
+            ? document.offer_number
+            : current_state === "reservation"
+            ? document.reservation_number
+            : document.contract_number;
     return (
         <div className="p-2 border border-black">
             <DocumentTooltipInfoItem
@@ -42,6 +49,7 @@ export const DocumentTooltip = ({
             <DocumentTooltipActions
                 documentId={document.id}
                 documentState={document.current_state}
+                documentNr={documentNr}
                 documentFunctions={documentFunctions}
             />
         </div>

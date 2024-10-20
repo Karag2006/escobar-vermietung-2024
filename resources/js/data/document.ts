@@ -41,6 +41,11 @@ export const updateDocument = async (id: number, documentData: any) => {
     return data;
 };
 
+export const deleteDocument = async (id: number) => {
+    const { data } = await axios.delete(route("document.delete", id));
+    return data;
+};
+
 export const getDocumentCollisionCheckData = async (id: number) => {
     const { data } = await axios.get(`collisiondata/${id}`);
     return data;

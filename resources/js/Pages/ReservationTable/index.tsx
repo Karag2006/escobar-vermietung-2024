@@ -9,7 +9,7 @@ import { de } from "date-fns/locale";
 import { useState } from "react";
 import { Picker } from "@/Components/datePicker/picker";
 import { Button } from "@/Components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, TriangleAlert } from "lucide-react";
 import {
     Tooltip,
     TooltipContent,
@@ -19,6 +19,18 @@ import {
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { Modal } from "@/Components/wrapper/modal";
 import { QuickReservationModal } from "./components/quick-reservation-modal";
+import {
+    getDocumentNextTypeTranslation,
+    getDocumentTypeArticle,
+    getDocumentTypeTranslation,
+} from "@/lib/utils";
+import { DecisionButtons } from "@/Components/decision-buttons";
+import {
+    collisionCheck,
+    deleteDocument,
+    forwardDocument,
+    getDocumentCollisionCheckData,
+} from "@/data/document";
 
 const ReservationTable = ({
     auth,
@@ -34,6 +46,10 @@ const ReservationTable = ({
     const [picker, setPicker] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [currentID, setCurrentID] = useState(0);
+    const [currentDocumentType, setCurrentDocumentType] = useState("");
+    const [documentNr, setDocumentNr] = useState(0);
+    const [confirmModal, setConfirmModal] = useState(false);
+    const [forward, setForward] = useState(false);
 
     const togglePicker = () => {
         setPicker(!picker);
@@ -53,6 +69,70 @@ const ReservationTable = ({
     const editDocumentModal = (id: number) => {
         setCurrentID(id);
         setModalOpen(true);
+    };
+
+    const handleDeleteDocument = (
+        id: number,
+        documentType: string,
+        documentNr: number
+    ) => {
+        setCurrentID(id);
+        setCurrentDocumentType(documentType);
+        setDocumentNr(documentNr);
+        setForward(false);
+        setConfirmModal(true);
+    };
+
+    const confirm = (id?: number) => {
+        if (!id) return;
+        if (!forward) {
+            // confirm is used to delete or forward a document.
+            // if we ware not forwarding we are deleting.
+            deleteDocument(id).then(() => {
+                router.get(
+                    route("reservationTable", format(monthDate, "yyyy-MM")),
+                    undefined,
+                    { preserveScroll: true }
+                );
+            });
+        } else {
+            if (id) {
+                setConfirmModal(false);
+                checkCollision(id);
+            }
+        }
+    };
+
+    const cancelConfirm = () => {
+        setConfirmModal(false);
+    };
+
+    const checkCollision = (id: number) => {
+        getDocumentCollisionCheckData(id).then((data) => {
+            data.id = id;
+            collisionCheck(data).then((data) => {
+                if (data.collision === "no") doForward(id);
+                else {
+                    // setCollisionId(id);
+                    // setCollision(data.collisionData);
+                    // setCollisionDialog(true);
+                }
+            });
+        });
+    };
+
+    const doForward = (id: number) => {
+        forwardDocument(id).then((data) => {
+            router.get(
+                `/${data.current_state}`,
+                {},
+                {
+                    headers: {
+                        forwardDocument: data.id,
+                    },
+                }
+            );
+        });
     };
 
     return (
@@ -129,10 +209,72 @@ const ReservationTable = ({
                 trailers={trailers}
                 documentFunctions={{
                     edit: editDocumentModal,
-                    delete: () => {},
+                    delete: handleDeleteDocument,
                     forward: () => {},
                 }}
             />
+            {confirmModal ? (
+                <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
+                    <ModalCardWrapper
+                        header={
+                            !forward ? (
+                                <h3 className="font-semibold text-xl text-gray-800">
+                                    Dokument löschen
+                                </h3>
+                            ) : (
+                                <h3 className="font-semibold text-xl text-gray-800">
+                                    In{" "}
+                                    {getDocumentNextTypeTranslation(
+                                        currentDocumentType
+                                    )}{" "}
+                                    umwandeln
+                                </h3>
+                            )
+                        }
+                        showHeader
+                        footer={
+                            <DecisionButtons
+                                yesLabel={!forward ? "Löschen" : "Umwandeln"}
+                                noLabel="Abbrechen"
+                                id={currentID}
+                                yesAction={confirm}
+                                noAction={cancelConfirm}
+                            />
+                        }
+                    >
+                        {!forward ? (
+                            <p>
+                                {`Soll ${getDocumentTypeArticle(
+                                    currentDocumentType
+                                )} ${getDocumentTypeTranslation(
+                                    currentDocumentType
+                                )} `}
+                                <span className="font-bold">
+                                    "Nr: {documentNr}"
+                                </span>{" "}
+                                wirklich gelöscht werden?
+                            </p>
+                        ) : (
+                            <p>
+                                {`Soll ${getDocumentTypeArticle(
+                                    currentDocumentType
+                                )} ${getDocumentTypeTranslation(
+                                    currentDocumentType
+                                )} Nr: `}
+                                <span className="font-bold">{documentNr}"</span>
+                                {` wirklich in ${getDocumentNextTypeTranslation(
+                                    currentDocumentType
+                                )} umwandeln?`}
+                            </p>
+                        )}
+                        <p className="flex gap-2">
+                            <TriangleAlert className="h-5 w-5  text-destructive" />
+                            Diese Aktion kann nicht rückgängig gemacht werden!
+                            <TriangleAlert className="h-5 w-5  text-destructive" />
+                        </p>
+                    </ModalCardWrapper>
+                </Modal>
+            ) : null}
             {modalOpen ? (
                 <Modal
                     className="xl:max-w-[1600px]"
