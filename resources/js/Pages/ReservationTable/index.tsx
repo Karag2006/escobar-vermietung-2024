@@ -83,6 +83,18 @@ const ReservationTable = ({
         setConfirmModal(true);
     };
 
+    const handleForwardDocument = (
+        id: number,
+        documentType: string,
+        documentNr: number
+    ) => {
+        setCurrentID(id);
+        setCurrentDocumentType(documentType);
+        setDocumentNr(documentNr);
+        setForward(true);
+        setConfirmModal(true);
+    };
+
     const confirm = (id?: number) => {
         if (!id) return;
         if (!forward) {
@@ -96,10 +108,8 @@ const ReservationTable = ({
                 );
             });
         } else {
-            if (id) {
-                setConfirmModal(false);
-                checkCollision(id);
-            }
+            setConfirmModal(false);
+            checkCollision(id);
         }
     };
 
@@ -210,7 +220,7 @@ const ReservationTable = ({
                 documentFunctions={{
                     edit: editDocumentModal,
                     delete: handleDeleteDocument,
-                    forward: () => {},
+                    forward: handleForwardDocument,
                 }}
             />
             {confirmModal ? (
@@ -256,9 +266,7 @@ const ReservationTable = ({
                             </p>
                         ) : (
                             <p>
-                                {`Soll ${getDocumentTypeArticle(
-                                    currentDocumentType
-                                )} ${getDocumentTypeTranslation(
+                                {`${getDocumentTypeTranslation(
                                     currentDocumentType
                                 )} Nr: `}
                                 <span className="font-bold">{documentNr}"</span>

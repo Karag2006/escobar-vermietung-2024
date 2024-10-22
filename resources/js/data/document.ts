@@ -47,7 +47,7 @@ export const deleteDocument = async (id: number) => {
 };
 
 export const getDocumentCollisionCheckData = async (id: number) => {
-    const { data } = await axios.get(`collisiondata/${id}`);
+    const { data } = await axios.get(route("collisionCheck.data", id));
     return data;
 };
 
@@ -66,6 +66,6 @@ export const downloadPDF = async (id: number) => {
 };
 
 export const forwardDocument = async (id: number) => {
-    const { data } = await axios.patch(`document/${id}`, {});
+    const { data } = await axios.patch(route("forwardDocument", id), {});
     return data;
 };

@@ -51,7 +51,12 @@ export const DocumentTooltipActions = ({
                 size="sm"
                 onClick={
                     documentId
-                        ? () => documentFunctions.forward(documentId)
+                        ? () =>
+                              documentFunctions.forward(
+                                  documentId,
+                                  documentState,
+                                  documentNr ? documentNr : 0
+                              )
                         : () => console.log("error")
                 }
                 aria-label="auf nächsten Dokumentenstatus setzen"
