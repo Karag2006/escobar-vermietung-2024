@@ -32,7 +32,7 @@ class ContractController extends Controller
         return response()->json($this->getNextNumber(), Response::HTTP_OK);
     }
 
-    // Translate the input into the form that the Database Requires. 
+    // Translate the input into the form that the Database Requires.
     // (should happen after Data validation, use Store and Update Requests for validation.)
     private function useInput($input, $mode)
     {
@@ -58,6 +58,12 @@ class ContractController extends Controller
         foreach ($settings as $key => $value) {
             $output[$key] = $value;
         }
+
+        // 22.10.2024 Fix: Add collectAt and returnAt columns for collision checks
+        $collectDateTime = Carbon::parse($output['collect_date'] . ' ' . $output['collect_time']);
+        $output['collectAt'] = $collectDateTime;
+        $returnDateTime = Carbon::parse($output['return_date'] . ' ' . $output['return_time']);
+        $output['returnAt'] = $returnDateTime;
 
         if ($mode == 'new') {
 
@@ -94,7 +100,7 @@ class ContractController extends Controller
                 'ForwardDocument' => $headerValue
             ]);
         }
-            
+
         return Inertia::render('Document/index', [
             'contractList' => $contractList,
             'type' => 'contract'

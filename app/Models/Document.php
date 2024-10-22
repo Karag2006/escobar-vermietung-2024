@@ -127,7 +127,11 @@ class Document extends Model
         'collect_address_id',
 
         // Equipment List
-        'selectedEquipmentList'
+        'selectedEquipmentList',
+
+        // CollectAt and ReturnAt for collision checks
+        'collectAt',
+        'returnAt',
     ];
 
     protected $dates = [
