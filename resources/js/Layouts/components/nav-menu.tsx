@@ -1,4 +1,4 @@
-import { KeyRound, Power } from "lucide-react";
+import { BookOpenCheck, KeyRound, Power } from "lucide-react";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
 import NavLink from "@/Components/NavLink";
 import { Separator } from "@/Components/ui/separator";
@@ -6,6 +6,7 @@ import { ApplicationLogo } from "@/Components/ApplicationLogo";
 import { useEffect, useState } from "react";
 import Icon from "@/Components/icon";
 import { useApi } from "@/hooks/use-api";
+import { format } from "date-fns";
 
 type NavMenuProps = {
     className?: string;
@@ -19,6 +20,7 @@ type NavItem = {
 };
 
 export const NavMenu = ({ className }: NavMenuProps) => {
+    const month = format(new Date(), "yyyy-MM");
     const [navItems, setNavItems] = useState([]);
     useEffect(() => {
         async function getNavMenu() {
@@ -46,6 +48,16 @@ export const NavMenu = ({ className }: NavMenuProps) => {
                             </NavLink>
                         );
                     })}
+
+                    <NavLink
+                        href={route("reservationTable", month)}
+                        active={route().current("reservationTable", month)}
+                    >
+                        <BookOpenCheck className="h-6 w-6" />
+                        <span className="inline-block">
+                            Reservierungen Liste
+                        </span>
+                    </NavLink>
 
                     <Separator className="w-full" />
 

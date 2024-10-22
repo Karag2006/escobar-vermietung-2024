@@ -122,6 +122,7 @@ export const SelectorCombobox = ({
                     )
                 }
                 suffixClasses="right-4 top-0"
+                autoComplete="off"
             />
             <div className="absolute top-2 right-2 text-gray-600">
                 {open ? (

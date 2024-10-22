@@ -56,7 +56,7 @@ export const offerColumns: ColumnDef<Document>[] = [
             );
         },
         cell: (cell) => {
-            return <span>{cell.row.original.collect_address.name}</span>;
+            return <span>{cell.row.original.collect_address?.name}</span>;
         },
     },
     {

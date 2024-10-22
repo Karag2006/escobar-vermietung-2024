@@ -6,14 +6,66 @@ use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
+use App\Http\Resources\DocumentResource;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
+
+    // Translate the input into the form that the Database Requires.
+    // (should happen after Data validation, use Store and Update Requests for validation.)
+    private function useInput($input, $mode, $type)
+    {
+        $output = [];
+        $customer = $input['customer'];
+        $driver = $input['driver'];
+        $trailer = $input['trailer'];
+        $data = $input['data'];
+        $settings = $input['settings'];
+
+        foreach ($customer as $key => $value) {
+            $output['customer_' . $key] = $value;
+        }
+        foreach ($driver as $key => $value) {
+            $output['driver_' . $key] = $value;
+        }
+        foreach ($trailer as $key => $value) {
+            $output['vehicle_' . $key] = $value;
+        }
+        foreach ($data as $key => $value) {
+            $output[$key] = $value;
+        }
+        foreach ($settings as $key => $value) {
+            $output[$key] = $value;
+        }
+
+        if ($mode == 'new') {
+
+            $output['user_id'] = Auth::id();
+
+            $today = Carbon::today()->format('d.m.Y');
+            $output['selectedEquipmentList'] = json_encode($output['selectedEquipmentList']);
+
+            $output['reservation_number'] = $this->getNextNumber($type, 265382);
+            $output['current_state'] = "reservation";
+            $output['reservation_date'] = $today;
+            $output['contract_bail'] = 100.0;
+        }
+
+        return $output;
+    }
+
+    public function getHighestNumber()
+    {
+
+        return response()->json($this->getNextNumber('reservation', 265382), Response::HTTP_OK);
+    }
+
     private function getNextNumber($type, $default){
         $propertyName = $type."_number";
         $document = Document::select($propertyName)
@@ -58,7 +110,7 @@ class DocumentController extends Controller
             // - Document rental period is not already in the past.
             // - Document deals with the same Trailer
             // - Document's collect Date happens before this documents return Date
-            //  && Document's return Date happens after this documents collect Date. 
+            //  && Document's return Date happens after this documents collect Date.
         $collisionDocument = Document::whereNot('id', $request['id'])
             ->whereNot('return_date', '<', $currentDate)
             ->where('vehicle_id', $request['vehicle_id'])
@@ -85,6 +137,43 @@ class DocumentController extends Controller
             ]
         ];
         return response()->json($data, Response::HTTP_OK);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Document $document)
+    {
+        return new DocumentResource($document);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreDocumentRequest $request)
+    {
+        $data = $this->useInput($request->input(), 'new', 'reservation');
+        $document = Document::create($data);
+        return response()->json($document, Response::HTTP_CREATED);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateDocumentRequest $request, Document $document)
+    {
+        $data = $this->useInput($request->input(), 'update', $request->current_state);
+        $document->update($data);
+        return response()->json($document, Response::HTTP_OK);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Document $document)
+    {
+        $document->delete();
     }
 
     public function downloadPDF(Document $document)
@@ -148,9 +237,9 @@ class DocumentController extends Controller
         $request[$nextDocumentType.'_number'] = $newNumber;
         $request[$nextDocumentType.'_date'] = $currentDate;
         $request['current_state'] = $nextDocumentType;
-        // The $request is supposed to be empty at start, 
+        // The $request is supposed to be empty at start,
         // so to make sure no one can insert data thats not supposed to be there,
-        // limit the update to only the parameters we just set. 
+        // limit the update to only the parameters we just set.
         $document->update($request->only([$nextDocumentType.'_number', $nextDocumentType.'_date', 'current_state']));
 
         $document = $document->only([

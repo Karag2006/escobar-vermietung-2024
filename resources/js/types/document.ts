@@ -1,5 +1,6 @@
 import { PageProps } from "@/types";
 import { z } from "zod";
+import { TrailerItem } from "./trailer";
 
 export enum customerType {
     CUSTOMER = "customer",
@@ -24,6 +25,14 @@ export const documentSchema = z.object({
     vehicle_plateNumber: z.string(),
     collect_address_id: z.number(),
     current_state: z.string(),
+    added: z.boolean().optional().nullable(),
+    vehicle_id: z.number().optional().nullable(),
+    collect_time: z.string().optional().nullable(),
+    return_time: z.string().optional().nullable(),
+    collectTimestamp: z.date().optional().nullable(),
+    returnTimestamp: z.date().optional().nullable(),
+    colorClass: z.string().optional().nullable(),
+    total_price: z.number().optional().nullable(),
     collect_address: z.object({ id: z.number(), name: z.string() }),
 });
 
@@ -35,6 +44,12 @@ export type DocumentProps = {
     contractList?: Document[];
     type: documentType;
     ForwardDocument?: number;
+} & PageProps;
+
+export type ReservationTableProps = {
+    reservationList: Document[];
+    trailers: TrailerItem[];
+    month: string;
 } & PageProps;
 
 export const SelectorSchema = z.object({
@@ -104,3 +119,9 @@ export type DataErrors = {
 };
 
 export type DataField = keyof DataErrors;
+
+export type DocumentFunctions = {
+    edit: (id: number, type: string, Nr: number) => void;
+    delete: (id: number, type: string, Nr: number) => void;
+    forward: (id: number, type: string, Nr: number) => void;
+};

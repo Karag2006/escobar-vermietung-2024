@@ -9,6 +9,12 @@ module.exports = {
         "./resources/js/**/*.jsx",
     ],
     prefix: "",
+    safelist: [
+        {
+            pattern:
+                /bg-(red|blue|green|yellow|indigo|purple|pink)-500\/(15|20|40|60)/,
+        },
+    ],
     theme: {
         container: {
             center: true,
