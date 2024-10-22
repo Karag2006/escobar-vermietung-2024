@@ -64,10 +64,14 @@ const ReservationTable = ({
 
     const addDocumentModal = () => {
         setCurrentID(0);
+        setCurrentDocumentType("");
+        setDocumentNr(0);
         setModalOpen(true);
     };
-    const editDocumentModal = (id: number) => {
+    const editDocumentModal = (id: number, type: string, Nr: number) => {
         setCurrentID(id);
+        setCurrentDocumentType(type);
+        setDocumentNr(Nr);
         setModalOpen(true);
     };
 
@@ -293,6 +297,8 @@ const ReservationTable = ({
                         <QuickReservationModal
                             currentMonth={format(monthDate, "yyyy-MM")}
                             currentID={currentID}
+                            currentDocumentType={currentDocumentType}
+                            currentDocumentNumber={documentNr}
                             close={() => setModalOpen(false)}
                         />
                     </ModalCardWrapper>

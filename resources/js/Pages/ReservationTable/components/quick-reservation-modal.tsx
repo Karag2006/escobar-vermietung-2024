@@ -34,15 +34,21 @@ import { router } from "@inertiajs/react";
 interface QuickReservationModalProps {
     currentID: number;
     currentMonth: string;
+    currentDocumentType?: string;
+    currentDocumentNumber?: number;
     close: () => void;
 }
 
 export const QuickReservationModal = ({
     currentID,
+    currentDocumentType,
+    currentDocumentNumber,
     currentMonth,
     close,
 }: QuickReservationModalProps) => {
-    const germanDocumentType = "Reservierung";
+    const germanDocumentType = currentDocumentType
+        ? getDocumentTypeTranslation(currentDocumentType)
+        : "Reservierung";
     const [data, setData] = useState(blankForm);
     const [customerList, setCustomerList] = useState<SelectorItem[]>([]);
     const [localCustomerId, setLocalCustomerId] = useState(0);
@@ -268,11 +274,7 @@ export const QuickReservationModal = ({
         updateDocument(currentID, data)
             .then((data) => {
                 // router.reload({ preserveState: false });
-                toast.success(
-                    `${getDocumentTypeTranslation(
-                        data?.current_state
-                    )} erfolgreich aktualisiert`
-                );
+                toast.success(`${germanDocumentType} erfolgreich aktualisiert`);
             })
             .catch((error) => {})
             .finally(() => {
@@ -349,7 +351,19 @@ export const QuickReservationModal = ({
     return (
         <div className="p-4 w-full flex flex-col gap-8">
             <div className="flex gap-8 justify-between mb-4">
-                <h2 className="text-xl font-bold">Reservierung anlegen</h2>
+                {currentID > 0 ? (
+                    <h2 className="text-xl font-bold">
+                        {germanDocumentType} Nr:{" "}
+                        <span className="font-extrabold">
+                            {currentDocumentNumber}
+                        </span>{" "}
+                        bearbeiten
+                    </h2>
+                ) : (
+                    <h2 className="text-xl font-bold">
+                        {germanDocumentType} anlegen
+                    </h2>
+                )}
                 <DecisionButtons
                     className="ml-4"
                     yesLabel="Speichern"

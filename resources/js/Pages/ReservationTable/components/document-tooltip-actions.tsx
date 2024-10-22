@@ -23,7 +23,12 @@ export const DocumentTooltipActions = ({
                 size="sm"
                 onClick={
                     documentId
-                        ? () => documentFunctions.edit(documentId)
+                        ? () =>
+                              documentFunctions.edit(
+                                  documentId,
+                                  documentState,
+                                  documentNr ? documentNr : 0
+                              )
                         : () => console.log("error")
                 }
                 aria-label="Bearbeiten"
