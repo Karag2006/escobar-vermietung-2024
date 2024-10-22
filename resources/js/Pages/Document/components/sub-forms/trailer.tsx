@@ -1,26 +1,27 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
 
-import { getCustomerById, getCustomerSelectors } from "@/data/customer";
 import { PickerReturn } from "@/types";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 
 import { toast } from "sonner";
-import { customerType, documentType, SelectorItem } from "@/types/document";
-import { blankForm, documentTrailerForm } from "@/lib/document-form";
+import { documentType, SelectorItem } from "@/types/document";
+import { documentTrailerForm } from "@/lib/document-form";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { getTrailerById, getTrailerSelectors, getTuev } from "@/data/trailer";
-import { MonthPicker } from "@/Components/datePicker/month-picker";
 import { LoadingSizeInput } from "@/Pages/Trailer/components/loading-size-input";
 import { TuevBatch } from "@/Pages/Trailer/components/tuev-batch";
+import { TrailerErrors, TrailerField } from "@/types/trailer";
 
 interface TrailerFormProps {
     type: "trailer";
     documentType: documentType;
     trailer: documentTrailerForm;
+    trailerErrors: TrailerErrors;
     tuevCompareDate?: string;
+    clearTrailerError: (key: TrailerField) => void;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentTrailerForm
@@ -30,7 +31,8 @@ interface TrailerFormProps {
 export const TrailerForm = ({
     type,
     tuevCompareDate,
-    documentType,
+    trailerErrors,
+    clearTrailerError,
     trailer,
     handleChangeInSubForm,
 }: TrailerFormProps) => {
@@ -115,6 +117,11 @@ export const TrailerForm = ({
             });
         }
     };
+
+    const handleClearError = (key: TrailerField) => {
+        clearTrailerError(key);
+    };
+
     useEffect(() => {
         const getCurrentTrailer = () => {
             if (data.id > 0 && trailer.id !== data.id) {
@@ -160,27 +167,18 @@ export const TrailerForm = ({
                         label="Anhängerbezeichnung *"
                         id="title"
                         value={data.title}
-                        error={errors.title}
+                        error={errors.title || trailerErrors.title}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("title")}
+                        onFocus={() => handleClearError("title")}
                         disabled={processing}
                     />
                     <InputTP24
                         label="Kennzeichen *"
                         id="plateNumber"
                         value={data.plateNumber}
-                        error={errors.plateNumber}
+                        error={errors.plateNumber || trailerErrors.plateNumber}
                         onChange={handleChange}
-                        onFocus={() => clearErrors("plateNumber")}
-                        disabled={processing}
-                    />
-                    <InputTP24
-                        label="Fahrgestellnummer *"
-                        id="chassisNumber"
-                        value={data.chassisNumber}
-                        error={errors.chassisNumber}
-                        onFocus={() => clearErrors("chassisNumber")}
-                        onChange={handleChange}
+                        onFocus={() => handleClearError("plateNumber")}
                         disabled={processing}
                     />
                 </div>
@@ -191,9 +189,11 @@ export const TrailerForm = ({
                             label="zulässiges Gesamtgewicht *"
                             id="totalWeight"
                             value={data.totalWeight}
-                            error={errors.totalWeight}
+                            error={
+                                errors.totalWeight || trailerErrors.totalWeight
+                            }
                             onChange={handleChange}
-                            onFocus={() => clearErrors("totalWeight")}
+                            onFocus={() => handleClearError("totalWeight")}
                             disabled={processing}
                         />
                         <InputTP24
@@ -201,16 +201,23 @@ export const TrailerForm = ({
                             label="Nutzlast *"
                             id="usableWeight"
                             value={data.usableWeight}
-                            error={errors.usableWeight}
-                            onFocus={() => clearErrors("usableWeight")}
+                            error={
+                                errors.usableWeight ||
+                                trailerErrors.usableWeight
+                            }
+                            onFocus={() => handleClearError("usableWeight")}
                             onChange={handleChange}
                             disabled={processing}
                         />
                     </div>
                     <LoadingSizeInput
                         value={data.loading_size}
-                        errors={errors}
-                        clearErrors={clearErrors}
+                        errors={{
+                            "loading_size.0": trailerErrors["loading_size.0"],
+                            "loading_size.1": trailerErrors["loading_size.1"],
+                            "loading_size.2": trailerErrors["loading_size.2"],
+                        }}
+                        clearErrors={handleClearError}
                         handleChangeSize={handleChangeSize}
                         processing={processing}
                     />
@@ -222,9 +229,9 @@ export const TrailerForm = ({
                     label="Kommentar"
                     id="comment"
                     value={data.comment}
-                    error={errors.comment}
+                    error={errors.comment || trailerErrors.comment}
                     onChange={handleChange}
-                    onFocus={() => clearErrors("comment")}
+                    onFocus={() => handleClearError("comment")}
                     disabled={processing}
                 />
             </div>

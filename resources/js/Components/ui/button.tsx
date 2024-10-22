@@ -13,6 +13,9 @@ const buttonVariants = cva(
                     "bg-primary text-primary-foreground hover:bg-primary/90 rounded-md",
                 destructive:
                     "bg-destructive text-white hover:bg-destructive/70 rounded-md",
+
+                success:
+                    "bg-green-600 text-white hover:bg-green-600/70 rounded-md",
                 outline:
                     "border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md",
                 secondary:
@@ -21,7 +24,7 @@ const buttonVariants = cva(
                 link: "text-primary underline-offset-4 hover:underline",
 
                 accent: "bg-accent text-gray-100 hover:text-grey-300",
-                success: "bg-green-600 text-white hover:bg-green-600/70",
+
                 navLink:
                     "bg-primary hover:bg-white/10 text-gray-100 w-full font-bold",
                 primary:

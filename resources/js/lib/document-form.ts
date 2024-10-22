@@ -79,6 +79,7 @@ export const blankForm = {
         comment: "",
         user_id: "",
         collect_address_id: 0,
+        selectedEquipmentList: [],
     },
     settings: {
         vat: 19,
@@ -95,7 +96,7 @@ export type documentCustomerForm = typeof blankForm.customer;
 export type documentTrailerForm = typeof blankForm.trailer;
 
 export type documentDataForm = typeof blankForm.data & {
-    selectedEquipmentList: EquipmentItem[];
+    selectedEquipmentList?: EquipmentItem[];
 };
 
 export type documentSettingsForm = typeof blankForm.settings;

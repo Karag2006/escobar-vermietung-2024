@@ -19,3 +19,17 @@ export type TrailerItem = z.infer<typeof trailerSchema>;
 export type TrailerProps = {
     trailers: TrailerItem[];
 } & PageProps;
+
+export type TrailerErrors = {
+    title?: string;
+    plateNumber?: string;
+    totalWeight?: string;
+    usableWeight?: string;
+    "loading_size.0"?: string;
+    "loading_size.1"?: string;
+    "loading_size.2"?: string;
+    loading_size?: string;
+    comment?: string;
+};
+
+export type TrailerField = keyof TrailerErrors;
