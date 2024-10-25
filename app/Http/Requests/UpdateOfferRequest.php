@@ -24,7 +24,7 @@ class UpdateOfferRequest extends FormRequest
             "payment_types" => $payment_types
         ];
     }
-    
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -110,6 +110,8 @@ class UpdateOfferRequest extends FormRequest
             'data.return_date' => 'required|' . $regexDate,
             'data.collect_time' => 'required|' . $regexTime,
             'data.return_time' => 'required|' . $regexTime,
+            'data.collectAt' => 'date',
+            'data.returnAt' => 'date',
             'data.collect_address_id' => 'required|integer|max:100',
             'data.total_price' => 'required|numeric|min:1|max:9999',
             'data.netto_price' => 'required|numeric|lte:data.total_price',

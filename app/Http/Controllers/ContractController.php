@@ -60,10 +60,22 @@ class ContractController extends Controller
         }
 
         // 22.10.2024 Fix: Add collectAt and returnAt columns for collision checks
-        $collectDateTime = Carbon::parse($output['collect_date'] . ' ' . $output['collect_time']);
-        $output['collectAt'] = $collectDateTime;
-        $returnDateTime = Carbon::parse($output['return_date'] . ' ' . $output['return_time']);
-        $output['returnAt'] = $returnDateTime;
+        if(!$output['collectAt'])
+        {
+            $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['collectAt'] = $collectDateTime;
+        }
+        else {
+            $output['collectAt'] = Carbon::parse($output['collectAt']);
+        }
+        if(!$output['returnAt'])
+        {
+            $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['returnAt'] = $returnDateTime;
+        }
+        else {
+            $output['returnAt'] = Carbon::parse($output['returnAt']);
+        }
 
         if ($mode == 'new') {
 

@@ -39,6 +39,7 @@ import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { CollisionDialog } from "./collision-dialog";
 import { CustomerField } from "@/types/customer";
 import { TrailerField } from "@/types/trailer";
+import { parse } from "date-fns";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -83,13 +84,29 @@ export const DocumentForm = ({
             if (
                 data.trailer.id &&
                 data.data.collect_date &&
-                data.data.return_date
+                data.data.return_date &&
+                data.data.return_time &&
+                data.data.collect_time
             ) {
+                data.data.collectAt = parse(
+                    data.data.collect_date + " " + data.data.collect_time,
+                    "dd.MM.yyyy HH:mm",
+                    new Date()
+                );
+                data.data.returnAt = parse(
+                    data.data.return_date + " " + data.data.return_time,
+                    "dd.MM.yyyy HH:mm",
+                    new Date()
+                );
                 collisionCheck({
                     id: undefined,
                     vehicle_id: data.trailer.id,
                     collect_date: data.data.collect_date,
                     return_date: data.data.return_date,
+                    collect_time: data.data.collect_time,
+                    return_time: data.data.return_time,
+                    collectAt: data.data.collectAt,
+                    returnAt: data.data.returnAt,
                 })
                     .then((data) => {
                         if (data.collision === "no") storeNewDocument();
@@ -111,13 +128,29 @@ export const DocumentForm = ({
             if (
                 data.trailer.id &&
                 data.data.collect_date &&
-                data.data.return_date
+                data.data.return_date &&
+                data.data.return_time &&
+                data.data.collect_time
             ) {
+                data.data.collectAt = parse(
+                    data.data.collect_date + " " + data.data.collect_time,
+                    "dd.MM.yyyy HH:mm",
+                    new Date()
+                );
+                data.data.returnAt = parse(
+                    data.data.return_date + " " + data.data.return_time,
+                    "dd.MM.yyyy HH:mm",
+                    new Date()
+                );
                 collisionCheck({
                     id: currentID,
                     vehicle_id: data.trailer.id,
                     collect_date: data.data.collect_date,
                     return_date: data.data.return_date,
+                    collect_time: data.data.collect_time,
+                    return_time: data.data.return_time,
+                    collectAt: data.data.collectAt,
+                    returnAt: data.data.returnAt,
                 })
                     .then((data) => {
                         if (data.collision === "no") updateDocument();

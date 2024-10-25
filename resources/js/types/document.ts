@@ -69,6 +69,10 @@ export type collisionCheckData = {
     vehicle_id: number;
     collect_date: string;
     return_date: string;
+    collect_time: string;
+    return_time: string;
+    collectAt: Date;
+    returnAt: Date;
 };
 
 export type collisionData = {
@@ -78,6 +82,8 @@ export type collisionData = {
     endDate?: string;
     startTime?: string;
     endTime?: string;
+    collectAt?: Date;
+    returnAt?: Date;
     customerName?: string;
     reservationFeePayed?: boolean;
     reservationFeeDate?: string;
