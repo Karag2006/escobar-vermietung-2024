@@ -143,22 +143,22 @@ class DocumentController extends Controller
         // 22.10.2024 Fix: New functionality using DateTime Objects:
         if(!$request['collectAt'])
             $collectDate = $this->getDateTimeObject($request['collect_date'], $request['collect_time']);
-        else $collectDate = $request['collectAt'];
+        else $collectDate = Carbon::parse($request['collectAt']);
 
         if(!$request['returnAt'])
             $returnDate = $this->getDateTimeObject($request['return_date'], $request['return_time']);
-        else $returnDate = $request['returnAt'];
+        else $returnDate = Carbon::parse($request['returnAt']);
         $currentDate = Carbon::now();
 
 
         // Requirements for collisions with Document:
-            // - Document is not this document itself
-            // - Document rental period is not already in the past.
-            // - Document deals with the same Trailer
-            // - Document's collect Date happens before this documents return Date
-            //  && Document's return Date happens after this documents collect Date.
-        $collisionDocument = Document::whereNot('id', $request['id'])
-            // ->whereNot('returnAt', '<', $currentDate)
+        //     - Document is not this document itself
+        //     - Document rental period is not already in the past.
+        //     - Document deals with the same Trailer
+        //     - Document's collect Date happens before this documents return Date
+        //      && Document's return Date happens after this documents collect Date.
+        $collisionDocument = Document::where('id', "!=", $request['id'])
+            ->where('returnAt', '>=', $currentDate)
             ->where('vehicle_id', $request['vehicle_id'])
             ->where(function ($query) use($collectDate, $returnDate){
                 $query->where('collectAt', '<', $returnDate)
