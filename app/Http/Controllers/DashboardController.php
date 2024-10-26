@@ -12,8 +12,13 @@ class DashboardController extends Controller
 {
     private function GetNextReservations() {
         $currentDate = Carbon::today();
-        $reservations = Document::where('current_state', 'reservation')
-        ->where('collectAt', '>=', $currentDate)->orderBy('collectAt', 'ASC')->limit(5)->get();
+        $reservations = Document::with('collectAddress:id,name')
+        ->where('current_state', 'reservation')
+        ->where('collectAt', '>=', $currentDate)
+        ->orderBy('collectAt', 'ASC')
+        ->limit(5)
+        ->get();
+
         return $reservations;
     }
 
