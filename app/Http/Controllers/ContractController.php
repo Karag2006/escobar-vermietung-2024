@@ -59,22 +59,23 @@ class ContractController extends Controller
             $output[$key] = $value;
         }
 
-        // 22.10.2024 Fix: Add collectAt and returnAt columns for collision checks
-        if(!$output['collectAt'])
+        // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
+        // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
+        if(!$output['collect_at'])
         {
             $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
-            $output['collectAt'] = $collectDateTime;
+            $output['collect_at'] = $collectDateTime;
         }
         else {
-            $output['collectAt'] = Carbon::parse($output['collectAt']);
+            $output['collect_at'] = Carbon::parse($output['collect_at']);
         }
-        if(!$output['returnAt'])
+        if(!$output['return_at'])
         {
             $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
-            $output['returnAt'] = $returnDateTime;
+            $output['return_at'] = $returnDateTime;
         }
         else {
-            $output['returnAt'] = Carbon::parse($output['returnAt']);
+            $output['return_at'] = Carbon::parse($output['return_at']);
         }
 
         if ($mode == 'new') {
@@ -97,8 +98,12 @@ class ContractController extends Controller
      */
     public function index(Request $request)
     {
+        // 27.10.2024 - Fix/DatesAndTimes :
+        // collect_at and return_at added to the List
+
+
         $contractList = Document::with('collectAddress:id,name')
-            ->select('id', 'contract_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
+            ->select('id', 'contract_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
             ->where('current_state', 'contract')
             ->orderBy('contract_number', 'desc')
             ->get();

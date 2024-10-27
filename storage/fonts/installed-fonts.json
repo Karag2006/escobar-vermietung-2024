@@ -1,8 +1,8 @@
 {
     "verdana": {
         "100": "\/var\/www\/html\/storage\/fonts\/verdana-100_e55b1cebf3e2babd942b7b01e829a7bf",
-        "normal": "\/var\/www\/html\/storage\/fonts\/verdana_normal_eae97245ca5a0277aa9bccd78853341d",
-        "bold": "verdana_bold_f5bf34c74ffc4aeb2b7463baccd78c1b"
+        "normal": "D:\\work\\code\\fullstack\\laravel\\projects\\escobar-vermietung-2024\\storage\\fonts\/verdana_normal_bd23df0cf18f5c40d80feb2b5bf0c3e6",
+        "bold": "verdana_bold_8a853f871f4ebab15fe6fb7ec307dbdf"
     },
     "verdana-bold": {
         "normal": "verdana-bold-normal_d43b643a5bf4ef2aa20f71a3398c16a4",

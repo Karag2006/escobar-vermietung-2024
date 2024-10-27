@@ -12,10 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
-        Schema::table('documents', function (Blueprint $table) {
-            $table->dateTime('collect_at')->nullable()->after('collect_time');
-            $table->dateTime('return_at')->nullable()->after('return_time');
-    });
+        Schema::table('trailers', function (Blueprint $table) {
+            $table->dateTime('inspection_at')->nullable()->after('tuev');
+        });
     }
 
     /**
@@ -24,8 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('documents', function (Blueprint $table) {
-            $table->dropColumn('collect_at');
-            $table->dropColumn('return_at');
+            $table->dropColumn('inspection_at');
         });
     }
 };

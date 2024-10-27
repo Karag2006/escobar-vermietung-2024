@@ -44,22 +44,23 @@ class DocumentController extends Controller
             $output[$key] = $value;
         }
 
-        // 22.10.2024 Fix: Add collectAt and returnAt columns for collision checks
-        if(!$output['collectAt'])
+        // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
+        // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
+        if(!$output['collect_at'])
         {
             $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
-            $output['collectAt'] = $collectDateTime;
+            $output['collect_at'] = $collectDateTime;
         }
         else {
-            $output['collectAt'] = Carbon::parse($output['collectAt']);
+            $output['collect_at'] = Carbon::parse($output['collect_at']);
         }
-        if(!$output['returnAt'])
+        if(!$output['return_at'])
         {
             $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
-            $output['returnAt'] = $returnDateTime;
+            $output['return_at'] = $returnDateTime;
         }
         else {
-            $output['returnAt'] = Carbon::parse($output['returnAt']);
+            $output['return_at'] = Carbon::parse($output['return_at']);
         }
 
         if ($mode == 'new') {
@@ -141,13 +142,13 @@ class DocumentController extends Controller
         // $currentDate = Carbon::today()->format('Y-m-d');
 
         // 22.10.2024 Fix: New functionality using DateTime Objects:
-        if(!$request['collectAt'])
+        if(!$request['collect_at'])
             $collectDate = $this->getDateTimeObject($request['collect_date'], $request['collect_time']);
-        else $collectDate = Carbon::parse($request['collectAt']);
+        else $collectDate = Carbon::parse($request['collect_at']);
 
-        if(!$request['returnAt'])
+        if(!$request['return_at'])
             $returnDate = $this->getDateTimeObject($request['return_date'], $request['return_time']);
-        else $returnDate = Carbon::parse($request['returnAt']);
+        else $returnDate = Carbon::parse($request['return_at']);
         $currentDate = Carbon::now();
 
 
@@ -158,11 +159,11 @@ class DocumentController extends Controller
         //     - Document's collect Date happens before this documents return Date
         //      && Document's return Date happens after this documents collect Date.
         $collisionDocument = Document::where('id', "!=", $request['id'])
-            ->where('returnAt', '>=', $currentDate)
+            ->where('return_at', '>=', $currentDate)
             ->where('vehicle_id', $request['vehicle_id'])
             ->where(function ($query) use($collectDate, $returnDate){
-                $query->where('collectAt', '<', $returnDate)
-                ->where('returnAt', '>', $collectDate);
+                $query->where('collect_at', '<', $returnDate)
+                ->where('return_at', '>', $collectDate);
             })->first();
 
             // $collisionDocument = Document::whereNot('id', $request['id'])
@@ -185,8 +186,8 @@ class DocumentController extends Controller
                 'endDate' => $collisionDocument['return_date'],
                 'startTime' => $collisionDocument['collect_time'],
                 'endTime' => $collisionDocument['return_time'],
-                'collectAt' => $collisionDocument['collectAt'],
-                'returnAt' => $collisionDocument['returnAt'],
+                'collect_at' => $collisionDocument['collect_at'],
+                'return_at' => $collisionDocument['return_at'],
                 'customerName' => $collisionDocument['customer_name1'],
                 'reservationFeePayed' => $collisionDocument['reservation_deposit_recieved'],
                 'reservationFeeDate' => $collisionDocument['reservation_deposit_date']
