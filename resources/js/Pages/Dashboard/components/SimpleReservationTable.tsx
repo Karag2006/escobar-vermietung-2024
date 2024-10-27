@@ -1,28 +1,25 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
-import { PageProps } from "@/types";
+import { format } from "date-fns";
+
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
-import { Document } from "@/types/document";
-import { format } from "date-fns";
 
-interface DashboardProps extends PageProps {
-    nextReservations: Document[];
+import { Document } from "@/types/document";
+
+interface SimpleReservationTableProps {
+    reservations: Document[];
 }
 
-export default function Dashboard({ auth, nextReservations }: DashboardProps) {
-    const pageTitle = "Dashboard";
+export const SimpleReservationTable = ({
+    reservations,
+}: SimpleReservationTableProps) => {
     return (
-        <AuthenticatedLayout user={auth.user} header={pageTitle}>
-            <Head title={pageTitle} />
-
+        <section>
             <h2 className="font-bold text-xl">Nächste Reservierungen</h2>
 
             <Table className="border border-neutral-300 mt-4 rounded-md">
@@ -37,8 +34,8 @@ export default function Dashboard({ auth, nextReservations }: DashboardProps) {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {nextReservations
-                        ? nextReservations.map((reservation) => (
+                    {reservations
+                        ? reservations.map((reservation) => (
                               <TableRow key={reservation.id}>
                                   <TableCell>
                                       {reservation.reservation_number}
@@ -72,6 +69,6 @@ export default function Dashboard({ auth, nextReservations }: DashboardProps) {
                         : null}
                 </TableBody>
             </Table>
-        </AuthenticatedLayout>
+        </section>
     );
-}
+};

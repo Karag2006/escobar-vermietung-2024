@@ -12,6 +12,7 @@ export const trailerSchema = z.object({
         .optional()
         .nullable(),
     tuev: z.string().optional().nullable(),
+    inspection_at: z.string().optional().nullable(),
 });
 
 export type TrailerItem = z.infer<typeof trailerSchema>;
