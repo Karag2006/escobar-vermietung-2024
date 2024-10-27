@@ -29,6 +29,8 @@ export const documentSchema = z.object({
     vehicle_id: z.number().optional().nullable(),
     collect_time: z.string().optional().nullable(),
     return_time: z.string().optional().nullable(),
+    collectAt: z.string().optional().nullable(),
+    returnAt: z.string().optional().nullable(),
     collectTimestamp: z.date().optional().nullable(),
     returnTimestamp: z.date().optional().nullable(),
     colorClass: z.string().optional().nullable(),
