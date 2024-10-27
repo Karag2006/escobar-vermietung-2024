@@ -39,11 +39,11 @@ class DocumentFactory extends Factory
             // currentState is one of : ['offer', 'reservation', 'contract']
             'current_state' => $this->faker->randomElement($array = array('offer', 'reservation', 'contract')),
 
-            // 22.10.2024 Fix: Add collectAt and returnAt columns for collision checks
-            'collectAt' => $collectDateTime,
-            'returnAt' => $returnDateTime,
+            // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
+            'collect_at' => $collectDateTime,
+            'return_at' => $returnDateTime,
 
-            // 22.10.2024 Fix: base collect_date and return_date on the new collectAt and returnAt columns
+            // 22.10.2024 Fix: base collect_date and return_date on the new collect_at and return_at columns
             'collect_date' => $collect_date,
             'return_date' => $return_date,
             'collect_time' => $collect_time,

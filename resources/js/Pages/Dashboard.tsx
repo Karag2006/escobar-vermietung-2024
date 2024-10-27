@@ -23,7 +23,7 @@ export default function Dashboard({ auth, nextReservations }: DashboardProps) {
         <AuthenticatedLayout user={auth.user} header={pageTitle}>
             <Head title={pageTitle} />
 
-            <h2 className="font-bold text-xl">Next Reservations</h2>
+            <h2 className="font-bold text-xl">Nächste Reservierungen</h2>
 
             <Table className="border border-neutral-300 mt-4 rounded-md">
                 <TableHeader>
@@ -47,9 +47,9 @@ export default function Dashboard({ auth, nextReservations }: DashboardProps) {
                                       {reservation.customer_name1}
                                   </TableCell>
                                   <TableCell>
-                                      {reservation.collectAt
+                                      {reservation.collect_at
                                           ? format(
-                                                reservation.collectAt,
+                                                reservation.collect_at,
                                                 "dd.MM.yyyy HH:mm"
                                             )
                                           : null}
@@ -60,9 +60,9 @@ export default function Dashboard({ auth, nextReservations }: DashboardProps) {
                                           : null}
                                   </TableCell>
                                   <TableCell>
-                                      {reservation.returnAt
+                                      {reservation.return_at
                                           ? format(
-                                                reservation.returnAt,
+                                                reservation.return_at,
                                                 "dd.MM.yyyy HH:mm"
                                             )
                                           : null}

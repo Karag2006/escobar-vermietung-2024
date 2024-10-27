@@ -14,8 +14,8 @@ class DashboardController extends Controller
         $currentDate = Carbon::today();
         $reservations = Document::with('collectAddress:id,name')
         ->where('current_state', 'reservation')
-        ->where('collectAt', '>=', $currentDate)
-        ->orderBy('collectAt', 'ASC')
+        ->where('collect_at', '>=', $currentDate)
+        ->orderBy('collect_at', 'ASC')
         ->limit(5)
         ->get();
 

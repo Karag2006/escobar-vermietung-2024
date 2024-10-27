@@ -88,12 +88,12 @@ export const DocumentForm = ({
                 data.data.return_time &&
                 data.data.collect_time
             ) {
-                data.data.collectAt = parse(
+                data.data.collect_at = parse(
                     data.data.collect_date + " " + data.data.collect_time,
                     "dd.MM.yyyy HH:mm",
                     new Date()
                 );
-                data.data.returnAt = parse(
+                data.data.return_at = parse(
                     data.data.return_date + " " + data.data.return_time,
                     "dd.MM.yyyy HH:mm",
                     new Date()
@@ -105,8 +105,8 @@ export const DocumentForm = ({
                     return_date: data.data.return_date,
                     collect_time: data.data.collect_time,
                     return_time: data.data.return_time,
-                    collectAt: data.data.collectAt,
-                    returnAt: data.data.returnAt,
+                    collect_at: data.data.collect_at,
+                    return_at: data.data.return_at,
                 })
                     .then((data) => {
                         if (data.collision === "no") storeNewDocument();
@@ -132,12 +132,12 @@ export const DocumentForm = ({
                 data.data.return_time &&
                 data.data.collect_time
             ) {
-                data.data.collectAt = parse(
+                data.data.collect_at = parse(
                     data.data.collect_date + " " + data.data.collect_time,
                     "dd.MM.yyyy HH:mm",
                     new Date()
                 );
-                data.data.returnAt = parse(
+                data.data.return_at = parse(
                     data.data.return_date + " " + data.data.return_time,
                     "dd.MM.yyyy HH:mm",
                     new Date()
@@ -149,8 +149,8 @@ export const DocumentForm = ({
                     return_date: data.data.return_date,
                     collect_time: data.data.collect_time,
                     return_time: data.data.return_time,
-                    collectAt: data.data.collectAt,
-                    returnAt: data.data.returnAt,
+                    collect_at: data.data.collect_at,
+                    return_at: data.data.return_at,
                 })
                     .then((data) => {
                         if (data.collision === "no") updateDocument();
