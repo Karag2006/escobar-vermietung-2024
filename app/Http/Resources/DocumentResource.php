@@ -73,6 +73,8 @@ class DocumentResource extends JsonResource
             'return_date' => $this->return_date,
             'collect_time' => $this->collect_time,
             'return_time' => $this->return_time,
+            'collectAt' => $this->collectAt,
+            'returnAt' => $this->returnAt,
             'total_price' => $this->total_price,
             'netto_price' => $this->netto_price,
             'tax_value' => $this->tax_value,

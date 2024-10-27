@@ -59,6 +59,8 @@ export const blankForm = {
         return_date: "",
         collect_time: "",
         return_time: "",
+        collectAt: new Date(),
+        returnAt: new Date(),
         total_price: 0,
         netto_price: 0,
         tax_value: 0,

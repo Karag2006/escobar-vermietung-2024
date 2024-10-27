@@ -27,7 +27,7 @@ class ReservationController extends Controller
         return $number;
     }
 
-    // Translate the input into the form that the Database Requires. 
+    // Translate the input into the form that the Database Requires.
     // (should happen after Data validation, use Store and Update Requests for validation.)
     private function useInput($input, $mode)
     {
@@ -52,6 +52,24 @@ class ReservationController extends Controller
         }
         foreach ($settings as $key => $value) {
             $output[$key] = $value;
+        }
+
+        // 22.10.2024 Fix: Add collectAt and returnAt columns for collision checks
+        if(!$output['collectAt'])
+        {
+            $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['collectAt'] = $collectDateTime;
+        }
+        else {
+            $output['collectAt'] = Carbon::parse($output['collectAt']);
+        }
+        if(!$output['returnAt'])
+        {
+            $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['returnAt'] = $returnDateTime;
+        }
+        else {
+            $output['returnAt'] = Carbon::parse($output['returnAt']);
         }
 
         if ($mode == 'new') {
@@ -83,11 +101,11 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
         $reservationList = Document::with('collectAddress:id,name')
-            ->select('id', 'reservation_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
+            ->select('id', 'reservation_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collectAt', 'returnAt', 'collect_address_id', "current_state")
             ->where('current_state', 'reservation')
             ->orderBy('reservation_number', 'desc')
             ->get();
-        
+
         $headerValue = intval($request->header('Forwarddocument'));
         if ($headerValue > 0)
         {
