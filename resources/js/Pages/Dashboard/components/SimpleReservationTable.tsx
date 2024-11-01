@@ -1,15 +1,14 @@
-import { format } from "date-fns";
+import { Document } from "@/types/document";
 
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
 
-import { Document } from "@/types/document";
+import { SimpleReservationTableRow } from "./SimpleReservationTableRow";
 
 interface SimpleReservationTableProps {
     reservations: Document[];
@@ -18,6 +17,20 @@ interface SimpleReservationTableProps {
 export const SimpleReservationTable = ({
     reservations,
 }: SimpleReservationTableProps) => {
+    const actions = {
+        edit: (id: number) => {
+            console.log("edit", id);
+        },
+        delete: (id: number) => {
+            console.log("delete", id);
+        },
+        forward: (id: number) => {
+            console.log("forward", id);
+        },
+        print: (id: number) => {
+            console.log("print", id);
+        },
+    };
     return (
         <section>
             <h2 className="font-bold text-xl">Nächste Reservierungen</h2>
@@ -36,35 +49,11 @@ export const SimpleReservationTable = ({
                 <TableBody>
                     {reservations
                         ? reservations.map((reservation) => (
-                              <TableRow key={reservation.id}>
-                                  <TableCell>
-                                      {reservation.reservation_number}
-                                  </TableCell>
-                                  <TableCell>
-                                      {reservation.customer_name1}
-                                  </TableCell>
-                                  <TableCell>
-                                      {reservation.collect_at
-                                          ? format(
-                                                reservation.collect_at,
-                                                "dd.MM.yyyy HH:mm"
-                                            )
-                                          : null}
-                                  </TableCell>
-                                  <TableCell>
-                                      {reservation.collect_address.name
-                                          ? reservation.collect_address.name
-                                          : null}
-                                  </TableCell>
-                                  <TableCell>
-                                      {reservation.return_at
-                                          ? format(
-                                                reservation.return_at,
-                                                "dd.MM.yyyy HH:mm"
-                                            )
-                                          : null}
-                                  </TableCell>
-                              </TableRow>
+                              <SimpleReservationTableRow
+                                  key={reservation.id}
+                                  reservation={reservation}
+                                  actions={actions}
+                              />
                           ))
                         : null}
                 </TableBody>
