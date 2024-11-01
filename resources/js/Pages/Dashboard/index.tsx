@@ -1,10 +1,10 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
 import { PageProps } from "@/types";
 import { Document } from "@/types/document";
 import { TrailerItem } from "@/types/trailer";
 
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { SimpleTrailerTable } from "./components/SimpleTrailerTable";
 import { SimpleReservationTable } from "./components/SimpleReservationTable";
 

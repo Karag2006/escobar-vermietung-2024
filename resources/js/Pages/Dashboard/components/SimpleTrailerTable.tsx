@@ -10,6 +10,7 @@ import {
 } from "@/Components/ui/table";
 
 import { TrailerItem } from "@/types/trailer";
+import { SimpleTrailerTableRow } from "./SimpleTrailerTableRow";
 
 interface SimpleTrailerTableProps {
     trailers: TrailerItem[];
@@ -27,23 +28,16 @@ export const SimpleTrailerTable = ({ trailers }: SimpleTrailerTableProps) => {
                         <TableHead>Anhänger </TableHead>
                         <TableHead>Kennzeichen</TableHead>
                         <TableHead>Tüv bis</TableHead>
+                        <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {trailers
                         ? trailers.map((trailer) => (
-                              <TableRow key={trailer.id}>
-                                  <TableCell>{trailer.title}</TableCell>
-                                  <TableCell>{trailer.plateNumber}</TableCell>
-                                  <TableCell>
-                                      {trailer.inspection_at
-                                          ? format(
-                                                trailer.inspection_at,
-                                                "MM / yy"
-                                            )
-                                          : null}
-                                  </TableCell>
-                              </TableRow>
+                              <SimpleTrailerTableRow
+                                  trailer={trailer}
+                                  key={trailer.id}
+                              />
                           ))
                         : null}
                 </TableBody>
