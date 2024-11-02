@@ -47,12 +47,8 @@ export function Actions<TData>({
                 const linkParts: [] = fileURL.split("/");
                 link.href = fileURL;
                 link.target = "_blank";
-                link.setAttribute(
-                    "open",
-                    `${currentDocument.current_state}_${
-                        linkParts[linkParts.length - 1]
-                    }`
-                );
+                link.setAttribute("open", "");
+
                 document.body.appendChild(link);
 
                 link.click();

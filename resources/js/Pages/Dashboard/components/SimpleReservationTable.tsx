@@ -10,6 +10,7 @@ import {
 } from "@/Components/ui/table";
 
 import { SimpleReservationTableRow } from "./SimpleReservationTableRow";
+import { downloadPDF } from "@/data/document";
 
 interface SimpleReservationTableProps {
     reservations: Document[];
@@ -39,7 +40,18 @@ export const SimpleReservationTable = ({
         },
         print: {
             function: (id: number) => {
-                console.log("print", id);
+                if (id) {
+                    downloadPDF(id).then((data) => {
+                        const fileURL = data;
+                        let link = document.createElement("a");
+                        link.href = fileURL;
+                        link.target = "_blank";
+                        link.setAttribute("open", "");
+                        document.body.appendChild(link);
+
+                        link.click();
+                    });
+                }
             },
             tooltip: "Reservierung als PDF Drucken",
         },
