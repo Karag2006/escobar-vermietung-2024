@@ -1,3 +1,4 @@
+import { Actions } from "@/types";
 import { Document } from "@/types/document";
 
 import {
@@ -17,18 +18,30 @@ interface SimpleReservationTableProps {
 export const SimpleReservationTable = ({
     reservations,
 }: SimpleReservationTableProps) => {
-    const actions = {
-        edit: (id: number) => {
-            console.log("edit", id);
+    const actions: Actions = {
+        edit: {
+            function: (id: number) => {
+                console.log("edit", id);
+            },
+            tooltip: "Reservierung bearbeiten",
         },
-        delete: (id: number) => {
-            console.log("delete", id);
+        delete: {
+            function: (id: number) => {
+                console.log("delete", id);
+            },
+            tooltip: "Reservierung löschen",
         },
-        forward: (id: number) => {
-            console.log("forward", id);
+        forward: {
+            function: (id: number) => {
+                console.log("forward", id);
+            },
+            tooltip: "in Mietvertrag umwandeln",
         },
-        print: (id: number) => {
-            console.log("print", id);
+        print: {
+            function: (id: number) => {
+                console.log("print", id);
+            },
+            tooltip: "Reservierung als PDF Drucken",
         },
     };
     return (

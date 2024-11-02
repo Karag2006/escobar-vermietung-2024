@@ -3,16 +3,13 @@ import { format } from "date-fns";
 import { Document } from "@/types/document";
 
 import { TableCell, TableRow } from "@/Components/ui/table";
-import { SimpleReservationTableActions } from "./SimpleReservationTableActions";
+
+import { ListActions } from "@/Components/Actions/ListActions";
+import { Actions } from "@/types";
 
 interface SimpleReservationTableRowProps {
     reservation: Document;
-    actions: {
-        edit: (id: number) => void;
-        delete: (id: number) => void;
-        forward: (id: number) => void;
-        print: (id: number) => void;
-    };
+    actions: Actions;
 }
 
 export const SimpleReservationTableRow = ({
@@ -41,10 +38,7 @@ export const SimpleReservationTableRow = ({
                     : null}
             </TableCell>
             <TableCell>
-                <SimpleReservationTableActions
-                    id={reservation.id}
-                    actions={actions}
-                />
+                <ListActions id={reservation.id} actions={actions} />
             </TableCell>
         </TableRow>
     );
