@@ -16,7 +16,13 @@ import {
     getDocumentTypeArticle,
     getDocumentTypeTranslation,
 } from "@/lib/utils";
-import { collisionCheck, getDocumentCollisionCheckData } from "@/data/document";
+import {
+    collisionCheck,
+    deleteDocument,
+    forwardDocument,
+    getDocumentCollisionCheckData,
+} from "@/data/document";
+import { router } from "@inertiajs/react";
 
 interface SimpleReservationTableRowProps {
     reservation: Document;
@@ -48,14 +54,25 @@ export const SimpleReservationTableRow = ({
         },
     };
 
-    const confirm = (id?: number) => {
+    const confirm = async (id?: number) => {
         if (!id) return;
+        let data;
         if (forward) {
-            console.log("forward", id);
+            data = await forwardDocument(id);
+            router.get(
+                `/${data.current_state}`,
+                {},
+                {
+                    headers: {
+                        forwardDocument: data.id,
+                    },
+                }
+            );
         } else {
-            console.log("delete", id);
+            data = await deleteDocument(id);
         }
         setConfirmModal(false);
+        console.log("Result: ", data);
     };
 
     const cancelConfirm = () => {
