@@ -34,6 +34,8 @@ class Document extends Model
 
     protected $fillable = [
         // Document internal Values
+        // 03.11.2024 Feature: Add Archive functionality - Add is_archived to the model
+        'is_archived',
         'offer_number',
         'reservation_number',
         'contract_number',
