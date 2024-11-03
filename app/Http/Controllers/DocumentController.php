@@ -332,15 +332,18 @@ class DocumentController extends Controller
                 //  Reservations:
                 // - Collect Date is in the past
 
+        $today = Carbon::today();
+        $todayString = $today->format("Y-m-d");
+
         $documents = Document::where('is_archived', false)
-            ->where(function ($query) {
+            ->where(function ($query) use($todayString) {
                 $query->where('current_state', 'offer')
                     ->where('reservation_deposit_recieved', false)
-                    ->where('reservation_deposit_date', '<', Carbon::today()->format("Y-m-d"));
+                    ->where('reservation_deposit_date', '<', $todayString);
             })
-            ->orWhere(function ($query) {
+            ->orWhere(function ($query) use($today) {
                 $query->where('current_state', 'reservation')
-                    ->where('collect_at', '<', Carbon::today());
+                    ->where('collect_at', '<', $today);
             })
             ->get();
         // dd('ArchiveDocuments function called : ', $documents);
