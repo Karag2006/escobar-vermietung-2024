@@ -29,6 +29,8 @@ export const documentSchema = z.object({
     vehicle_id: z.number().optional().nullable(),
     collect_time: z.string().optional().nullable(),
     return_time: z.string().optional().nullable(),
+    collect_at: z.string().optional().nullable(),
+    return_at: z.string().optional().nullable(),
     collectTimestamp: z.date().optional().nullable(),
     returnTimestamp: z.date().optional().nullable(),
     colorClass: z.string().optional().nullable(),
@@ -69,6 +71,10 @@ export type collisionCheckData = {
     vehicle_id: number;
     collect_date: string;
     return_date: string;
+    collect_time: string;
+    return_time: string;
+    collect_at: Date;
+    return_at: Date;
 };
 
 export type collisionData = {
@@ -78,6 +84,8 @@ export type collisionData = {
     endDate?: string;
     startTime?: string;
     endTime?: string;
+    collect_at?: Date;
+    return_at?: Date;
     customerName?: string;
     reservationFeePayed?: boolean;
     reservationFeeDate?: string;

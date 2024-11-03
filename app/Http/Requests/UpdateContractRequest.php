@@ -24,7 +24,7 @@ class UpdateContractRequest extends FormRequest
             "payment_types" => $payment_types
         ];
     }
-    
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -104,6 +104,8 @@ class UpdateContractRequest extends FormRequest
             'data.return_date' => 'required|regex:/^(?:[0-9]{2})\.(?:[0-9]{2})\.(?:[0-9]{4})$/',
             'data.collect_time' => 'required|regex:/^(?:[0-9]{2})\:(?:[0-9]{2})$/',
             'data.return_time' => 'required|regex:/^(?:[0-9]{2})\:(?:[0-9]{2})$/',
+            'data.collect_at' => 'date',
+            'data.return_at' => 'date',
             'data.collect_address_id' => 'required|integer|max:100',
             'data.total_price' => 'required|numeric|min:1|max:9999',
             'data.netto_price' => 'required|numeric|lte:data.total_price',

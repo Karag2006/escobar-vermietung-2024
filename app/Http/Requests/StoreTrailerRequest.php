@@ -26,6 +26,7 @@ class StoreTrailerRequest extends FormRequest
             'plateNumber' => 'required|string|max:15',
             'chassisNumber' => 'required|string|max:30',
             'tuev' => 'nullable|string|regex:/^(?:[0-1]{1})(?:[0-9]{1})\/(?:[0-9]{2})$/',
+            'inspection_at' => 'nullable|date',
             'totalWeight' => 'required|integer|min:500|max:3500',
             'usableWeight' => 'required|integer|min:1|lt:totalWeight',
             'loading_size' => 'required|array',

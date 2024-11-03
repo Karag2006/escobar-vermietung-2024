@@ -21,6 +21,14 @@ class DocumentFactory extends Factory
         $total = $this->faker->numberBetween($min = 750, $max = 3500);
         $usable = $this->faker->numberBetween($min = 500, $max = $total);
 
+        $collectDateTime = Carbon::parse($this->faker->dateTimeBetween($startDate = 'now', $endDate = '+12 month'));
+        $durationDays = $this->faker->numberBetween($min = 0, $max = 21);
+        $durationHours = $this->faker->numberBetween($min = 1, $max = 23);
+        $durationHours = $durationHours + $durationDays * 24;
+        $returnDateTime = $collectDateTime->copy()->addHours($durationHours);
+
+        [$collect_date, $collect_time] = $this->stringsFromDateTime($collectDateTime);
+        [$return_date, $return_time] = $this->stringsFromDateTime($returnDateTime);
         return [
             'offer_number' => $this->faker->numberBetween($min = 10, $max = 9999),
             'reservation_number' => $this->faker->numberBetween($min = 10, $max = 9999),
@@ -30,10 +38,17 @@ class DocumentFactory extends Factory
             'contract_date' => $this->faker->date($format = 'd.m.Y', $max = 'now') ,
             // currentState is one of : ['offer', 'reservation', 'contract']
             'current_state' => $this->faker->randomElement($array = array('offer', 'reservation', 'contract')),
-            'collect_date' => $this->faker->date($format = 'd.m.Y', $max = 'now'),
-            'return_date' => $this->faker->date($format = 'd.m.Y', $max = 'now'),
-            'collect_time' => $this->faker->time('H:i'),
-            'return_time' => $this->faker->time('H:i'),
+
+            // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
+            'collect_at' => $collectDateTime,
+            'return_at' => $returnDateTime,
+
+            // 22.10.2024 Fix: base collect_date and return_date on the new collect_at and return_at columns
+            'collect_date' => $collect_date,
+            'return_date' => $return_date,
+            'collect_time' => $collect_time,
+            'return_time' => $return_time,
+
             'netto_price' => $this->faker->randomFloat(2),
             'total_price' => $this->faker->randomFloat(2),
             'tax_value' => $this->faker->randomFloat(2),
@@ -127,4 +142,13 @@ class DocumentFactory extends Factory
             $result[] = $height;
         return $result;
     }
+
+    private function stringsFromDateTime($dateTime)
+    {
+        $date = Carbon::parse($dateTime)->format(config('custom.date_format'));
+        $time = Carbon::parse($dateTime)->format(config('custom.time_format'));
+
+        return [$date, $time];
+    }
+
 }

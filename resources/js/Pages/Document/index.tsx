@@ -207,7 +207,7 @@ export default function Document({
             {type === "offer" && (
                 <DataTable
                     columns={offerColumns}
-                    data={offerList}
+                    data={offerList ? offerList : []}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
                     forwardModal={forwardModal}
@@ -216,7 +216,7 @@ export default function Document({
             {type === "reservation" && (
                 <DataTable
                     columns={reservationColumns}
-                    data={reservationList}
+                    data={reservationList ? reservationList : []}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
                     forwardModal={forwardModal}
@@ -225,7 +225,7 @@ export default function Document({
             {type === "contract" && (
                 <DataTable
                     columns={contractColumns}
-                    data={contractList}
+                    data={contractList ? contractList : []}
                     editModal={editDocumentModal}
                     deleteModal={deleteModal}
                 />

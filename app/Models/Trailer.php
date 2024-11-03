@@ -11,13 +11,14 @@ class Trailer extends Model
     use HasFactory;
 
     protected $appends = ['selector'];
-    
+
     protected $dates = [
+        'inspection_at',
         'tuev',
         'created_at',
         'updated_at',
     ];
-    
+
     protected $fillable = [
         'title',
         'plateNumber',
@@ -26,8 +27,12 @@ class Trailer extends Model
         'usableWeight',
         'loading_size',
         'tuev',
+        'inspection_at',
         'comment'
     ];
+
+
+
 
     public function getSelectorAttribute(){
         return $this->plateNumber . ' - ' . $this->title;
@@ -53,6 +58,17 @@ class Trailer extends Model
     public function setLoadingSizeAttribute($value){
         $this->attributes['loading_size'] = implode(" x ", $value);
     }
+
+
+    public function getInspectionAtAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->firstOfMonth() : null;
+    }
+    public function setInspectionAtAttribute($value)
+    {
+        $this->attributes['inspection_at'] = $value ? Carbon::parse($value)->firstOfMonth() : null;
+    }
+
 
     public function getTuevAttribute($value)
     {

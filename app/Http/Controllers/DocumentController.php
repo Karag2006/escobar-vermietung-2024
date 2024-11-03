@@ -44,6 +44,25 @@ class DocumentController extends Controller
             $output[$key] = $value;
         }
 
+        // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
+        // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
+        if(!$output['collect_at'])
+        {
+            $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['collect_at'] = $collectDateTime;
+        }
+        else {
+            $output['collect_at'] = Carbon::parse($output['collect_at']);
+        }
+        if(!$output['return_at'])
+        {
+            $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['return_at'] = $returnDateTime;
+        }
+        else {
+            $output['return_at'] = Carbon::parse($output['return_at']);
+        }
+
         if ($mode == 'new') {
 
             $output['user_id'] = Auth::id();
@@ -83,41 +102,77 @@ class DocumentController extends Controller
         return $value ? Carbon::createFromFormat(config('custom.date_format'), $value)->format('Y-m-d') : null;
     }
 
+    // 22.10.2024 Fix: Adding this function to work with DateTime Objects instead of just Dates in string format.
+    private function getDateTimeObject($date, $time){
+        return $date ? Carbon::createFromFormat('d.m.Y H:i', $date.' '.$time) : null;
+    }
+
     public function collisionCheckData(Document $document) {
         return response()->json($document->only([
             'vehicle_id',
             'collect_date',
-            'return_date'
+            'return_date',
+            'collect_time',
+            'return_time'
         ]), Response::HTTP_OK);
     }
 
     // function to check if the current Document, potentially conflicts with any other Document on File.
     // Only checks Dates and to be sure will call potential conflict even if the other Document only overlaps in the collect- or return Date.
+
+
+    // 22.10.2024 Fix: This function works, but needs to to take times into account as well for the Month List to work properly.
+    //                 The request needs to be changed to include collect_time and return_time as well.
+
     public function collisionCheck(Request $request) {
 
         if (!$request['vehicle_id'] ||
             !$request['collect_date'] ||
-            !$request['return_date']
+            !$request['return_date'] ||
+            //  22.10.2024 Fix: Adding the time to the required fields.
+            // WARNING: Frontend needs to be adjusted to send the time as well.
+            !$request['collect_time'] ||
+            !$request['return_time']
         )
         return response()->json(null, Response::HTTP_UNPROCESSABLE_ENTITY);
 
-        $collectDate = $this->getISODate($request['collect_date']);
-        $returnDate = $this->getISODate($request['return_date']);
-        $currentDate = Carbon::today()->format('Y-m-d');
+        // 22.10.2024 Fix: Old functionality:
+        // $collectDate = $this->getISODate($request['collect_date']);
+        // $returnDate = $this->getISODate($request['return_date']);
+        // $currentDate = Carbon::today()->format('Y-m-d');
+
+        // 22.10.2024 Fix: New functionality using DateTime Objects:
+        if(!$request['collect_at'])
+            $collectDate = $this->getDateTimeObject($request['collect_date'], $request['collect_time']);
+        else $collectDate = Carbon::parse($request['collect_at']);
+
+        if(!$request['return_at'])
+            $returnDate = $this->getDateTimeObject($request['return_date'], $request['return_time']);
+        else $returnDate = Carbon::parse($request['return_at']);
+        $currentDate = Carbon::now();
+
 
         // Requirements for collisions with Document:
-            // - Document is not the this document itself
-            // - Document rental period is not already in the past.
-            // - Document deals with the same Trailer
-            // - Document's collect Date happens before this documents return Date
-            //  && Document's return Date happens after this documents collect Date.
-        $collisionDocument = Document::whereNot('id', $request['id'])
-            ->whereNot('return_date', '<', $currentDate)
+        //     - Document is not this document itself
+        //     - Document rental period is not already in the past.
+        //     - Document deals with the same Trailer
+        //     - Document's collect Date happens before this documents return Date
+        //      && Document's return Date happens after this documents collect Date.
+        $collisionDocument = Document::where('id', "!=", $request['id'])
+            ->where('return_at', '>=', $currentDate)
             ->where('vehicle_id', $request['vehicle_id'])
             ->where(function ($query) use($collectDate, $returnDate){
-                $query->where('collect_date', '<=', $returnDate)
-                ->where('return_date', '>=', $collectDate);
+                $query->where('collect_at', '<', $returnDate)
+                ->where('return_at', '>', $collectDate);
             })->first();
+
+            // $collisionDocument = Document::whereNot('id', $request['id'])
+            // ->whereNot('return_date', '<', $currentDate)
+            // ->where('vehicle_id', $request['vehicle_id'])
+            // ->where(function ($query) use($collectDate, $returnDate){
+            //     $query->where('collect_date', '<=', $returnDate)
+            //     ->where('return_date', '>=', $collectDate);
+            // })->first();
 
         if(!$collisionDocument) return response()->json(['collision' => 'no'], Response::HTTP_OK);
 
@@ -131,6 +186,8 @@ class DocumentController extends Controller
                 'endDate' => $collisionDocument['return_date'],
                 'startTime' => $collisionDocument['collect_time'],
                 'endTime' => $collisionDocument['return_time'],
+                'collect_at' => $collisionDocument['collect_at'],
+                'return_at' => $collisionDocument['return_at'],
                 'customerName' => $collisionDocument['customer_name1'],
                 'reservationFeePayed' => $collisionDocument['reservation_deposit_recieved'],
                 'reservationFeeDate' => $collisionDocument['reservation_deposit_date']
@@ -174,6 +231,7 @@ class DocumentController extends Controller
     public function destroy(Document $document)
     {
         $document->delete();
+        return response()->json(['status' => "deleted"], Response::HTTP_OK);
     }
 
     public function downloadPDF(Document $document)

@@ -30,6 +30,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { toast } from "sonner";
 import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
 import { router } from "@inertiajs/react";
+import { parse } from "date-fns";
 
 interface QuickReservationModalProps {
     currentID: number;
@@ -169,13 +170,29 @@ export const QuickReservationModal = ({
             if (
                 data.trailer.id &&
                 data.data.collect_date &&
-                data.data.return_date
+                data.data.return_date &&
+                data.data.return_time &&
+                data.data.collect_time
             ) {
+                data.data.collect_at = parse(
+                    data.data.collect_date + " " + data.data.collect_time,
+                    "dd.MM.yyyy HH:mm",
+                    new Date()
+                );
+                data.data.return_at = parse(
+                    data.data.return_date + " " + data.data.return_time,
+                    "dd.MM.yyyy HH:mm",
+                    new Date()
+                );
                 collisionCheck({
                     id: undefined,
                     vehicle_id: data.trailer.id,
                     collect_date: data.data.collect_date,
                     return_date: data.data.return_date,
+                    collect_time: data.data.collect_time,
+                    return_time: data.data.return_time,
+                    collect_at: data.data.collect_at,
+                    return_at: data.data.return_at,
                 })
                     .then((data) => {
                         if (data.collision === "no") storeNewDocument();
@@ -197,13 +214,29 @@ export const QuickReservationModal = ({
             if (
                 data.trailer.id &&
                 data.data.collect_date &&
-                data.data.return_date
+                data.data.return_date &&
+                data.data.return_time &&
+                data.data.collect_time
             ) {
+                data.data.collect_at = parse(
+                    data.data.collect_date + " " + data.data.collect_time,
+                    "dd.MM.yyyy HH:mm",
+                    new Date()
+                );
+                data.data.return_at = parse(
+                    data.data.return_date + " " + data.data.return_time,
+                    "dd.MM.yyyy HH:mm",
+                    new Date()
+                );
                 collisionCheck({
                     id: currentID,
                     vehicle_id: data.trailer.id,
                     collect_date: data.data.collect_date,
                     return_date: data.data.return_date,
+                    collect_time: data.data.collect_time,
+                    return_time: data.data.return_time,
+                    collect_at: data.data.collect_at,
+                    return_at: data.data.return_at,
                 })
                     .then((data) => {
                         if (data.collision === "no") documentUpdate();

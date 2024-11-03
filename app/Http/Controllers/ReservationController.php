@@ -27,7 +27,7 @@ class ReservationController extends Controller
         return $number;
     }
 
-    // Translate the input into the form that the Database Requires. 
+    // Translate the input into the form that the Database Requires.
     // (should happen after Data validation, use Store and Update Requests for validation.)
     private function useInput($input, $mode)
     {
@@ -52,6 +52,25 @@ class ReservationController extends Controller
         }
         foreach ($settings as $key => $value) {
             $output[$key] = $value;
+        }
+
+        // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
+        // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
+        if(!$output['collect_at'])
+        {
+            $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['collect_at'] = $collectDateTime;
+        }
+        else {
+            $output['collect_at'] = Carbon::parse($output['collect_at']);
+        }
+        if(!$output['return_at'])
+        {
+            $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['return_at'] = $returnDateTime;
+        }
+        else {
+            $output['return_at'] = Carbon::parse($output['return_at']);
         }
 
         if ($mode == 'new') {
@@ -82,12 +101,16 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
+        // 27.10.2024 - Fix/DatesAndTimes :
+        // collect_at and return_at added to the List
+        // order changed to collect_at
+        // Todo: Add flag to show only future reservations
         $reservationList = Document::with('collectAddress:id,name')
-            ->select('id', 'reservation_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
+            ->select('id', 'reservation_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_at', 'return_at', 'collect_address_id', "current_state")
             ->where('current_state', 'reservation')
-            ->orderBy('reservation_number', 'desc')
+            ->orderBy('collect_at', 'desc')
             ->get();
-        
+
         $headerValue = intval($request->header('Forwarddocument'));
         if ($headerValue > 0)
         {

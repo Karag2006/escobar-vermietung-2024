@@ -28,7 +28,7 @@ class OfferController extends Controller
         return $number;
     }
 
-    // Translate the input into the form that the Database Requires. 
+    // Translate the input into the form that the Database Requires.
     // (should happen after Data validation, use Store and Update Requests for validation.)
     private function useInput($input, $mode)
     {
@@ -55,13 +55,31 @@ class OfferController extends Controller
             $output[$key] = $value;
         }
 
+        // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
+        // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
+        if(!$output['collect_at'])
+        {
+            $collectDateTime = Carbon::createFromFormat($output['collect_date'] . ' ' . $output['collect_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['collect_at'] = $collectDateTime;
+        }
+        else {
+            $output['collect_at'] = Carbon::parse($output['collect_at']);
+        }
+        if(!$output['return_at'])
+        {
+            $returnDateTime = Carbon::createFromFormat($output['return_date'] . ' ' . $output['return_time'], config('custom.date_format'). ' ' . config('custom.time_format'), 'Europe/Berlin');
+            $output['return_at'] = $returnDateTime;
+        }
+        else {
+            $output['return_at'] = Carbon::parse($output['return_at']);
+        }
+
         if ($mode == 'new') {
 
             $output['user_id'] = Auth::id();
 
-            $today = Carbon::today()->format('d.m.Y');
+            $today = Carbon::today()->format(config('custom.date_format'));
             $output['selectedEquipmentList'] = json_encode($output['selectedEquipmentList']);
-
             $output['offer_number'] = $this->getNextNumber();
             $output['current_state'] = "offer";
             $output['offer_date'] = $today;
@@ -76,16 +94,20 @@ class OfferController extends Controller
      */
     public function index(Request $request)
     {
+        // 27.10.2024 - Fix/DatesAndTimes :
+        // collect_at and return_at added to the List
+        // order changed to collect_at
+        // Todo: Add flag to show only future offers
         $offerList = Document::with('collectAddress:id,name')
-        ->select('id', 'offer_number', 'collect_date', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
+        ->select('id', 'offer_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
         ->where('current_state', 'offer')
-        ->orderBy('offer_number', 'desc')
+        ->orderBy('collect_at', 'desc')
         ->get();
 
         $headerValue = intval($request->header('Forwarddocument'));
         if ($headerValue > 0)
         {
-            
+
             return Inertia::render('Document/index', [
                 'offerList' => $offerList,
                 'type' => 'offer',
@@ -96,10 +118,10 @@ class OfferController extends Controller
         return Inertia::render('Document/index', [
             'offerList' => $offerList,
             'type' => 'offer'
-            
+
         ]);
 
-    }    
+    }
 
     /**
      * Store a newly created resource in storage.
