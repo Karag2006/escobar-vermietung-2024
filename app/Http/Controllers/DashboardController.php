@@ -22,13 +22,33 @@ class DashboardController extends Controller
         return $reservations;
     }
 
-    // private function getNextInspectionTrailers() {
-    //     $currentMonth = Carbon::today()->startOfMonth();
-    //     $due = Trailer::where()
-    // }
+    private function getNextInspectionTrailers() {
+        $currentMonth = Carbon::today()->startOfMonth();
+        $due = Trailer::where('inspection_at', '<=', $currentMonth)
+        ->orderBy('inspection_at', 'ASC')
+        ->get();
+
+        $currentCount = $due ? count($due) : 0;
+        if ($currentCount < 5) {
+            $nextDue = Trailer::where('inspection_at', '>', $currentMonth)
+            ->orderBy('inspection_at', 'ASC')
+            ->limit(5 - $currentCount)
+            ->get();
+
+            $due = $due->merge($nextDue);
+        }
+
+        return $due;
+    }
+
+
 
     public function index() {
         $nextReservations = $this->GetNextReservations();
-        return Inertia::render('Dashboard', ['nextReservations' => $nextReservations]);
+        $nextDueTrailers = $this->getNextInspectionTrailers();
+        return Inertia::render('Dashboard/index', [
+            'nextReservations' => $nextReservations,
+            'nextDueTrailers' => $nextDueTrailers
+        ]);
     }
 }

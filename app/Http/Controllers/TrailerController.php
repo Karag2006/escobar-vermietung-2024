@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTrailerRequest;
 use App\Http\Requests\UpdateTrailerRequest;
 use App\Models\Trailer;
+use Carbon\Carbon;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,7 +16,7 @@ class TrailerController extends Controller
      */
     public function index()
     {
-        $trailers = Trailer::select('id', 'title', 'plateNumber', 'totalWeight', 'usableWeight', 'loading_size', 'tuev')->orderBy('plateNumber')->get();
+        $trailers = Trailer::select('id', 'title', 'plateNumber', 'totalWeight', 'usableWeight', 'loading_size', 'tuev', 'inspection_at')->orderBy('plateNumber')->get();
         return Inertia::render('Trailer/index', [
             'trailers' => $trailers
         ]);
@@ -43,6 +44,9 @@ class TrailerController extends Controller
      */
     public function update(UpdateTrailerRequest $request, Trailer $trailer)
     {
+        if(!$request->inspection_at){
+            $request->merge(['inspection_at' => Carbon::createFromFormat('m/y', $request->tuev)]);
+        }
         $trailer->update($request->all());
     }
 
@@ -59,6 +63,7 @@ class TrailerController extends Controller
         $trailer = $trailer->only([
             'id',
             'tuev',
+            'inspection_at'
         ]);
 
         return response()->json($trailer, Response::HTTP_OK);
