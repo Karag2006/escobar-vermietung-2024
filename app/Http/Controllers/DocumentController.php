@@ -318,4 +318,35 @@ class DocumentController extends Controller
             Response::HTTP_OK
         );
     }
+
+    public static function archiveDocuments()
+    {
+        // 03.11.2024 Feature: Add Archive functionality
+        // Documents to be archived need to pass all the following conditions:
+            // - Document is not already archived
+            // - Document is offer or reservation
+                //  Offers :
+                //  - reservation Deposit is not payed
+                //  - reservation Deposit Date is in the past
+
+                //  Reservations:
+                // - Collect Date is in the past
+
+        $documents = Document::where('is_archived', false)
+            ->where(function ($query) {
+                $query->where('current_state', 'offer')
+                    ->where('reservation_deposit_recieved', false)
+                    ->where('reservation_deposit_date', '<', Carbon::today()->format("Y-m-d"));
+            })
+            ->orWhere(function ($query) {
+                $query->where('current_state', 'reservation')
+                    ->where('collect_at', '<', Carbon::today());
+            })
+            ->get();
+        // dd('ArchiveDocuments function called : ', $documents);
+        foreach ($documents as $document) {
+            $document->update(['is_archived' => true]);
+        }
+
+    }
 }
