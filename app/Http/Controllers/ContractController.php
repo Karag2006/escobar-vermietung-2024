@@ -101,12 +101,21 @@ class ContractController extends Controller
         // 27.10.2024 - Fix/DatesAndTimes :
         // collect_at and return_at added to the List
 
+        // 03.11.2024 Feature: Add Archive functionality
+        // Removed the archived documents from the list
+        // Restructured code to allow users to send parameter to show archived documents
+        $query = Document::query();
+        $query->with('collectAddress:id,name');
+        $query->select('id', 'contract_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
+        $query->where('current_state', 'contract');
 
-        $contractList = Document::with('collectAddress:id,name')
-            ->select('id', 'contract_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
-            ->where('current_state', 'contract')
-            ->orderBy('contract_number', 'desc')
-            ->get();
+        $showArchived = request('showArchived', false);
+
+        if (!$showArchived || $showArchived != 'true') {
+            $query->where('is_archived', false);
+        }
+
+        $contractList = $query->orderBy('contract_number', 'desc')->get();
 
         $headerValue = intval($request->header('Forwarddocument'));
         if ($headerValue > 0)

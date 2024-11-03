@@ -97,12 +97,30 @@ class OfferController extends Controller
         // 27.10.2024 - Fix/DatesAndTimes :
         // collect_at and return_at added to the List
         // order changed to collect_at
-        // Todo: Add flag to show only future offers
-        $offerList = Document::with('collectAddress:id,name')
-        ->select('id', 'offer_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
-        ->where('current_state', 'offer')
-        ->orderBy('collect_at', 'desc')
-        ->get();
+
+        // 03.11.2024 Feature: Add Archive functionality
+        // Removed the archived documents from the list
+        // Restructured code to allow users to send parameter to show archived documents
+
+        $query = Document::query();
+        $query->with('collectAddress:id,name');
+        $query->select('id', 'offer_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
+        $query->where('current_state', 'offer');
+
+        $showArchived = request('showArchived', false);
+
+        if (!$showArchived || $showArchived != 'true') {
+            $query->where('is_archived', false);
+        }
+
+        $offerList = $query->orderBy('collect_at', 'desc')->get();
+
+        // $offerList = Document::with('collectAddress:id,name')
+        // ->select('id', 'offer_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
+        // ->where('current_state', 'offer')
+        // ->where('is_archived', false)
+        // ->orderBy('collect_at', 'desc')
+        // ->get();
 
         $headerValue = intval($request->header('Forwarddocument'));
         if ($headerValue > 0)
