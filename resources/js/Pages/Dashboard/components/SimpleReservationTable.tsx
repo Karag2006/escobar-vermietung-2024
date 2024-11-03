@@ -11,6 +11,7 @@ import {
 
 import { SimpleReservationTableRow } from "./SimpleReservationTableRow";
 import { downloadPDF } from "@/data/document";
+import { router } from "@inertiajs/react";
 
 interface SimpleReservationTableProps {
     reservations: Document[];
@@ -22,7 +23,15 @@ export const SimpleReservationTable = ({
     const actions: Actions = {
         edit: {
             function: (id: number) => {
-                console.log("edit", id);
+                router.get(
+                    "/reservation",
+                    {},
+                    {
+                        headers: {
+                            forwardDocument: "" + id,
+                        },
+                    }
+                );
             },
             tooltip: "Reservierung bearbeiten",
         },
