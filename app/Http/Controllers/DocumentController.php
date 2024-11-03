@@ -231,6 +231,7 @@ class DocumentController extends Controller
     public function destroy(Document $document)
     {
         $document->delete();
+        return response()->json(['status' => "deleted"], Response::HTTP_OK);
     }
 
     public function downloadPDF(Document $document)

@@ -23,6 +23,7 @@ import {
     getDocumentCollisionCheckData,
 } from "@/data/document";
 import { router } from "@inertiajs/react";
+import { toast } from "sonner";
 
 interface SimpleReservationTableRowProps {
     reservation: Document;
@@ -59,17 +60,29 @@ export const SimpleReservationTableRow = ({
         let data;
         if (forward) {
             data = await forwardDocument(id);
-            router.get(
-                `/${data.current_state}`,
-                {},
-                {
-                    headers: {
-                        forwardDocument: data.id,
-                    },
-                }
-            );
+            if (data && data.id) {
+                toast.success(
+                    "Reservierung erfolgreich in Mietvertrag umgewandelt"
+                );
+                router.get(
+                    `/${data.current_state}`,
+                    {},
+                    {
+                        headers: {
+                            forwardDocument: data.id,
+                        },
+                    }
+                );
+            }
         } else {
             data = await deleteDocument(id);
+            if (data && data.status === "deleted") {
+                toast.success("Reservierung erfolgreich gelöscht");
+                router.reload({
+                    only: ["nextReservations"],
+                    preserveScroll: true,
+                });
+            }
         }
         setConfirmModal(false);
         console.log("Result: ", data);
