@@ -24,6 +24,7 @@ import {
 } from "@/data/document";
 import { router } from "@inertiajs/react";
 import { toast } from "sonner";
+import { arch } from "os";
 
 interface SimpleReservationTableRowProps {
     reservation: Document;
@@ -52,6 +53,12 @@ export const SimpleReservationTableRow = ({
                 setConfirmModal(true);
             },
             tooltip: "Reservierung löschen",
+        },
+        archive: {
+            function: (id: number) => {
+                console.log("archive", id);
+            },
+            tooltip: "Reservierung archivieren",
         },
     };
 

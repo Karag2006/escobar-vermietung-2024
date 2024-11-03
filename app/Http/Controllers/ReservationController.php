@@ -111,7 +111,7 @@ class ReservationController extends Controller
 
         $query = Document::query();
         $query->with('collectAddress:id,name');
-        $query->select('id', 'reservation_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
+        $query->select('id', 'is_archived',  'reservation_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
         $query->where('current_state', 'reservation');
 
         $showArchived = request('showArchived', false);
@@ -132,7 +132,8 @@ class ReservationController extends Controller
         }
         return Inertia::render('Document/index', [
             'reservationList' => $reservationList,
-            'type' => 'reservation'
+            'type' => 'reservation',
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 

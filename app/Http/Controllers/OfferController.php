@@ -104,7 +104,7 @@ class OfferController extends Controller
 
         $query = Document::query();
         $query->with('collectAddress:id,name');
-        $query->select('id', 'offer_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
+        $query->select('id', 'is_archived', 'offer_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
         $query->where('current_state', 'offer');
 
         $showArchived = request('showArchived', false);
@@ -135,7 +135,8 @@ class OfferController extends Controller
 
         return Inertia::render('Document/index', [
             'offerList' => $offerList,
-            'type' => 'offer'
+            'type' => 'offer',
+            'queryParams' => request()->query() ?: null,
 
         ]);
 

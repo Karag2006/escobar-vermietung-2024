@@ -4,6 +4,7 @@ import { PrintAction } from "./PrintAction";
 import { ForwardAction } from "./ForwardAction";
 import { EditAction } from "./EditAction";
 import { DeleteAction } from "./DeleteAction";
+import { ArchiveAction } from "./ArchiveAction";
 
 interface ListActionsProps {
     id: number;
@@ -39,6 +40,13 @@ export const ListActions = ({ id, actions }: ListActionsProps) => {
                     id={id}
                     erase={actions.delete.function}
                     tooltip={actions.delete.tooltip}
+                />
+            ) : null}
+            {actions.archive ? (
+                <ArchiveAction
+                    id={id}
+                    archive={actions.archive.function}
+                    tooltip={actions.archive.tooltip}
                 />
             ) : null}
         </div>

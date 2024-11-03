@@ -21,28 +21,25 @@ import {
 } from "@/Components/ui/table";
 import { DataTablePagination } from "./pagination";
 import { DataTableToolbar } from "./toolbar";
+import { Actions } from "@/types";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    editModal?: (id: number) => void;
-    deleteModal?: (id: number) => void;
-    forwardModal?: (id: number) => void;
+    actions: Actions;
+    queryParams?: any;
 }
 declare module "@tanstack/react-table" {
     interface CellContext<TData, TValue> {
-        editModal?: (id: number) => void;
-        deleteModal?: (id: number) => void;
-        forwardModal?: (id: number) => void;
+        actions: Actions;
     }
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
-    editModal,
-    deleteModal,
-    forwardModal,
+    actions,
+    queryParams,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -68,7 +65,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
-            <DataTableToolbar table={table} />
+            <DataTableToolbar table={table} queryParams={queryParams} />
             <div className="rounded-md border mb-4">
                 <Table>
                     <TableHeader>
@@ -105,9 +102,7 @@ export function DataTable<TData, TValue>({
                                                 cell.column.columnDef.cell,
                                                 {
                                                     ...cell.getContext(),
-                                                    editModal,
-                                                    deleteModal,
-                                                    forwardModal,
+                                                    actions,
                                                 }
                                             )}
                                         </TableCell>
