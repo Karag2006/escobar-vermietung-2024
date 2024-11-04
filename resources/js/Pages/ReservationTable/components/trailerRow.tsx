@@ -28,16 +28,13 @@ export const TrailerRow = ({
     documents,
     documentFunctions,
 }: RowProps) => {
-    let listOfColorClasses = [
-        "bg-red-500",
-        "bg-green-500",
-        "bg-indigo-500",
-        "bg-pink-500",
-        "bg-blue-500",
-        "bg-yellow-500",
-        "bg-purple-500",
-    ];
-    let colorClassIndex = Math.floor(Math.random() * listOfColorClasses.length);
+    let offerColors = ["bg-yellow-400/40", "bg-yellow-600/40"];
+    let offerColorIndex = 0;
+    let reservationColors = ["bg-green-400/40", "bg-green-600/40"];
+    let reservationColorIndex = 0;
+    let contractColors = ["bg-blue-400/40", "bg-blue-600/40"];
+    let contractColorIndex = 0;
+
     let listOfDays = eachDayOfInterval({
         start: startOfMonth(date),
         end: lastDayOfMonth(date),
@@ -115,12 +112,41 @@ export const TrailerRow = ({
                             )
                         ) {
                             // If the document starts on this day, it is added to the list of documents for this day
+
+                            // 04.11.2024 Feature: Month List
+                            // Color for document Markers is now based on the current state of the document
+                            // List of colors for each document type are defined above.
                             sortedDocuments[0].added = true;
-                            sortedDocuments[0].colorClass =
-                                listOfColorClasses[
-                                    colorClassIndex % listOfColorClasses.length
-                                ];
-                            colorClassIndex++;
+                            if (sortedDocuments[0].current_state === "offer") {
+                                sortedDocuments[0].colorClass =
+                                    offerColors[
+                                        offerColorIndex % offerColors.length
+                                    ];
+                                offerColorIndex++;
+                            }
+
+                            if (
+                                sortedDocuments[0].current_state ===
+                                "reservation"
+                            ) {
+                                sortedDocuments[0].colorClass =
+                                    reservationColors[
+                                        reservationColorIndex %
+                                            reservationColors.length
+                                    ];
+                                reservationColorIndex++;
+                            }
+                            if (
+                                sortedDocuments[0].current_state === "contract"
+                            ) {
+                                sortedDocuments[0].colorClass =
+                                    contractColors[
+                                        contractColorIndex %
+                                            contractColors.length
+                                    ];
+                                contractColorIndex++;
+                            }
+
                             documentsForDay.push(sortedDocuments[0]);
                             if (
                                 isSameDay(
@@ -151,12 +177,41 @@ export const TrailerRow = ({
                             // If the document starts before this day, and was not removed from the list yet, it is added to the list of documents for this day
                             documentsForDay.push(sortedDocuments[0]);
                             if (!sortedDocuments[0].colorClass) {
-                                sortedDocuments[0].colorClass =
-                                    listOfColorClasses[
-                                        colorClassIndex %
-                                            listOfColorClasses.length
-                                    ];
-                                colorClassIndex++;
+                                // 04.11.2024 Feature: Month List
+                                // Color for document Markers is now based on the current state of the document
+                                // List of colors for each document type are defined above.
+                                if (
+                                    sortedDocuments[0].current_state === "offer"
+                                ) {
+                                    sortedDocuments[0].colorClass =
+                                        offerColors[
+                                            offerColorIndex % offerColors.length
+                                        ];
+                                    offerColorIndex++;
+                                }
+
+                                if (
+                                    sortedDocuments[0].current_state ===
+                                    "reservation"
+                                ) {
+                                    sortedDocuments[0].colorClass =
+                                        reservationColors[
+                                            reservationColorIndex %
+                                                reservationColors.length
+                                        ];
+                                    reservationColorIndex++;
+                                }
+                                if (
+                                    sortedDocuments[0].current_state ===
+                                    "contract"
+                                ) {
+                                    sortedDocuments[0].colorClass =
+                                        contractColors[
+                                            contractColorIndex %
+                                                contractColors.length
+                                        ];
+                                    contractColorIndex++;
+                                }
                             }
 
                             if (
