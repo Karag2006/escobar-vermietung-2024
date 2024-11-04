@@ -49,6 +49,8 @@ export const blankForm = {
     data: {
         id: 0,
         offer_number: "",
+        // 04.11.2024 : Feature - Add Archive Functionality
+        is_archived: false,
         reservation_number: "",
         contract_number: "",
         offer_date: "",

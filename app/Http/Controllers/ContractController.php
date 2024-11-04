@@ -59,6 +59,12 @@ class ContractController extends Controller
             $output[$key] = $value;
         }
 
+        // 04.11.2024 : Feature - Add Archive Functionality
+        // an archived document can be unarchived by updating it
+        if (!!$output['is_archived']) {
+            $output['is_archived'] = false;
+        }
+
         // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
         // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
         if(!$output['collect_at'])
