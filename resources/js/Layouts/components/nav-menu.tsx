@@ -1,12 +1,14 @@
-import { BookOpenCheck, KeyRound, Power } from "lucide-react";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
+import { CircleGauge, KeyRound, List, Power } from "lucide-react";
+
+import { useApi } from "@/hooks/use-api";
+
 import NavLink from "@/Components/NavLink";
 import { Separator } from "@/Components/ui/separator";
 import { ApplicationLogo } from "@/Components/ApplicationLogo";
-import { useEffect, useState } from "react";
 import Icon from "@/Components/icon";
-import { useApi } from "@/hooks/use-api";
-import { format } from "date-fns";
 
 type NavMenuProps = {
     className?: string;
@@ -35,32 +37,43 @@ export const NavMenu = ({ className }: NavMenuProps) => {
             <Separator className="w-full my-2" />
             <nav className="block h-full w-full">
                 <div className="flex flex-col gap-1">
-                    {navItems?.map((item: NavItem) => {
-                        return (
-                            <NavLink
-                                key={item?.id}
-                                href={route(item?.link)}
-                                active={route().current(item?.link)}
-                                className="flex gap-4 items-center"
-                            >
-                                <Icon className="h-6 w-6" name={item.icon} />
-                                <span>{item?.name}</span>
-                            </NavLink>
-                        );
-                    })}
-
+                    {/* 04.11.2024 Feature: Month List
+                    Removed Dashboard from navItems and added it here as a static link
+                    in order to insert the reservationtable between the Dashboard and the next item */}
+                    <NavLink
+                        href={route("dashboard")}
+                        active={route().current("dashboard")}
+                    >
+                        <CircleGauge className="h-6 w-6" />
+                        <span className="inline-block">Dashboard</span>
+                    </NavLink>
                     <NavLink
                         href={route("reservationTable", month)}
                         active={route().current("reservationTable", month)}
                     >
-                        <BookOpenCheck className="h-6 w-6" />
-                        <span className="inline-block">
-                            Reservierungen Liste
-                        </span>
+                        <List className="h-6 w-6" />
+                        <span className="inline-block">Monatsübersicht</span>
                     </NavLink>
-
+                    {navItems?.map((item: NavItem) => {
+                        // 04.11.2024 Feature: Month List
+                        // Removed Dashboard from navItems and added it above as a static link
+                        if (item.id != 1)
+                            return (
+                                <NavLink
+                                    key={item?.id}
+                                    href={route(item?.link)}
+                                    active={route().current(item?.link)}
+                                    className="flex gap-4 items-center"
+                                >
+                                    <Icon
+                                        className="h-6 w-6"
+                                        name={item.icon}
+                                    />
+                                    <span>{item?.name}</span>
+                                </NavLink>
+                            );
+                    })}
                     <Separator className="w-full" />
-
                     <NavLink
                         href={route("profile.edit")}
                         active={route().current("profile.edit")}
@@ -68,7 +81,6 @@ export const NavMenu = ({ className }: NavMenuProps) => {
                         <KeyRound className="h-6 w-6" />
                         <span className="inline-block">Profile</span>
                     </NavLink>
-
                     <NavLink
                         href={route("logout")}
                         method="post"

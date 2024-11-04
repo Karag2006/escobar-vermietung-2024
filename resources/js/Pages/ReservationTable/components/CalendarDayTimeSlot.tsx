@@ -29,15 +29,11 @@ export const CalendarDayTimeSlot = ({
         forward: () => {},
     };
 
-    const markerClass = () => {
-        if (document?.current_state === "offer")
-            return document?.colorClass + "/20";
-        if (document?.current_state === "reservation")
-            return document?.colorClass + "/40";
-        if (document?.current_state === "contract")
-            return document?.colorClass + "/60";
-    };
-    const documentColorClass = markerClass();
+    // 04.11.2024 Feature: Month List
+    // Color for document Markers is now based on the current state of the document
+    // The colorClass is now stored in the document object
+    // Color Definitions can be found in "./trailerRow.tsx"
+    const documentColorClass = document?.colorClass;
 
     if (!document) {
         return <div className={cn("w-full h-full")}></div>;

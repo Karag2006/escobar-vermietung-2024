@@ -1,12 +1,7 @@
 import Holidays from "date-holidays";
-import { format, isWeekend } from "date-fns";
+import { format, isWeekend, isToday } from "date-fns";
 
 import { cn } from "@/lib/utils";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/Components/ui/tooltip";
 import { Document, DocumentFunctions } from "@/types/document";
 import { CalendarDayOverlay } from "./CalendarDayOverlay";
 
@@ -34,7 +29,8 @@ export const CalendarDay = ({
             className={cn(
                 "relative w-9 border-black border text-center",
                 "trailer-" + trailerId,
-                "day-" + dayNumber
+                "day-" + dayNumber,
+                isToday(day) ? "font-bold" : null
             )}
         >
             {dayNumber}

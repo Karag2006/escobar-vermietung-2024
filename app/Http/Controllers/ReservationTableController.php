@@ -30,7 +30,7 @@ class ReservationTableController extends Controller
         // 03.11.2024 Feature: Add Archive functionality
         // Removed the archived documents from the list
         $reservations = Document::with('collectAddress:id,name')
-        ->select('id', 'reservation_number', 'offer_number', 'contract_number', 'current_state', 'total_price', 'customer_name1', 'vehicle_id', 'vehicle_title', 'vehicle_plateNumber', 'collect_date', 'collect_time', 'return_date', 'return_time', 'collect_address_id')
+        ->select('id', 'is_archived', 'reservation_number', 'offer_number', 'contract_number', 'current_state', 'total_price', 'customer_name1', 'vehicle_id', 'vehicle_title', 'vehicle_plateNumber', 'collect_date', 'collect_time', 'return_date', 'return_time', 'collect_address_id')
         ->where('is_archived', false)
         ->whereDate('collect_date', '<=', $targetMonthEnd)
         ->whereDate('return_date', '>=', $targetMonthBegin)
@@ -47,15 +47,4 @@ class ReservationTableController extends Controller
             'month' => $month
         ]);
     }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-
 }
