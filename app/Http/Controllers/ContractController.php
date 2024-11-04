@@ -129,7 +129,8 @@ class ContractController extends Controller
 
         return Inertia::render('Document/index', [
             'contractList' => $contractList,
-            'type' => 'contract'
+            'type' => 'contract',
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 
