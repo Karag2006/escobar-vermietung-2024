@@ -16,15 +16,9 @@ import {
     getDocumentTypeArticle,
     getDocumentTypeTranslation,
 } from "@/lib/utils";
-import {
-    collisionCheck,
-    deleteDocument,
-    forwardDocument,
-    getDocumentCollisionCheckData,
-} from "@/data/document";
+import { deleteDocument, forwardDocument } from "@/data/document";
 import { router } from "@inertiajs/react";
 import { toast } from "sonner";
-import { arch } from "os";
 
 interface SimpleReservationTableRowProps {
     reservation: Document;
@@ -55,8 +49,8 @@ export const SimpleReservationTableRow = ({
             tooltip: "Reservierung löschen",
         },
         archive: {
-            function: (id: number) => {
-                console.log("archive", id);
+            function: (document: Document) => {
+                console.log("archive", document);
             },
             tooltip: "Reservierung archivieren",
         },
@@ -133,7 +127,11 @@ export const SimpleReservationTableRow = ({
                         : null}
                 </TableCell>
                 <TableCell>
-                    <ListActions id={reservation.id} actions={localActions} />
+                    <ListActions
+                        document={reservation}
+                        id={reservation.id}
+                        actions={localActions}
+                    />
                 </TableCell>
             </TableRow>
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>

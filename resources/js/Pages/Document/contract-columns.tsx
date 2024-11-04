@@ -64,6 +64,7 @@ export const contractColumns: ColumnDef<Document>[] = [
         cell: (cell) => {
             return (
                 <ListActions
+                    document={cell.row.original}
                     id={cell.row.original.id ? cell.row.original.id : 0}
                     actions={cell.actions}
                 />

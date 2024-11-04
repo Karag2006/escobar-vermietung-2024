@@ -18,7 +18,7 @@ import { Modal } from "@/Components/wrapper/modal";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { DecisionButtons } from "@/Components/decision-buttons";
 
-import { collisionData, DocumentProps } from "@/types/document";
+import { collisionData, Document, DocumentProps } from "@/types/document";
 import {
     collisionCheck,
     downloadPDF,
@@ -35,7 +35,7 @@ import { contractColumns } from "./contract-columns";
 import { CollisionDialog } from "./components/collision-dialog";
 import { Actions } from "@/types";
 
-export default function Document({
+export default function index({
     auth,
     offerList,
     reservationList,
@@ -141,8 +141,8 @@ export default function Document({
         },
 
         archive: {
-            function: (id: number) => {
-                console.log("toggleArchive", id);
+            function: (document: Document) => {
+                console.log("toggleArchive", document);
             },
             tooltip: `${germanDocumentType} archivieren`,
         },

@@ -1,4 +1,5 @@
 import { Config } from "ziggy-js";
+import { Document } from "./document";
 
 export interface User {
     id: number;
@@ -39,7 +40,7 @@ export type Actions = {
         tooltip?: string;
     };
     archive?: {
-        function: (id: number) => void;
+        function: (document: Document) => void;
         tooltip?: string;
     };
     restore?: {
