@@ -10,14 +10,22 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    private function GetNextReservations() {
+    private function GetNextReservations($showArchived = false) {
         $currentDate = Carbon::today();
-        $reservations = Document::with('collectAddress:id,name')
-        ->where('current_state', 'reservation')
-        ->where('collect_at', '>=', $currentDate)
-        ->orderBy('collect_at', 'ASC')
-        ->limit(5)
-        ->get();
+
+        // 03.11.2024 Feature: Add Archive functionality
+        // Removed the archived documents from the list
+
+        $query = Document::query();
+        $query->with('collectAddress:id,name');
+        $query->where('current_state', 'reservation');
+        $query->where('collect_at', '>=', $currentDate);
+
+        if (!$showArchived) {
+            $query->where('is_archived', false);
+        }
+
+        $reservations = $query->orderBy('collect_at', 'ASC')->limit(5)->get();
 
         return $reservations;
     }
@@ -44,11 +52,14 @@ class DashboardController extends Controller
 
 
     public function index() {
-        $nextReservations = $this->GetNextReservations();
+        $showArchived = request('showArchived', false);
+        $showArchived = $showArchived == 'true' ? true : false;
+        $nextReservations = $this->GetNextReservations($showArchived);
         $nextDueTrailers = $this->getNextInspectionTrailers();
         return Inertia::render('Dashboard/index', [
             'nextReservations' => $nextReservations,
-            'nextDueTrailers' => $nextDueTrailers
+            'nextDueTrailers' => $nextDueTrailers,
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 }

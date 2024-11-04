@@ -54,6 +54,12 @@ class ReservationController extends Controller
             $output[$key] = $value;
         }
 
+        // 04.11.2024 : Feature - Add Archive Functionality
+        // an archived document can be unarchived by updating it
+        if (!!$output['is_archived']) {
+            $output['is_archived'] = false;
+        }
+
         // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
         // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
         if(!$output['collect_at'])
@@ -104,12 +110,22 @@ class ReservationController extends Controller
         // 27.10.2024 - Fix/DatesAndTimes :
         // collect_at and return_at added to the List
         // order changed to collect_at
-        // Todo: Add flag to show only future reservations
-        $reservationList = Document::with('collectAddress:id,name')
-            ->select('id', 'reservation_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_at', 'return_at', 'collect_address_id', "current_state")
-            ->where('current_state', 'reservation')
-            ->orderBy('collect_at', 'desc')
-            ->get();
+
+        // 03.11.2024 Feature: Add Archive functionality
+        // Removed the archived documents from the list
+        // Restructured code to allow users to send parameter to show archived documents
+
+        $query = Document::query();
+        $query->with('collectAddress:id,name');
+        $query->select('id', 'is_archived',  'reservation_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
+        $query->where('current_state', 'reservation');
+
+        $showArchived = request('showArchived', false);
+        if (!$showArchived || $showArchived != 'true') {
+            $query->where('is_archived', false);
+        }
+
+        $reservationList = $query->orderBy('collect_at', 'asc')->get();
 
         $headerValue = intval($request->header('Forwarddocument'));
         if ($headerValue > 0)
@@ -122,7 +138,8 @@ class ReservationController extends Controller
         }
         return Inertia::render('Document/index', [
             'reservationList' => $reservationList,
-            'type' => 'reservation'
+            'type' => 'reservation',
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 

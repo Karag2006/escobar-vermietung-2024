@@ -59,6 +59,12 @@ class ContractController extends Controller
             $output[$key] = $value;
         }
 
+        // 04.11.2024 : Feature - Add Archive Functionality
+        // an archived document can be unarchived by updating it
+        if (!!$output['is_archived']) {
+            $output['is_archived'] = false;
+        }
+
         // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
         // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
         if(!$output['collect_at'])
@@ -101,12 +107,21 @@ class ContractController extends Controller
         // 27.10.2024 - Fix/DatesAndTimes :
         // collect_at and return_at added to the List
 
+        // 03.11.2024 Feature: Add Archive functionality
+        // Removed the archived documents from the list
+        // Restructured code to allow users to send parameter to show archived documents
+        $query = Document::query();
+        $query->with('collectAddress:id,name');
+        $query->select('id', 'is_archived', 'contract_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
+        $query->where('current_state', 'contract');
 
-        $contractList = Document::with('collectAddress:id,name')
-            ->select('id', 'contract_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
-            ->where('current_state', 'contract')
-            ->orderBy('contract_number', 'desc')
-            ->get();
+        $showArchived = request('showArchived', false);
+
+        if (!$showArchived || $showArchived != 'true') {
+            $query->where('is_archived', false);
+        }
+
+        $contractList = $query->orderBy('contract_number', 'desc')->get();
 
         $headerValue = intval($request->header('Forwarddocument'));
         if ($headerValue > 0)
@@ -120,7 +135,8 @@ class ContractController extends Controller
 
         return Inertia::render('Document/index', [
             'contractList' => $contractList,
-            'type' => 'contract'
+            'type' => 'contract',
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 

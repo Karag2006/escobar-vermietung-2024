@@ -25,6 +25,7 @@ export const documentSchema = z.object({
     vehicle_plateNumber: z.string(),
     collect_address_id: z.number(),
     current_state: z.string(),
+    is_archived: z.boolean().optional().nullable(),
     added: z.boolean().optional().nullable(),
     vehicle_id: z.number().optional().nullable(),
     collect_time: z.string().optional().nullable(),
@@ -46,6 +47,7 @@ export type DocumentProps = {
     contractList?: Document[];
     type: documentType;
     ForwardDocument?: number;
+    queryParams?: string;
 } & PageProps;
 
 export type ReservationTableProps = {

@@ -12,14 +12,26 @@ import {
 import { SimpleReservationTableRow } from "./SimpleReservationTableRow";
 import { downloadPDF } from "@/data/document";
 import { router } from "@inertiajs/react";
+import { ArchiveButton } from "@/Components/data-table/ArchiveButton";
 
 interface SimpleReservationTableProps {
     reservations: Document[];
+    queryParams?: any;
 }
 
 export const SimpleReservationTable = ({
     reservations,
+    queryParams,
 }: SimpleReservationTableProps) => {
+    const toggleLoadArchived = () => {
+        const url = window.location.pathname;
+        if (!queryParams?.showArchived) {
+            router.get(`${url}`, { showArchived: true, preserveScroll: true });
+        } else {
+            router.get(`${url}`, { preserveScroll: true });
+        }
+    };
+
     const actions: Actions = {
         edit: {
             function: (id: number) => {
@@ -67,7 +79,13 @@ export const SimpleReservationTable = ({
     };
     return (
         <section>
-            <h2 className="font-bold text-xl">Nächste Reservierungen</h2>
+            <div className="flex justify-between">
+                <h2 className="font-bold text-xl">Nächste Reservierungen</h2>
+                <ArchiveButton
+                    status={!!queryParams?.showArchived}
+                    onClick={toggleLoadArchived}
+                />
+            </div>
 
             <Table className="border border-neutral-300 mt-4 rounded-md">
                 <TableHeader>

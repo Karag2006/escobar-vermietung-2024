@@ -30,6 +30,8 @@ class DocumentFactory extends Factory
         [$collect_date, $collect_time] = $this->stringsFromDateTime($collectDateTime);
         [$return_date, $return_time] = $this->stringsFromDateTime($returnDateTime);
         return [
+            // 03.11.2024 Feature: Add Archive functionality - Add is_archived to the factory - 40% chance of being true
+            'is_archived' => $this->faker->boolean($chanceOfGettingTrue = 40),
             'offer_number' => $this->faker->numberBetween($min = 10, $max = 9999),
             'reservation_number' => $this->faker->numberBetween($min = 10, $max = 9999),
             'contract_number' => $this->faker->numberBetween($min = 10, $max = 9999),

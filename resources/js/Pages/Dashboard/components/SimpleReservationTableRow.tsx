@@ -17,10 +17,9 @@ import {
     getDocumentTypeTranslation,
 } from "@/lib/utils";
 import {
-    collisionCheck,
+    archiveDocument,
     deleteDocument,
     forwardDocument,
-    getDocumentCollisionCheckData,
 } from "@/data/document";
 import { router } from "@inertiajs/react";
 import { toast } from "sonner";
@@ -52,6 +51,20 @@ export const SimpleReservationTableRow = ({
                 setConfirmModal(true);
             },
             tooltip: "Reservierung löschen",
+        },
+        archive: {
+            function: async (document: Document) => {
+                const data = await archiveDocument(
+                    document.id ? document.id : 0
+                );
+                if (data.is_archived) {
+                    toast.success(`Reservierung archiviert`);
+                    router.reload({
+                        only: ["nextReservations"],
+                    });
+                }
+            },
+            tooltip: "Reservierung archivieren",
         },
     };
 
@@ -126,7 +139,11 @@ export const SimpleReservationTableRow = ({
                         : null}
                 </TableCell>
                 <TableCell>
-                    <ListActions id={reservation.id} actions={localActions} />
+                    <ListActions
+                        document={reservation}
+                        id={reservation.id}
+                        actions={localActions}
+                    />
                 </TableCell>
             </TableRow>
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>

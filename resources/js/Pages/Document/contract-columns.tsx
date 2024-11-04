@@ -4,8 +4,8 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 
-import { Actions } from "./components/actions";
 import { Document } from "@/types/document";
+import { ListActions } from "@/Components/Actions/ListActions";
 
 export const contractColumns: ColumnDef<Document>[] = [
     {
@@ -63,10 +63,10 @@ export const contractColumns: ColumnDef<Document>[] = [
         id: "actions",
         cell: (cell) => {
             return (
-                <Actions
-                    row={cell.row}
-                    editModal={cell.editModal}
-                    deleteModal={cell.deleteModal}
+                <ListActions
+                    document={cell.row.original}
+                    id={cell.row.original.id ? cell.row.original.id : 0}
+                    actions={cell.actions}
                 />
             );
         },

@@ -44,6 +44,12 @@ class DocumentController extends Controller
             $output[$key] = $value;
         }
 
+        // 04.11.2024 : Feature - Add Archive Functionality
+        // an archived document can be unarchived by updating it
+        if (!!$output['is_archived']) {
+            $output['is_archived'] = false;
+        }
+
         // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
         // 27.10.2024 Fix/DatesAndTimes : This might be the place where timezone issues are coming from.
         if(!$output['collect_at'])
@@ -317,5 +323,47 @@ class DocumentController extends Controller
             $document,
             Response::HTTP_OK
         );
+    }
+
+    public function toggleArchive(Document $document, Request $request)
+    {
+        // 04.11.2024 Feature: Add Archive functionality
+        // Toggle the is_archived value of the document.
+        $document->update(['is_archived' => !$document->is_archived]);
+        return response()->json($document, Response::HTTP_OK);
+    }
+
+    public static function archiveDocuments()
+    {
+        // 03.11.2024 Feature: Add Archive functionality
+        // Documents to be archived need to pass all the following conditions:
+            // - Document is not already archived
+            // - Document is offer or reservation
+                //  Offers :
+                //  - reservation Deposit is not payed
+                //  - reservation Deposit Date is in the past
+
+                //  Reservations:
+                // - Collect Date is in the past
+
+        $today = Carbon::today();
+        $todayString = $today->format("Y-m-d");
+
+        $documents = Document::where('is_archived', false)
+            ->where(function ($query) use($todayString) {
+                $query->where('current_state', 'offer')
+                    ->where('reservation_deposit_recieved', false)
+                    ->where('reservation_deposit_date', '<', $todayString);
+            })
+            ->orWhere(function ($query) use($today) {
+                $query->where('current_state', 'reservation')
+                    ->where('collect_at', '<', $today);
+            })
+            ->get();
+        // dd('ArchiveDocuments function called : ', $documents);
+        foreach ($documents as $document) {
+            $document->update(['is_archived' => true]);
+        }
+
     }
 }

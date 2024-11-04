@@ -63,6 +63,7 @@ class DocumentResource extends JsonResource
 
         $data = [
             'offer_number' => $this->offer_number,
+            'is_archived' => $this->is_archived,
             'reservation_number' => $this->reservation_number,
             'contract_number' => $this->contract_number,
             'offer_date' => $this->offer_date,
