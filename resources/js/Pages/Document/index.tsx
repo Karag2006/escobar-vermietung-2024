@@ -20,6 +20,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 
 import { collisionData, Document, DocumentProps } from "@/types/document";
 import {
+    archiveDocument,
     collisionCheck,
     downloadPDF,
     forwardDocument,
@@ -141,8 +142,16 @@ export default function index({
         },
 
         archive: {
-            function: (document: Document) => {
-                console.log("toggleArchive", document);
+            function: async (document: Document) => {
+                const data = await archiveDocument(
+                    document.id ? document.id : 0
+                );
+                if (data.is_archived) {
+                    toast.success(`${germanDocumentType} archiviert`);
+                    router.reload({
+                        only: ["offerList", "reservationList", "contractList"],
+                    });
+                }
             },
             tooltip: `${germanDocumentType} archivieren`,
         },

@@ -319,6 +319,14 @@ class DocumentController extends Controller
         );
     }
 
+    public function toggleArchive(Document $document, Request $request)
+    {
+        // 04.11.2024 Feature: Add Archive functionality
+        // Toggle the is_archived value of the document.
+        $document->update(['is_archived' => !$document->is_archived]);
+        return response()->json($document, Response::HTTP_OK);
+    }
+
     public static function archiveDocuments()
     {
         // 03.11.2024 Feature: Add Archive functionality

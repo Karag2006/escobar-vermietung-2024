@@ -14,4 +14,7 @@ Route::patch('document/general/{document}', [DocumentController::class, 'update'
 Route::delete('document/general/{document}', [DocumentController::class, 'destroy'])->name('document.delete');
 
 Route::get('reservationtable/{month}', [ReservationTableController::class, 'index'])->name('reservationTable');
+
+// 04.11.2024 : Feature - Add Archive Functionality
+Route::patch('archive/{document}', [DocumentController::class, 'toggleArchive'])->name('archive.toggle');
 ?>

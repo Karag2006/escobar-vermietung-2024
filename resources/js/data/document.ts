@@ -69,3 +69,9 @@ export const forwardDocument = async (id: number) => {
     const { data } = await axios.patch(route("forwardDocument", id), {});
     return data;
 };
+
+// 04.11.2024 Feature: Add Archive functionality
+export const archiveDocument = async (id: number) => {
+    const { data } = await axios.patch(route("archive.toggle", id), {});
+    return data;
+};

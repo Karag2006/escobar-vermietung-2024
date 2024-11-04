@@ -106,7 +106,7 @@ class ContractController extends Controller
         // Restructured code to allow users to send parameter to show archived documents
         $query = Document::query();
         $query->with('collectAddress:id,name');
-        $query->select('id', 'contract_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
+        $query->select('id', 'is_archived', 'contract_number', 'collect_date', 'collect_at', 'return_at', 'return_date', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state");
         $query->where('current_state', 'contract');
 
         $showArchived = request('showArchived', false);

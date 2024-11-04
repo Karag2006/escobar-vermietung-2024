@@ -16,7 +16,11 @@ import {
     getDocumentTypeArticle,
     getDocumentTypeTranslation,
 } from "@/lib/utils";
-import { deleteDocument, forwardDocument } from "@/data/document";
+import {
+    archiveDocument,
+    deleteDocument,
+    forwardDocument,
+} from "@/data/document";
 import { router } from "@inertiajs/react";
 import { toast } from "sonner";
 
@@ -49,8 +53,16 @@ export const SimpleReservationTableRow = ({
             tooltip: "Reservierung löschen",
         },
         archive: {
-            function: (document: Document) => {
-                console.log("archive", document);
+            function: async (document: Document) => {
+                const data = await archiveDocument(
+                    document.id ? document.id : 0
+                );
+                if (data.is_archived) {
+                    toast.success(`Reservierung archiviert`);
+                    router.reload({
+                        only: ["nextReservations"],
+                    });
+                }
             },
             tooltip: "Reservierung archivieren",
         },
