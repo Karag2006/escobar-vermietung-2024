@@ -11,12 +11,14 @@ import { SimpleReservationTable } from "./components/SimpleReservationTable";
 interface DashboardProps extends PageProps {
     nextReservations: Document[];
     nextDueTrailers: TrailerItem[];
+    queryParams?: any;
 }
 
 export default function Dashboard({
     auth,
     nextReservations,
     nextDueTrailers,
+    queryParams,
 }: DashboardProps) {
     const pageTitle = "Dashboard";
     return (
@@ -24,7 +26,10 @@ export default function Dashboard({
             <Head title={pageTitle} />
             <div className="flex flex-col gap-6">
                 <SimpleTrailerTable trailers={nextDueTrailers} />
-                <SimpleReservationTable reservations={nextReservations} />
+                <SimpleReservationTable
+                    reservations={nextReservations}
+                    queryParams={queryParams}
+                />
             </div>
         </AuthenticatedLayout>
     );

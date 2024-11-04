@@ -58,7 +58,8 @@ class DashboardController extends Controller
         $nextDueTrailers = $this->getNextInspectionTrailers();
         return Inertia::render('Dashboard/index', [
             'nextReservations' => $nextReservations,
-            'nextDueTrailers' => $nextDueTrailers
+            'nextDueTrailers' => $nextDueTrailers,
+            'queryParams' => request()->query() ?: null,
         ]);
     }
 }
