@@ -115,13 +115,6 @@ class OfferController extends Controller
 
         $offerList = $query->orderBy('collect_at', 'desc')->get();
 
-        // $offerList = Document::with('collectAddress:id,name')
-        // ->select('id', 'offer_number', 'collect_date', 'return_date', 'collect_at', 'return_at', 'customer_name1', 'vehicle_title', 'vehicle_plateNumber', 'collect_address_id', "current_state")
-        // ->where('current_state', 'offer')
-        // ->where('is_archived', false)
-        // ->orderBy('collect_at', 'desc')
-        // ->get();
-
         $headerValue = intval($request->header('Forwarddocument'));
         if ($headerValue > 0)
         {

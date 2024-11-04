@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { Link, router } from "@inertiajs/react";
 import { Button } from "../ui/button";
+import { ArchiveButton } from "./ArchiveButton";
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;
@@ -17,7 +18,6 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
     const toggleLoadArchived = () => {
         const url = window.location.pathname;
-        console.log(queryParams);
         if (!queryParams?.showArchived) {
             router.get(`${url}`, { showArchived: true, preserveScroll: true });
         } else {
@@ -38,7 +38,10 @@ export function DataTableToolbar<TData>({
                 <Search className="h-6 w-6" />
             </div>
             <div>
-                <Button onClick={() => toggleLoadArchived()}>Archiv</Button>
+                <ArchiveButton
+                    status={!!queryParams?.showArchived}
+                    onClick={toggleLoadArchived}
+                />
             </div>
         </div>
     );
