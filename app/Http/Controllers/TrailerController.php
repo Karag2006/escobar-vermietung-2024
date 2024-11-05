@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTrailerRequest;
 use App\Http\Requests\UpdateTrailerRequest;
 use App\Models\Trailer;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,9 +15,20 @@ class TrailerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $trailers = Trailer::select('id', 'title', 'plateNumber', 'totalWeight', 'usableWeight', 'loading_size', 'tuev', 'inspection_at')->orderBy('plateNumber')->get();
+
+        // 05.11.2024 : Feature Inspection List - Add OpenEdit Header
+        $headerValue = intval($request->header('openEdit'));
+        if ($headerValue > 0)
+        {
+            return Inertia::render('Trailer/index', [
+                'trailers' => $trailers,
+                'openEdit' => $headerValue
+            ]);
+        }
+
         return Inertia::render('Trailer/index', [
             'trailers' => $trailers
         ]);

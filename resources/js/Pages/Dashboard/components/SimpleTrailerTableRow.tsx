@@ -1,10 +1,11 @@
+import { router } from "@inertiajs/react";
 import { format } from "date-fns";
 
+import { Actions } from "@/types";
 import { TrailerItem } from "@/types/trailer";
 
 import { TableCell, TableRow } from "@/Components/ui/table";
 import { TuevBatch } from "@/Pages/Trailer/components/tuev-batch";
-import { Actions } from "@/types";
 import { ListActions } from "@/Components/Actions/ListActions";
 
 interface SimpleTrailerTableRowProps {
@@ -19,7 +20,18 @@ export const SimpleTrailerTableRow = ({
     const actions: Actions = {
         edit: {
             function: (id: number) => {
-                console.log("edit", id);
+                // Move the user to the trailer Page
+                // and open the edit form
+                router.get(
+                    route("trailer"),
+                    {},
+                    {
+                        // Tell the trailer page to open the edit form for the trailer with id: id
+                        headers: {
+                            openEdit: "" + id,
+                        },
+                    }
+                );
             },
             tooltip: "Anhänger bearbeiten",
         },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
 
 import { TriangleAlert } from "lucide-react";
@@ -17,7 +17,7 @@ import { getTrailerById } from "@/data/trailer";
 import { TrailerForm } from "./components/form";
 import { toast } from "sonner";
 
-export default function User({ auth, trailers }: TrailerProps) {
+export default function User({ auth, trailers, openEdit }: TrailerProps) {
     const pageTitle = "Anhänger";
     const [confirmModal, setConfirmModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -58,6 +58,12 @@ export default function User({ auth, trailers }: TrailerProps) {
     const cancelDelete = () => {
         setConfirmModal(false);
     };
+
+    useEffect(() => {
+        if (openEdit) {
+            editTrailerModal(openEdit);
+        }
+    }, []);
 
     return (
         <AuthenticatedLayout

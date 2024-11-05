@@ -17,8 +17,12 @@ export const trailerSchema = z.object({
 
 export type TrailerItem = z.infer<typeof trailerSchema>;
 
+// 05.11.2024 Feature: Inspection List -
+// Trailer Page gets new prop OpenEdit containing the id of the trailer to be edited,
+// if OpenEdit Header was set.
 export type TrailerProps = {
     trailers: TrailerItem[];
+    openEdit?: number;
 } & PageProps;
 
 export type TrailerErrors = {
