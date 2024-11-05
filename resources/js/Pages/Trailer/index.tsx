@@ -16,6 +16,7 @@ import { TrailerProps } from "@/types/trailer";
 import { getTrailerById } from "@/data/trailer";
 import { TrailerForm } from "./components/form";
 import { toast } from "sonner";
+import { Actions } from "@/types";
 
 export default function User({ auth, trailers, openEdit }: TrailerProps) {
     const pageTitle = "Anhänger";
@@ -26,6 +27,17 @@ export default function User({ auth, trailers, openEdit }: TrailerProps) {
     const Form = useForm({
         id: currentID,
     });
+
+    const actions: Actions = {
+        edit: {
+            function: (id: number) => editTrailerModal(id),
+            tooltip: "Anhänger bearbeiten",
+        },
+        delete: {
+            function: (id: number) => deleteModal(id),
+            tooltip: "Anhänger löschen",
+        },
+    };
 
     const addTrailerModal = () => {
         setCurrentID(0);
@@ -79,12 +91,7 @@ export default function User({ auth, trailers, openEdit }: TrailerProps) {
         >
             <Head title={pageTitle} />
 
-            <DataTable
-                columns={columns}
-                data={trailers}
-                editModal={editTrailerModal}
-                deleteModal={deleteModal}
-            />
+            <DataTable columns={columns} data={trailers} actions={actions} />
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
                     header={

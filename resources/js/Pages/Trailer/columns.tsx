@@ -4,10 +4,10 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 import { TrailerItem } from "@/types/trailer";
-import { Actions } from "./components/actions";
 import { TuevBatch } from "./components/tuev-batch";
 import { LoadingSizeDisplay } from "./components/loading-size-display";
 import { WeightDisplay } from "./components/weight-display";
+import { ListActions } from "@/Components/Actions/ListActions";
 
 export const columns: ColumnDef<TrailerItem>[] = [
     {
@@ -66,9 +66,14 @@ export const columns: ColumnDef<TrailerItem>[] = [
             return <DataTableColumnHeader column={column} title="Lademaße" />;
         },
         cell: (cell) => {
+            const loadingSize = cell.row.original.loading_size;
+            if (!loadingSize) {
+                return null;
+            }
+            const loadingSizeString = JSON.stringify(loadingSize);
             return (
                 <LoadingSizeDisplay
-                    loadingSize={cell.row.original.loading_size}
+                    loadingSize={loadingSizeString}
                     className="w-max"
                 />
             );
@@ -89,11 +94,9 @@ export const columns: ColumnDef<TrailerItem>[] = [
         id: "actions",
         cell: (cell) => {
             return (
-                <Actions
-                    row={cell.row}
-                    editModal={cell.editModal}
-                    deleteModal={cell.deleteModal}
-                    className="w-max"
+                <ListActions
+                    actions={cell.actions}
+                    id={cell.row.original.id ? cell.row.original.id : 0}
                 />
             );
         },
