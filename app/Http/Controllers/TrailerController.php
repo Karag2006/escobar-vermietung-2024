@@ -67,7 +67,10 @@ class TrailerController extends Controller
      */
     public function destroy(Trailer $trailer)
     {
+        $id = $trailer->id;
         $trailer->delete();
+        return response()->json($id, Response::HTTP_OK);
+
     }
 
     public function getTuev(trailer $trailer)

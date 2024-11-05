@@ -14,3 +14,8 @@ export const getTuev = async (id: number) => {
     const { data } = await axios.get(`/tuev/${id}`);
     return data;
 };
+
+export const deleteTrailerById = async (id: number) => {
+    const { data } = await axios.delete(route("trailer.delete", id));
+    return data;
+};
