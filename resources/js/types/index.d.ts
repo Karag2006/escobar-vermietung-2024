@@ -43,12 +43,12 @@ export type Actions = {
         function: (document: Document) => void;
         tooltip?: string;
     };
-    restore?: {
-        function: (id: number) => void;
+    plusOneYear?: {
+        function: (id: number, years: 1) => void;
         tooltip?: string;
     };
-    plusYears?: {
-        function: (id: number, years: number) => void;
+    plusTwoYears?: {
+        function: (id: number, years: 2) => void;
         tooltip?: string;
     };
 };

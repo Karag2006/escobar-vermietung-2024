@@ -95,7 +95,7 @@ export const SimpleReservationTable = ({
                         <TableHead>Abholung</TableHead>
                         <TableHead>Abholstation</TableHead>
                         <TableHead>Rückgabe</TableHead>
-                        <TableHead>Aktionen</TableHead>
+                        <TableHead className="text-end">Aktionen</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>

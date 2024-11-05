@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 22.10.2024 Fix: Add collect_at and return_at columns for collision checks
+        // 27.10.2024 Feature: Inspection List - Add Inspection Date to Trailers
         Schema::table('trailers', function (Blueprint $table) {
             $table->dateTime('inspection_at')->nullable()->after('tuev');
         });
