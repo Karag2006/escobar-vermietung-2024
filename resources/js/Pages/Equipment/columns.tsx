@@ -4,7 +4,7 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 import { EquipmentItem } from "@/types/equipment";
-import { Actions } from "./components/actions";
+import { ListActions } from "@/Components/Actions/ListActions";
 
 export const columns: ColumnDef<EquipmentItem>[] = [
     {
@@ -36,10 +36,9 @@ export const columns: ColumnDef<EquipmentItem>[] = [
         id: "actions",
         cell: (cell) => {
             return (
-                <Actions
-                    row={cell.row}
-                    editModal={cell.editModal}
-                    deleteModal={cell.deleteModal}
+                <ListActions
+                    actions={cell.actions}
+                    id={cell.row.original.id ? cell.row.original.id : 0}
                 />
             );
         },

@@ -24,6 +24,14 @@ export function DataTableToolbar<TData>({
             router.get(`${url}`, { preserveScroll: true });
         }
     };
+
+    const hasArchive = [
+        "/offer",
+        "/reservation",
+        "/contract",
+        "/dashboard",
+    ].includes(window.location.pathname);
+
     return (
         <div className="flex justify-between items-center">
             <div className="flex items-center py-4 gap-2">
@@ -38,10 +46,12 @@ export function DataTableToolbar<TData>({
                 <Search className="h-6 w-6" />
             </div>
             <div>
-                <ArchiveButton
-                    status={!!queryParams?.showArchived}
-                    onClick={toggleLoadArchived}
-                />
+                {hasArchive ? (
+                    <ArchiveButton
+                        status={!!queryParams?.showArchived}
+                        onClick={toggleLoadArchived}
+                    />
+                ) : null}
             </div>
         </div>
     );

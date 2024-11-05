@@ -14,11 +14,11 @@ export const ArchiveButton = ({
         <Button onClick={() => onClick()} size="sm">
             {status ? (
                 <div className="flex gap-4">
-                    <ArchiveX className=" size-5" /> Hide Archive
+                    <ArchiveX className=" size-5" /> Archiv ausblenden
                 </div>
             ) : (
                 <div className="flex gap-4">
-                    <Archive className=" size-5" /> Show Archive
+                    <Archive className=" size-5" /> Archiv anzeigen
                 </div>
             )}
         </Button>

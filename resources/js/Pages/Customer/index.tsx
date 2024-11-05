@@ -15,6 +15,7 @@ import { columns } from "./columns";
 import { CustomerProps } from "@/types/customer";
 import { getCustomerById } from "@/data/customer";
 import { CustomerForm } from "./components/form";
+import { Actions } from "@/types";
 
 export default function User({ auth, customers }: CustomerProps) {
     const pageTitle = "Kunden";
@@ -25,6 +26,17 @@ export default function User({ auth, customers }: CustomerProps) {
     const Form = useForm({
         id: currentID,
     });
+
+    const actions: Actions = {
+        edit: {
+            function: (id: number) => editCustomerModal(id),
+            tooltip: "Kunden bearbeiten",
+        },
+        delete: {
+            function: (id: number) => deleteModal(id),
+            tooltip: "Kunden löschen",
+        },
+    };
 
     const addCustomerModal = () => {
         setCurrentID(0);
@@ -72,12 +84,7 @@ export default function User({ auth, customers }: CustomerProps) {
         >
             <Head title={pageTitle} />
 
-            <DataTable
-                columns={columns}
-                data={customers}
-                editModal={editCustomerModal}
-                deleteModal={deleteModal}
-            />
+            <DataTable columns={columns} data={customers} actions={actions} />
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
                     header={

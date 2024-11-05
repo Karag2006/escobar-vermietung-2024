@@ -15,6 +15,7 @@ import { columns } from "./columns";
 import { EquipmentProps } from "@/types/equipment";
 import { getEquipmentById } from "@/data/equipment";
 import { EquipmentForm } from "./components/form";
+import { Actions } from "@/types";
 
 export default function User({ auth, equipmentList }: EquipmentProps) {
     const pageTitle = "Zubehörliste";
@@ -25,6 +26,17 @@ export default function User({ auth, equipmentList }: EquipmentProps) {
     const Form = useForm({
         id: currentID,
     });
+
+    const actions: Actions = {
+        edit: {
+            function: (id: number) => editEquipmentModal(id),
+            tooltip: "Zubehör bearbeiten",
+        },
+        delete: {
+            function: (id: number) => deleteModal(id),
+            tooltip: "Zubehör löschen",
+        },
+    };
 
     const addEquipmentModal = () => {
         setCurrentID(0);
@@ -75,8 +87,7 @@ export default function User({ auth, equipmentList }: EquipmentProps) {
             <DataTable
                 columns={columns}
                 data={equipmentList}
-                editModal={editEquipmentModal}
-                deleteModal={deleteModal}
+                actions={actions}
             />
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
