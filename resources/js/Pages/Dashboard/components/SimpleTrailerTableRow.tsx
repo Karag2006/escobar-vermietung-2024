@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { addYears, format, set, startOfMonth } from "date-fns";
 
 import { TriangleAlert } from "lucide-react";
 
@@ -14,7 +14,7 @@ import { Modal } from "@/Components/wrapper/modal";
 import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { ListActions } from "@/Components/Actions/ListActions";
 import { DecisionButtons } from "@/Components/decision-buttons";
-import { deleteTrailerById } from "@/data/trailer";
+import { deleteTrailerById, updateInspectionDate } from "@/data/trailer";
 
 interface SimpleTrailerTableRowProps {
     trailer: TrailerItem;
@@ -24,6 +24,8 @@ export const SimpleTrailerTableRow = ({
     trailer,
 }: SimpleTrailerTableRowProps) => {
     const [confirmModal, setConfirmModal] = useState(false);
+    const [confirmAction, setConfirmAction] = useState("delete");
+    const [inspectionAddYears, setInspectionAddYears] = useState<1 | 2>(1);
 
     // 04.11.2024 Feature: Inspection List
     // Adding actions to the table row
@@ -52,20 +54,36 @@ export const SimpleTrailerTableRow = ({
             tooltip: "Anhänger löschen",
         },
         plusOneYear: {
-            function: (id: number, years: number = 1) => {
-                console.log("plusOneYear", id, years);
+            function: (id: number, years: 1) => {
+                plusYears(id, years);
             },
             tooltip: "TÜV um ein Jahr verlängern",
         },
         plusTwoYears: {
-            function: (id: number, years: number = 2) => {
-                console.log("plusTwoYear", id, years);
+            function: (id: number, years: 2) => {
+                plusYears(id, years);
             },
             tooltip: "TÜV um zwei Jahre verlängern",
         },
     };
 
+    const plusYears = (id: number, years: 1 | 2) => {
+        setInspectionAddYears(years);
+        setConfirmAction("plusYears");
+        setConfirmModal(true);
+    };
+
+    const plusYearsConfirm = async (id: number) => {
+        const result = await updateInspectionDate(id, inspectionAddYears);
+        if (result) {
+            setConfirmModal(false);
+            toast.success("TÜV Datum wurde aktualisiert");
+            router.reload({ only: ["nextDueTrailers"] });
+        }
+    };
+
     const deleteModal = () => {
+        setConfirmAction("delete");
         setConfirmModal(true);
     };
 
@@ -79,7 +97,7 @@ export const SimpleTrailerTableRow = ({
         setConfirmModal(false);
     };
 
-    const cancelDelete = () => {
+    const cancelConfirm = () => {
         setConfirmModal(false);
     };
 
@@ -111,27 +129,64 @@ export const SimpleTrailerTableRow = ({
                     }
                     showHeader
                     footer={
-                        <DecisionButtons
-                            yesLabel="Löschen"
-                            noLabel="Abbrechen"
-                            id={trailer.id ? trailer.id : 0}
-                            yesAction={confirmDelete}
-                            noAction={cancelDelete}
-                        />
+                        confirmAction === "delete" ? (
+                            <DecisionButtons
+                                yesLabel="Löschen"
+                                noLabel="Abbrechen"
+                                id={trailer.id ? trailer.id : 0}
+                                yesAction={confirmDelete}
+                                noAction={cancelConfirm}
+                            />
+                        ) : (
+                            <DecisionButtons
+                                yesLabel="Setzen"
+                                noLabel="Abbrechen"
+                                id={trailer.id ? trailer.id : 0}
+                                yesAction={() =>
+                                    plusYearsConfirm(
+                                        trailer.id ? trailer.id : 0
+                                    )
+                                }
+                                noAction={cancelConfirm}
+                            />
+                        )
                     }
                 >
-                    <p>
-                        Soll der Anhänger mit dem Kennzeichen{" "}
-                        <span className="font-bold">
-                            "{trailer.plateNumber}"
-                        </span>{" "}
-                        wirklich gelöscht werden?
-                    </p>
-                    <p className="flex gap-2">
-                        <TriangleAlert className="h-5 w-5  text-destructive" />
-                        Diese Aktion kann nicht rückgängig gemacht werden!
-                        <TriangleAlert className="h-5 w-5  text-destructive" />
-                    </p>
+                    {confirmAction === "delete" ? (
+                        <>
+                            <p>
+                                Soll der Anhänger mit dem Kennzeichen{" "}
+                                <span className="font-bold">
+                                    "{trailer.plateNumber}"
+                                </span>{" "}
+                                wirklich gelöscht werden?
+                            </p>
+                            <p className="flex gap-2">
+                                <TriangleAlert className="h-5 w-5  text-destructive" />
+                                Diese Aktion kann nicht rückgängig gemacht
+                                werden!
+                                <TriangleAlert className="h-5 w-5  text-destructive" />
+                            </p>
+                        </>
+                    ) : (
+                        <p>
+                            Soll der nächste Tüv Termin für den Anhänger{" "}
+                            <span className="font-bold">
+                                "{trailer.plateNumber}"
+                            </span>{" "}
+                            wirklich auf{" "}
+                            <span className="font-bold">
+                                {format(
+                                    addYears(
+                                        startOfMonth(new Date()),
+                                        inspectionAddYears
+                                    ),
+                                    '"MM / yy"'
+                                )}{" "}
+                            </span>
+                            gesetzt werden?
+                        </p>
+                    )}
                 </ModalCardWrapper>
             </Modal>
         </>

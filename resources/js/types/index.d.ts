@@ -44,11 +44,11 @@ export type Actions = {
         tooltip?: string;
     };
     plusOneYear?: {
-        function: (id: number, years: number) => void;
+        function: (id: number, years: 1) => void;
         tooltip?: string;
     };
     plusTwoYears?: {
-        function: (id: number, years: number) => void;
+        function: (id: number, years: 2) => void;
         tooltip?: string;
     };
 };

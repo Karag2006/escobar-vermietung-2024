@@ -84,6 +84,26 @@ class TrailerController extends Controller
         return response()->json($trailer, Response::HTTP_OK);
     }
 
+    // 05.11.2024 Feature: Inspection List
+    // update Inspection Date for specific Trailer by adding 1 or 2 years.
+    public function inspectionPlusYears(Request $request, Trailer $trailer)
+    {
+        $request->validate([
+            'years' => 'required|integer|in:1,2'
+        ]);
+
+        // if an inspection is done today, the next inspection is required in 1 or 2 years from this month.
+        $inspection = Carbon::now()->startOfMonth()->addYears($request->years);
+        $tuev = $inspection->format('m/y');
+
+        $trailer->update([
+            'inspection_at' => $inspection,
+            'tuev' => $tuev
+        ]);
+
+        return response()->json($tuev, Response::HTTP_OK);
+    }
+
     public function getSelector() {
         $selectors = Trailer::select('id', 'plateNumber', 'title')->orderBy('plateNumber')->get();
         return response()->json($selectors, Response::HTTP_OK);
