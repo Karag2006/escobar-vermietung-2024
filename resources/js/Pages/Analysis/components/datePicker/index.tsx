@@ -56,7 +56,7 @@ export const DatePicker = ({
     const formatString = "dd.MM.yyyy";
     const [picker, setPicker] = useState(false);
     const [stringValue, setStringValue] = useState(
-        format(new Date(), formatString, options)
+        value ? format(value, formatString, options) : ""
     );
     const [currentDate, setCurrentDate] = useState(new Date());
 

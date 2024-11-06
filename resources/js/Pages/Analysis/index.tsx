@@ -8,7 +8,7 @@ import { getTrailerSelectors } from "@/data/trailer";
 import { SelectorItem } from "@/types/document";
 import { PickerReturn } from "@/types";
 import { DatePicker, DatePickerReturn } from "./components/datePicker";
-import { format } from "date-fns";
+import { format, subYears } from "date-fns";
 
 const Analysis = ({ auth }: AnalysisProps) => {
     const [trailerList, setTrailerList] = useState<SelectorItem[]>([]);
@@ -24,7 +24,7 @@ const Analysis = ({ auth }: AnalysisProps) => {
         clearErrors,
     } = useForm({
         trailerId: 0,
-        startDate: new Date(),
+        startDate: subYears(new Date(), 1),
         endDate: new Date(),
     });
 
