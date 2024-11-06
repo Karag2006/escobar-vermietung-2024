@@ -30,6 +30,7 @@ require __DIR__.'/offer.php';
 require __DIR__.'/reservation.php';
 require __DIR__.'/contract.php';
 require __DIR__.'/document.php';
+require __DIR__.'/analysis.php';
 
 });
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
 import { CircleGauge, KeyRound, List, Power } from "lucide-react";
+import { FaChartLine } from "react-icons/fa";
 
 import { useApi } from "@/hooks/use-api";
 
@@ -73,6 +74,13 @@ export const NavMenu = ({ className }: NavMenuProps) => {
                                 </NavLink>
                             );
                     })}
+                    <NavLink
+                        href={route("analysis")}
+                        active={route().current("analysis")}
+                    >
+                        <FaChartLine className="h-6 w-6" />
+                        <span className="inline-block">Auswertung</span>
+                    </NavLink>
                     <Separator className="w-full" />
                     <NavLink
                         href={route("profile.edit")}

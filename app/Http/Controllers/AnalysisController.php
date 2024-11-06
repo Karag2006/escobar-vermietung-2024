@@ -13,14 +13,14 @@ class AnalysisController extends Controller
         // This function provides the Inertia page to create and display the analysis
         // Request is optional and can contain a Trailer, in that case the page will be pre-populated with an analysis for that trailer for the last year.
         $preSelected = $request->input('trailer');
-        if (!$preSelected) return Inertia::render('Analysis/Index');
+        if (!$preSelected) return Inertia::render('Analysis/index');
         $trailer = Trailer::find($preSelected);
-        if (!$trailer) return Inertia::render('Analysis/Index');
+        if (!$trailer) return Inertia::render('Analysis/index');
 
         $analysis = $this->makeAnalysis($trailer, now()->subYear(), now());
-        if (!$analysis) return Inertia::render('Analysis/Index');
+        if (!$analysis) return Inertia::render('Analysis/index');
 
-        return Inertia::render('Analysis/Index', [
+        return Inertia::render('Analysis/index', [
             'trailer' => $trailer,
             'analysis' => $analysis
         ]);
