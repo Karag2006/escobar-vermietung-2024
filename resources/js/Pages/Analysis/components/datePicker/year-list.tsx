@@ -56,7 +56,7 @@ export const YearList = ({
     return (
         <div className="year-list grid grid-cols-1 gap-1 overflow-y-scroll mt-4 px-3 min-h-[15.25rem] max-h-[20rem]">
             {yearsList.map((year) => (
-                <div className="grid place-items-center w-full h-12">
+                <div key={year} className="grid place-items-center w-full h-12">
                     <Button
                         variant="borderless"
                         className={cn(

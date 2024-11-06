@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { getTrailerSelectors } from "@/data/trailer";
 import { SelectorItem } from "@/types/document";
 import { PickerReturn } from "@/types";
-import { DatePicker } from "./components/datePicker";
+import { DatePicker, DatePickerReturn } from "./components/datePicker";
 import { format } from "date-fns";
 
 const Analysis = ({ auth }: AnalysisProps) => {
@@ -41,6 +41,15 @@ const Analysis = ({ auth }: AnalysisProps) => {
         }));
     };
 
+    const handleDateChange = (result: DatePickerReturn) => {
+        const key = result.id;
+        const value = result.value;
+        setData((data) => ({
+            ...data,
+            [key]: value,
+        }));
+    };
+
     useEffect(() => {
         getTrailerSelectors().then((data) => {
             setTrailerList(data);
@@ -50,7 +59,7 @@ const Analysis = ({ auth }: AnalysisProps) => {
     return (
         <AuthenticatedLayout user={auth.user} header={pageTitle}>
             <Head title={pageTitle} />
-            <div className="flex flex-col gap-16 min-h-[500px]">
+            <div className="flex flex-col gap-16 min-h-[600px]">
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <SelectorCombobox
                         className="w-full"
@@ -62,20 +71,20 @@ const Analysis = ({ auth }: AnalysisProps) => {
                     />
                     <div className="mt-8 flex gap-6 flex-col lg:flex-row lg:justify-between">
                         <DatePicker
-                            value={format(data.startDate, "dd.MM.yyyy")}
+                            value={data.startDate}
                             error={errors.startDate}
                             id="startDate"
                             label="Anfangsdatum"
                             fieldName="startDate"
-                            onUpdateValue={handlePickerChange}
+                            onUpdateValue={handleDateChange}
                         />
                         <DatePicker
-                            value={format(data.endDate, "dd.MM.yyyy")}
+                            value={data.endDate}
                             error={errors.endDate}
                             id="endDate"
                             label="Enddatum"
                             fieldName="endDate"
-                            onUpdateValue={handlePickerChange}
+                            onUpdateValue={handleDateChange}
                         />
                     </div>
                 </form>

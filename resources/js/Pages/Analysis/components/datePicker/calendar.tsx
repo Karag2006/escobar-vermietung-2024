@@ -67,9 +67,9 @@ export const Calendar = ({
 
     return (
         <div className="calendar grid grid-cols-7 px-3 pb-3 min-h-48">
-            {dayTitles.map((title) => (
+            {dayTitles.map((title, index) => (
                 <div
-                    key={title}
+                    key={title + index}
                     className="grid place-items-center font-semibold text-gray-800"
                 >
                     {title}

@@ -52,7 +52,7 @@ export const MonthList = ({
     return (
         <div className="month-list grid grid-cols-3 gap-4 my-4 px-3 min-h-[15.25rem]">
             {monthList.map((month) => (
-                <div className="grid place-items-center">
+                <div key={month.id} className="grid place-items-center">
                     <Button
                         variant="borderless"
                         className={cn("", classList(month))}

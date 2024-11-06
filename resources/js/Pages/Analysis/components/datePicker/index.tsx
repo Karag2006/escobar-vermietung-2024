@@ -5,7 +5,7 @@
 // German locale is used when displaying dates
 
 import { FormEvent, useEffect, useState } from "react";
-import { isValid, parse, format } from "date-fns";
+import { isValid, parse, format, isMatch } from "date-fns";
 import { de } from "date-fns/locale/de";
 
 import { Calendar } from "lucide-react";
@@ -14,11 +14,15 @@ import { Button } from "@/Components/ui/button";
 import { InputTP24 } from "@/Components/ui/input-tp24";
 
 import { Picker } from "./picker";
-import { PickerReturn } from "@/types";
 import { cn } from "@/lib/utils";
 
+export type DatePickerReturn = {
+    id: string;
+    value: Date;
+};
+
 interface DatePickerProps {
-    value: string;
+    value: Date;
     label: string;
     id: string;
     fieldName: string;
@@ -26,7 +30,7 @@ interface DatePickerProps {
     required?: boolean;
     disabled?: boolean;
     className?: string;
-    onUpdateValue?: (result: PickerReturn) => void;
+    onUpdateValue?: (result: DatePickerReturn) => void;
     removeError?: () => void;
 }
 
@@ -49,8 +53,11 @@ export const DatePicker = ({
     onUpdateValue,
     removeError,
 }: DatePickerProps) => {
+    const formatString = "dd.MM.yyyy";
     const [picker, setPicker] = useState(false);
-    const [selectedValue, setSelectedValue] = useState(value);
+    const [stringValue, setStringValue] = useState(
+        format(new Date(), formatString, options)
+    );
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const togglePicker = () => {
@@ -65,31 +72,35 @@ export const DatePicker = ({
             event.target instanceof HTMLInputElement &&
             event.target.type == "text"
         ) {
-            setSelectedValue(event.target.value);
-            onUpdateValue && onUpdateValue({ id, value: event.target.value });
-            setPicker(false);
+            setStringValue(event.target.value);
             return;
         }
         //if the function was called by selecting a date in the date Picker
         if (date) {
-            const selectedDate = format(date, "dd.MM.yyyy", options);
-            setSelectedValue(selectedDate);
-            onUpdateValue && onUpdateValue({ id, value: selectedDate });
+            const selectedDate = format(date, formatString, options);
+            setStringValue(selectedDate);
+            onUpdateValue && onUpdateValue({ id, value: date });
             setPicker(false);
             return;
         }
     };
+
     useEffect(() => {
-        const setDate = (date?: string) => {
-            if (date && isValid(parse(date, "dd.MM.yyyy", new Date())))
-                return parse(date, "dd.MM.yyyy", new Date());
+        setStringValue(format(value, formatString, options));
+    }, [value]);
 
-            return new Date();
-        };
+    useEffect(() => {
+        const date = parse(stringValue, formatString, new Date());
+        if (
+            isMatch(stringValue, formatString) &&
+            stringValue.length === formatString.length &&
+            isValid(date)
+        ) {
+            setCurrentDate(date);
+            onUpdateValue && onUpdateValue({ id, value: date });
+        }
+    }, [stringValue]);
 
-        setCurrentDate(setDate(selectedValue));
-        return () => {};
-    }, [selectedValue]);
     return (
         <div className={cn("relative flex gap-2", className)}>
             <Button
@@ -105,7 +116,7 @@ export const DatePicker = ({
                 className="w-full"
                 id={id}
                 type="text"
-                value={value}
+                value={stringValue}
                 label={label}
                 error={error}
                 required={required}
