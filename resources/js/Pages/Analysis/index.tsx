@@ -9,20 +9,13 @@ import { SelectorItem } from "@/types/document";
 import { PickerReturn } from "@/types";
 import { DatePicker, DatePickerReturn } from "./components/datePicker";
 import { format, subYears } from "date-fns";
+import { Button } from "@/Components/ui/button";
+import { AnalysisResults } from "./components/AnalysisResults";
 
-const Analysis = ({ auth }: AnalysisProps) => {
+const Analysis = ({ auth, analysis, trailer }: AnalysisProps) => {
     const [trailerList, setTrailerList] = useState<SelectorItem[]>([]);
     const pageTitle = "Anhänger Auswertung";
-    const {
-        data,
-        setData,
-        post,
-        patch,
-        processing,
-        errors,
-        reset,
-        clearErrors,
-    } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         trailerId: 0,
         startDate: subYears(new Date(), 1),
         endDate: new Date(),
@@ -30,6 +23,7 @@ const Analysis = ({ auth }: AnalysisProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        console.log("data", data);
     };
 
     const handlePickerChange = (result: PickerReturn) => {
@@ -60,16 +54,16 @@ const Analysis = ({ auth }: AnalysisProps) => {
         <AuthenticatedLayout user={auth.user} header={pageTitle}>
             <Head title={pageTitle} />
             <div className="flex flex-col gap-16 min-h-[600px]">
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                    <SelectorCombobox
-                        className="w-full"
-                        id="trailerId"
-                        value={data.trailerId}
-                        items={trailerList}
-                        onValueChange={handlePickerChange}
-                        label="Anhänger auswählen"
-                    />
+                <form onSubmit={handleSubmit} className="flex flex-col gap-8">
                     <div className="mt-8 flex gap-6 flex-col lg:flex-row lg:justify-between">
+                        <SelectorCombobox
+                            className="w-full max-w-[400px]"
+                            id="trailerId"
+                            value={data.trailerId}
+                            items={trailerList}
+                            onValueChange={handlePickerChange}
+                            label="Anhänger auswählen"
+                        />
                         <DatePicker
                             value={data.startDate}
                             error={errors.startDate}
@@ -87,7 +81,20 @@ const Analysis = ({ auth }: AnalysisProps) => {
                             onUpdateValue={handleDateChange}
                         />
                     </div>
+                    <div className="flex justify-start gap-4">
+                        <Button type="submit">
+                            <span className="text-sm">Absenden</span>
+                        </Button>
+                    </div>
                 </form>
+                {analysis && trailer ? (
+                    <AnalysisResults
+                        analysisData={analysis}
+                        trailer={trailer}
+                        startDate={data.startDate}
+                        endDate={data.endDate}
+                    />
+                ) : null}
             </div>
         </AuthenticatedLayout>
     );
