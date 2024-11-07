@@ -46,7 +46,12 @@ class AnalysisController extends Controller
 
         if (!$analysis) return response()->json(['error' => 'keine Daten für diesen Anhängern in diesem Zeitraum.'], 404);
 
-        return response()->json($analysis);
+        $data = [
+            'trailer' => $trailer,
+            'analysis' => $analysis
+        ];
+
+        return response()->json($data);
     }
 
     private function makeAnalysis(Trailer $trailer, $start_date, $end_date)

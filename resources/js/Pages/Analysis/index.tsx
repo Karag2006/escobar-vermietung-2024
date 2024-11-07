@@ -1,21 +1,35 @@
-import { AnalysisProps } from "@/types/analysis";
+import { useEffect, useState } from "react";
+import { Head, useForm } from "@inertiajs/react";
+import { subYears } from "date-fns";
+
+import { AnalysisProps, AnalysisType } from "@/types/analysis";
+import { SelectorItem } from "@/types/document";
+import { TrailerItem } from "@/types/trailer";
+import { PickerReturn } from "@/types";
+
+import { createTrailerAnalysis, getTrailerSelectors } from "@/data/trailer";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, useForm } from "@inertiajs/react";
+
 import { SelectorCombobox } from "@/Components/selector-combobox";
-import { useEffect, useState } from "react";
-import { createTrailerAnalysis, getTrailerSelectors } from "@/data/trailer";
-import { SelectorItem } from "@/types/document";
-import { PickerReturn } from "@/types";
-import { DatePicker, DatePickerReturn } from "./components/datePicker";
-import { format, subYears } from "date-fns";
 import { Button } from "@/Components/ui/button";
+
+import { DatePicker, DatePickerReturn } from "./components/datePicker";
 import { AnalysisResults } from "./components/AnalysisResults";
 
 const Analysis = ({ auth, analysis, trailer }: AnalysisProps) => {
+    const [currentAnalysis, setCurrentAnalysis] = useState<
+        AnalysisType | undefined | null
+    >(analysis);
+    const [currentTrailer, setCurrentTrailer] = useState<
+        TrailerItem | undefined | null
+    >(trailer);
+
+    const [errorMessage, setErrorMessage] = useState("");
     const [trailerList, setTrailerList] = useState<SelectorItem[]>([]);
+
     const pageTitle = "Anhänger Auswertung";
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, errors } = useForm({
         trailerId: 0,
         startDate: subYears(new Date(), 1),
         endDate: new Date(),
@@ -23,11 +37,27 @@ const Analysis = ({ auth, analysis, trailer }: AnalysisProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        createTrailerAnalysis(data.trailerId, data).then((result) => {
-            if (result.status === 200) {
-                console.log("Analysis created");
-            }
-        });
+        setErrorMessage("");
+        setCurrentAnalysis(null);
+        setCurrentTrailer(null);
+        createTrailerAnalysis(data.trailerId, data)
+            .then(({ data }) => {
+                setCurrentAnalysis(data.analysis);
+                setCurrentTrailer(data.trailer);
+            })
+            .catch((error) => {
+                if (error.response.status === 422) {
+                    setErrorMessage("Bitte füllen Sie alle Felder aus.");
+                } else if (error.response.status === 500) {
+                    setErrorMessage(
+                        "Ein interner Server Fehler ist aufgetreten."
+                    );
+                } else if (error.response.status === 404) {
+                    setErrorMessage(
+                        "Keine Mietverträge für diesen Anhänger im Auswertungszeitraum."
+                    );
+                }
+            });
     };
 
     const handlePickerChange = (result: PickerReturn) => {
@@ -91,13 +121,17 @@ const Analysis = ({ auth, analysis, trailer }: AnalysisProps) => {
                         </Button>
                     </div>
                 </form>
-                {analysis && trailer ? (
+                {currentAnalysis && currentTrailer ? (
                     <AnalysisResults
-                        analysisData={analysis}
-                        trailer={trailer}
+                        analysisData={currentAnalysis}
+                        trailer={currentTrailer}
                         startDate={data.startDate}
                         endDate={data.endDate}
                     />
+                ) : errorMessage ? (
+                    <div className="text-red-600 font-semibold">
+                        {errorMessage}
+                    </div>
                 ) : null}
             </div>
         </AuthenticatedLayout>
