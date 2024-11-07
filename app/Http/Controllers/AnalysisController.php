@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
 use App\Models\Trailer;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -31,11 +32,43 @@ class AnalysisController extends Controller
     public function create(Trailer $trailer, Request $request)
     {
         // This function will create the analysis for the given trailer and date range
+
+        $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date'
+        ]);
+
+        if ($request->input('start_date') > $request->input('end_date')) {
+            return response()->json(['error' => 'The start date must be before the end date'], 422);
+        }
+
+        $analysis = $this->makeAnalysis($trailer, $request->input('start_date'), $request->input('end_date'));
+
+        if (!$analysis) return response()->json(['error' => 'keine Daten für diesen Anhängern in diesem Zeitraum.'], 404);
+
+        return response()->json($analysis);
     }
 
     private function makeAnalysis(Trailer $trailer, $start_date, $end_date)
     {
         // This function will create the analysis for the given trailer and date range
-        return null;
+        $documents = Document::where('vehicle_id', $trailer->id)
+            ->where('current_state', 'contract')
+            ->whereBetween('collectAt', [$start_date, $end_date])
+            ->get();
+
+        if (!$documents || $documents->count <= 0) return null;
+
+        $sum = 0;
+        foreach ($documents as $document) {
+            $sum += $document->total_price;
+        }
+
+        $analysis = [
+            'total' => $sum,
+            'numberOfContracts' => $documents->count(),
+            'contractList'  => $documents
+        ];
+        return $analysis;
     }
 }
