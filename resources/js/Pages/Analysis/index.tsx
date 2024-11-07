@@ -4,7 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm } from "@inertiajs/react";
 import { SelectorCombobox } from "@/Components/selector-combobox";
 import { useEffect, useState } from "react";
-import { getTrailerSelectors } from "@/data/trailer";
+import { createTrailerAnalysis, getTrailerSelectors } from "@/data/trailer";
 import { SelectorItem } from "@/types/document";
 import { PickerReturn } from "@/types";
 import { DatePicker, DatePickerReturn } from "./components/datePicker";
@@ -23,7 +23,11 @@ const Analysis = ({ auth, analysis, trailer }: AnalysisProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("data", data);
+        createTrailerAnalysis(data.trailerId, data).then((result) => {
+            if (result.status === 200) {
+                console.log("Analysis created");
+            }
+        });
     };
 
     const handlePickerChange = (result: PickerReturn) => {

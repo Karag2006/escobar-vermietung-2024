@@ -34,15 +34,15 @@ class AnalysisController extends Controller
         // This function will create the analysis for the given trailer and date range
 
         $request->validate([
-            'start_date' => 'required|date',
-            'end_date' => 'required|date'
+            'startDate' => 'required|date',
+            'endDate' => 'required|date'
         ]);
 
         if ($request->input('start_date') > $request->input('end_date')) {
             return response()->json(['error' => 'The start date must be before the end date'], 422);
         }
 
-        $analysis = $this->makeAnalysis($trailer, $request->input('start_date'), $request->input('end_date'));
+        $analysis = $this->makeAnalysis($trailer, $request->input('startDate'), $request->input('endDate'));
 
         if (!$analysis) return response()->json(['error' => 'keine Daten für diesen Anhängern in diesem Zeitraum.'], 404);
 
@@ -54,10 +54,12 @@ class AnalysisController extends Controller
         // This function will create the analysis for the given trailer and date range
         $documents = Document::where('vehicle_id', $trailer->id)
             ->where('current_state', 'contract')
-            ->whereBetween('collectAt', [$start_date, $end_date])
+            ->where('is_archived', false)
+            ->where('collect_at', '>=', $start_date)
+            ->where('collect_at', '<=', $end_date)
             ->get();
 
-        if (!$documents || $documents->count <= 0) return null;
+        if (!$documents || $documents->count() <= 0) return null;
 
         $sum = 0;
         foreach ($documents as $document) {

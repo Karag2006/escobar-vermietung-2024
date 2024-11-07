@@ -1,3 +1,4 @@
+import { AnalysisRequestData } from "@/types/analysis";
 import axios from "axios";
 
 export const getTrailerById = async (id: number) => {
@@ -26,4 +27,12 @@ export const updateInspectionDate = async (id: number, years: 1 | 2) => {
         years,
     });
     return data;
+};
+
+export const createTrailerAnalysis = async (
+    id: number,
+    data: AnalysisRequestData
+) => {
+    const result = await axios.post(route("analysis.create", id), data);
+    return result;
 };
