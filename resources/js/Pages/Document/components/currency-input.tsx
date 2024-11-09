@@ -1,6 +1,6 @@
-import { InputTP24 } from "@/Components/ui/input-tp24";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+
+import { InputTP24 } from "@/Components/ui/input-tp24";
 
 interface CurrencyInputProps {
     value: string;

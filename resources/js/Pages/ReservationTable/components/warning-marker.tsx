@@ -1,9 +1,5 @@
 import { TriangleAlert } from "lucide-react";
 
-interface WarningMarkerProps {
-    message: string;
-}
-
 export const WarningMarker = () => {
     return (
         <div className="absolute bottom-6">

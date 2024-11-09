@@ -1,4 +1,4 @@
-import { useState, PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 import { ApplicationLogo } from "@/Components/ApplicationLogo";
 import { Link } from "@inertiajs/react";
 import { User } from "@/types";
@@ -39,24 +39,6 @@ export default function Authenticated({
     headerCenter,
     footer,
 }: AuthenticatedLayoutProps) {
-    // For content changes based on current window width
-    // const getWindowWidth = () => {
-    //     return window.innerWidth;
-    // };
-    // const [windowWidth, setWindowWidth] = useState(getWindowWidth());
-
-    // useEffect(() => {
-    //     const handleWindowResize = () => {
-    //         setWindowWidth(getWindowWidth());
-    //     };
-
-    //     window.addEventListener("resize", handleWindowResize);
-
-    //     return () => {
-    //         window.removeEventListener("resize", handleWindowResize);
-    //     };
-    // }, []);
-
     return (
         <div className="min-h-screen w-full">
             <TooltipProvider>

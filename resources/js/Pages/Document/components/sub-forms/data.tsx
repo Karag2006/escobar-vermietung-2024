@@ -1,32 +1,27 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
-import { toast } from "sonner";
 
 import { PickerReturn } from "@/types";
 import {
     CollectAddressItem,
-    customerType,
     DataErrors,
     DataField,
     documentType,
-    SelectorItem,
 } from "@/types/document";
-import { blankForm, documentDataForm, documentForm } from "@/lib/document-form";
+import { EquipmentItem } from "@/types/equipment";
+import { documentDataForm, documentForm } from "@/lib/document-form";
 
-import { InputTP24 } from "@/Components/ui/input-tp24";
+import { getCollectAddresses } from "@/data/document";
+import { getPaymentTypes } from "@/data/settings";
+
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { DatePicker } from "@/Components/datePicker";
-import { SelectorCombobox } from "@/Components/selector-combobox";
 import { Combobox } from "@/Components/combobox";
 import { TimePicker } from "@/Components/time-picker";
-import { getCollectAddresses } from "@/data/document";
+import { CheckboxTP24 } from "@/Components/checkbox-tp24";
 import { AddressCombobox } from "../address-combobox";
 import { CurrencyInput } from "../currency-input";
-import { CheckboxTP24 } from "@/Components/checkbox-tp24";
-import { getPaymentTypes, getSettings } from "@/data/settings";
 import { EquipmentSelector } from "../equipment-selector";
-import { getEquipmentList } from "@/data/equipment";
-import { EquipmentItem } from "@/types/equipment";
 
 interface DataFormProps {
     type: "data";

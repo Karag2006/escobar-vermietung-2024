@@ -21,6 +21,7 @@ export const ListActions = ({ document, id, actions }: ListActionsProps) => {
                 <PlusYears
                     id={id}
                     years={1}
+                    // @ts-ignore
                     plusYears={actions.plusOneYear.function}
                     tooltip={actions.plusOneYear.tooltip}
                 />
@@ -30,6 +31,7 @@ export const ListActions = ({ document, id, actions }: ListActionsProps) => {
                 <PlusYears
                     id={id}
                     years={2}
+                    // @ts-ignore
                     plusYears={actions.plusTwoYears.function}
                     tooltip={actions.plusTwoYears.tooltip}
                 />

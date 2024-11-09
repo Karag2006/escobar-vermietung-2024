@@ -1,9 +1,6 @@
-import { format } from "date-fns";
-
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,

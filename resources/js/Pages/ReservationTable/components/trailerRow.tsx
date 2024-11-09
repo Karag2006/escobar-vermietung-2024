@@ -4,7 +4,6 @@ import {
     isAfter,
     isBefore,
     isSameDay,
-    isWithinInterval,
     lastDayOfMonth,
     parse,
     startOfMonth,
@@ -14,7 +13,7 @@ import { CalendarDay } from "./CalendarDay";
 
 import { TrailerItem } from "@/types/trailer";
 import { Document, DocumentFunctions } from "@/types/document";
-import { log } from "console";
+
 interface RowProps {
     date: Date;
     trailer: TrailerItem;

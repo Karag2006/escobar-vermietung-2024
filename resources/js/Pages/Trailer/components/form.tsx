@@ -17,6 +17,7 @@ interface TrailerFormProps {
 }
 
 export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
+    const emptySize: number[] = [];
     const {
         data,
         setData,
@@ -34,7 +35,7 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
         tuev: "",
         totalWeight: "",
         usableWeight: "",
-        loading_size: [],
+        loading_size: emptySize,
         comment: "",
     });
 
@@ -183,8 +184,6 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                         </div>
                         <LoadingSizeInput
                             value={data.loading_size}
-                            errors={errors}
-                            clearErrors={clearErrors}
                             handleChangeSize={handleChangeSize}
                             processing={processing}
                         />

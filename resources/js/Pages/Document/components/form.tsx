@@ -34,8 +34,6 @@ import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
 import { getSettings } from "@/data/settings";
 import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
-import { Modal } from "@/Components/wrapper/modal";
-import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { CollisionDialog } from "./collision-dialog";
 import { CustomerField } from "@/types/customer";
 import { TrailerField } from "@/types/trailer";

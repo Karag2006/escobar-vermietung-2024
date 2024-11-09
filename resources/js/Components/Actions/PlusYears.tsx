@@ -5,8 +5,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface PlusYearsProps {
     id: number;
-    years: number;
-    plusYears: (id: number, years: number) => void;
+    years: 1 | 2;
+    plusYears: (id: number, years: 1 | 2) => void;
     tooltip?: string;
 }
 

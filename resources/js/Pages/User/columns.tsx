@@ -4,7 +4,6 @@ import {
 } from "@tanstack/react-table";
 import { UserItem } from "@/types/user";
 
-import { Actions } from "./components/actions";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 import { ListActions } from "@/Components/Actions/ListActions";
 

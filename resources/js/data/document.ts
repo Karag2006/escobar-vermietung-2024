@@ -1,4 +1,4 @@
-import { collisionCheckData, Document } from "@/types/document";
+import { collisionCheckData } from "@/types/document";
 import axios from "axios";
 
 export const getCollectAddresses = async () => {

@@ -28,7 +28,7 @@ export const LicenseClasses = ({ classes }: LicenseClassesProps) => {
     const [deleteModal, setDeleteModal] = useState(false);
 
     const handleComboChange = (data: PickerReturn) => {
-        setEditedClass(data.value);
+        setEditedClass(data.value + "");
     };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {

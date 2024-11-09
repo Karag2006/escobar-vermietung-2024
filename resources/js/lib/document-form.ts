@@ -1,5 +1,7 @@
 import { EquipmentItem } from "@/types/equipment";
 
+const emptyEquipmentList: EquipmentItem[] = [];
+
 export const blankForm = {
     customer: {
         id: 0,
@@ -83,7 +85,7 @@ export const blankForm = {
         comment: "",
         user_id: "",
         collect_address_id: 0,
-        selectedEquipmentList: [],
+        selectedEquipmentList: emptyEquipmentList,
     },
     settings: {
         vat: 19,
