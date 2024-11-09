@@ -93,7 +93,6 @@ export const SimpleReservationTableRow = ({
                 toast.success("Reservierung erfolgreich gelöscht");
                 router.reload({
                     only: ["nextReservations"],
-                    preserveScroll: true,
                 });
             }
         }
