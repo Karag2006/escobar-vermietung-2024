@@ -4,8 +4,8 @@ import {
 } from "@tanstack/react-table";
 import { UserItem } from "@/types/user";
 
-import { Actions } from "./components/actions";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
+import { ListActions } from "@/Components/Actions/ListActions";
 
 type CellContext<TData, TValue> = TanCellContext<TData, TValue> & {
     editModal: (id: number) => void;
@@ -36,10 +36,9 @@ export const columns: ColumnDef<UserItem>[] = [
         id: "actions",
         cell: (cell) => {
             return (
-                <Actions
-                    row={cell.row}
-                    editModal={cell.editModal}
-                    deleteModal={cell.deleteModal}
+                <ListActions
+                    actions={cell.actions}
+                    id={cell.row.original.id ? cell.row.original.id : 0}
                 />
             );
         },

@@ -20,7 +20,7 @@ class TrailerFactory extends Factory
     {
         $total = $this->faker->numberBetween($min = 750, $max = 3500);
         $usable = $this->faker->numberBetween($min = 500, $max = $total);
-
+        $inspectionData = $this->getInspection();
 
         return [
             'title' => $this->faker->randomElement(
@@ -37,7 +37,8 @@ class TrailerFactory extends Factory
             'totalWeight' => $total,
             'usableWeight' => $usable,
             'loadingSize' => $this->getLoadingSize(),
-            'tuev' => Carbon::parse($this->faker->dateTimeBetween($startDate = 'now', $endDate = '+2 years', NULL))->format(config('custom.tuev_format')),
+            'tuev' => $inspectionData['tuev'],
+            'inspection_at' => $inspectionData['inspection_at'],
             'comment' => $this->faker->text($maxNbChars = 200),
         ];
     }
@@ -53,5 +54,15 @@ class TrailerFactory extends Factory
             $result[] = $height;
         return $result;
     }
-    
+
+    private function getInspection()
+    {
+        $inspectionDate = Carbon::parse($this->faker->dateTimeBetween($startDate = 'now', $endDate = '+1 years', NULL))->startOfMonth();
+        $data = [
+            "inspection_at" => $inspectionDate,
+            "tuev" => $inspectionDate->format(config('custom.tuev_format')),
+        ];
+        return $data;
+    }
+
 }

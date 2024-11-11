@@ -34,6 +34,8 @@ class Document extends Model
 
     protected $fillable = [
         // Document internal Values
+        // 03.11.2024 Feature: Add Archive functionality - Add is_archived to the model
+        'is_archived',
         'offer_number',
         'reservation_number',
         'contract_number',
@@ -127,7 +129,12 @@ class Document extends Model
         'collect_address_id',
 
         // Equipment List
-        'selectedEquipmentList'
+        'selectedEquipmentList',
+
+        // 27.10.2024 - Fix/DatesAndTimes : collect_at and return_at for switching to dateTime instead of
+        // seperated date and time fields as string
+        'collect_at',
+        'return_at',
     ];
 
     protected $dates = [
@@ -141,6 +148,10 @@ class Document extends Model
         'contract_bail_date',
         'customer_birth_date',
         'driver_birth_date',
+        // 27.10.2024 - Fix/DatesAndTimes : collect_at and return_at for switching to dateTime instead of
+        // seperated date and time fields as string
+        'collect_at',
+        'return_at',
     ];
 
     public function getVehicleLoadingSizeAttribute($value){
@@ -166,6 +177,23 @@ class Document extends Model
     public function setOfferDateAttribute($value)
     {
         $this->attributes['offer_date'] = $value ? Carbon::createFromFormat(config('custom.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    // 27.10.2024 - Fix/DatesAndTimes :
+    // collect_at and return_at
+    // for switching to dateTime instead of
+    // seperated date and time fields as string
+    public function getCollectAtAttribute($value) {
+        return $value ? Carbon::parse($value) : null;
+    }
+    public function setCollectAtAttribute($value) {
+        $this->attributes['collect_at'] = $value ? Carbon::parse($value) : null;
+    }
+    public function getReturnAtAttribute($value) {
+        return $value ? Carbon::parse($value) : null;
+    }
+    public function setReturnAtAttribute($value) {
+        $this->attributes['return_at'] = $value ? Carbon::parse($value) : null;
     }
 
     public function getReservationDateAttribute($value)

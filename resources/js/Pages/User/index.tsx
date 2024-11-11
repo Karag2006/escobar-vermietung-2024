@@ -15,6 +15,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { UserForm } from "./components/form";
 import { columns } from "./columns";
 import { toast } from "sonner";
+import { Actions } from "@/types";
 
 export default function User({ auth, userList }: UserProps) {
     const pageTitle = "Benutzerverwaltung";
@@ -25,6 +26,17 @@ export default function User({ auth, userList }: UserProps) {
     const Form = useForm({
         id: currentID,
     });
+
+    const actions: Actions = {
+        edit: {
+            function: (id: number) => editUserModal(id),
+            tooltip: "Benutzer bearbeiten",
+        },
+        delete: {
+            function: (id: number) => deleteModal(id),
+            tooltip: "Benutzer löschen",
+        },
+    };
 
     const addUserModal = () => {
         setCurrentID(0);
@@ -73,12 +85,7 @@ export default function User({ auth, userList }: UserProps) {
         >
             <Head title={pageTitle} />
 
-            <DataTable
-                columns={columns}
-                data={userList}
-                editModal={editUserModal}
-                deleteModal={deleteModal}
-            />
+            <DataTable columns={columns} data={userList} actions={actions} />
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
                     header={

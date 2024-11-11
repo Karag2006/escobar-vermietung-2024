@@ -1,5 +1,7 @@
 import { EquipmentItem } from "@/types/equipment";
 
+const emptyEquipmentList: EquipmentItem[] = [];
+
 export const blankForm = {
     customer: {
         id: 0,
@@ -49,6 +51,8 @@ export const blankForm = {
     data: {
         id: 0,
         offer_number: "",
+        // 04.11.2024 : Feature - Add Archive Functionality
+        is_archived: false,
         reservation_number: "",
         contract_number: "",
         offer_date: "",
@@ -59,6 +63,8 @@ export const blankForm = {
         return_date: "",
         collect_time: "",
         return_time: "",
+        collect_at: new Date(),
+        return_at: new Date(),
         total_price: 0,
         netto_price: 0,
         tax_value: 0,
@@ -79,6 +85,7 @@ export const blankForm = {
         comment: "",
         user_id: "",
         collect_address_id: 0,
+        selectedEquipmentList: emptyEquipmentList,
     },
     settings: {
         vat: 19,
@@ -95,7 +102,7 @@ export type documentCustomerForm = typeof blankForm.customer;
 export type documentTrailerForm = typeof blankForm.trailer;
 
 export type documentDataForm = typeof blankForm.data & {
-    selectedEquipmentList: EquipmentItem[];
+    selectedEquipmentList?: EquipmentItem[];
 };
 
 export type documentSettingsForm = typeof blankForm.settings;

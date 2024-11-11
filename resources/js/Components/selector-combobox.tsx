@@ -122,6 +122,7 @@ export const SelectorCombobox = ({
                     )
                 }
                 suffixClasses="right-4 top-0"
+                autoComplete="off"
             />
             <div className="absolute top-2 right-2 text-gray-600">
                 {open ? (
@@ -134,7 +135,7 @@ export const SelectorCombobox = ({
             {open ? (
                 <div
                     className={cn(
-                        "absolute top-10 left-0 bg-white z-10 w-full shadow-md"
+                        "absolute top-10 left-0 bg-white z-10 w-full shadow-md overflow-y-auto max-h-60"
                     )}
                 >
                     <div role="selectGroup" className="flex flex-col">

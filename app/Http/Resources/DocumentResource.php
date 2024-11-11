@@ -63,6 +63,7 @@ class DocumentResource extends JsonResource
 
         $data = [
             'offer_number' => $this->offer_number,
+            'is_archived' => $this->is_archived,
             'reservation_number' => $this->reservation_number,
             'contract_number' => $this->contract_number,
             'offer_date' => $this->offer_date,
@@ -73,6 +74,8 @@ class DocumentResource extends JsonResource
             'return_date' => $this->return_date,
             'collect_time' => $this->collect_time,
             'return_time' => $this->return_time,
+            'collect_at' => $this->collect_at,
+            'return_at' => $this->return_at,
             'total_price' => $this->total_price,
             'netto_price' => $this->netto_price,
             'tax_value' => $this->tax_value,

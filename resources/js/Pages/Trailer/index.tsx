@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
 
 import { TriangleAlert } from "lucide-react";
@@ -16,8 +16,9 @@ import { TrailerProps } from "@/types/trailer";
 import { getTrailerById } from "@/data/trailer";
 import { TrailerForm } from "./components/form";
 import { toast } from "sonner";
+import { Actions } from "@/types";
 
-export default function User({ auth, trailers }: TrailerProps) {
+export default function User({ auth, trailers, openEdit }: TrailerProps) {
     const pageTitle = "Anhänger";
     const [confirmModal, setConfirmModal] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -26,6 +27,17 @@ export default function User({ auth, trailers }: TrailerProps) {
     const Form = useForm({
         id: currentID,
     });
+
+    const actions: Actions = {
+        edit: {
+            function: (id: number) => editTrailerModal(id),
+            tooltip: "Anhänger bearbeiten",
+        },
+        delete: {
+            function: (id: number) => deleteModal(id),
+            tooltip: "Anhänger löschen",
+        },
+    };
 
     const addTrailerModal = () => {
         setCurrentID(0);
@@ -59,6 +71,12 @@ export default function User({ auth, trailers }: TrailerProps) {
         setConfirmModal(false);
     };
 
+    useEffect(() => {
+        if (openEdit) {
+            editTrailerModal(openEdit);
+        }
+    }, []);
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -73,12 +91,7 @@ export default function User({ auth, trailers }: TrailerProps) {
         >
             <Head title={pageTitle} />
 
-            <DataTable
-                columns={columns}
-                data={trailers}
-                editModal={editTrailerModal}
-                deleteModal={deleteModal}
-            />
+            <DataTable columns={columns} data={trailers} actions={actions} />
             <Modal modalOpen={confirmModal} openChange={setConfirmModal}>
                 <ModalCardWrapper
                     header={

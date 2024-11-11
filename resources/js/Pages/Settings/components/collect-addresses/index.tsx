@@ -1,14 +1,18 @@
-import { CollectAddressItem } from "@/types/collect-address";
-import { DataTable } from "./data-table";
-import { columns } from "./columns";
-import { useEffect, useState } from "react";
-import { Modal } from "@/Components/wrapper/modal";
-import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
-import { TriangleAlert } from "lucide-react";
-import { getAddressById } from "@/data/collect-address";
+import { useState } from "react";
 import { useForm } from "@inertiajs/react";
 import { toast } from "sonner";
+import { TriangleAlert } from "lucide-react";
+
+import { CollectAddressItem } from "@/types/collect-address";
+
+import { getAddressById } from "@/data/collect-address";
+
+import { Modal } from "@/Components/wrapper/modal";
+import { ModalCardWrapper } from "@/Components/wrapper/modal-card-wrapper";
 import { DecisionButtons } from "@/Components/decision-buttons";
+
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 
 interface CollectAddressesProps {
     collectAddresses: CollectAddressItem[];

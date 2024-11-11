@@ -7,9 +7,6 @@ import { CollectAddressItem } from "@/types/collect-address";
 import { Actions } from "./actions";
 
 export const columns: ColumnDef<CollectAddressItem>[] = [
-    // {
-    //     accessorKey: "id",
-    // },
     {
         accessorKey: "name",
         header: ({ column }) => {

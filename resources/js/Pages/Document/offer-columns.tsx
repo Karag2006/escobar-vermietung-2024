@@ -4,8 +4,8 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/Components/data-table/column-header";
 
-import { Actions } from "./components/actions";
 import { Document } from "@/types/document";
+import { ListActions } from "@/Components/Actions/ListActions";
 
 export const offerColumns: ColumnDef<Document>[] = [
     {
@@ -56,18 +56,17 @@ export const offerColumns: ColumnDef<Document>[] = [
             );
         },
         cell: (cell) => {
-            return <span>{cell.row.original.collect_address.name}</span>;
+            return <span>{cell.row.original.collect_address?.name}</span>;
         },
     },
     {
         id: "actions",
         cell: (cell) => {
             return (
-                <Actions
-                    row={cell.row}
-                    editModal={cell.editModal}
-                    deleteModal={cell.deleteModal}
-                    forwardModal={cell.forwardModal}
+                <ListActions
+                    document={cell.row.original}
+                    id={cell.row.original.id ? cell.row.original.id : 0}
+                    actions={cell.actions}
                 />
             );
         },

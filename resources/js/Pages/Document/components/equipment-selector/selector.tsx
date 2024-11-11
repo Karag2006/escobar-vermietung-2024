@@ -4,7 +4,6 @@ import { EquipmentItem } from "@/types/equipment";
 import { SelectorItem } from "./selector-item";
 import { useEffect, useState } from "react";
 import { InputClearButton } from "@/Components/input-clear-button";
-import { SelectedList } from "./selected-list";
 
 interface SelectorProps {
     equipmentList: EquipmentItem[];
