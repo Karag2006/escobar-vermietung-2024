@@ -32,8 +32,8 @@ return [
         'array' => 'The :attribute must have between :min and :max items.',
     ],
     'boolean' => 'The :attribute field must be true or false.',
-    'confirmed' => 'The :attribute confirmation does not match.',
-    'current_password' => 'The password is incorrect.',
+    'confirmed' => ':attribute und Wiederholung stimmen nicht überein',
+    'current_password' => 'Das Passwort ist falsch.',
     'date' => 'The :attribute is not a valid date.',
     'date_equals' => 'The :attribute must be a date equal to :date.',
     'date_format' => 'The :attribute does not match the format :format.',
@@ -97,7 +97,7 @@ return [
     'not_in' => 'The selected :attribute is invalid.',
     'not_regex' => 'The :attribute format is invalid.',
     'numeric' => 'Nur Zahlen erlaubt',
-    'password' => 'The password is incorrect.',
+    'password' => 'Das Passwort ist falsch.',
     'present' => 'The :attribute field must be present.',
     'regex' => 'Das Format ist nicht korrekt',
     'required' => 'darf nicht leer sein',
@@ -120,7 +120,7 @@ return [
     'starts_with' => 'The :attribute must start with one of the following: :values.',
     'string' => 'Muss eine Zeichenkette enthalten',
     'timezone' => 'The :attribute must be a valid timezone.',
-    'unique' => 'The :attribute has already been taken.',
+    'unique' => ':attribute ist bereits vergeben.',
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute must be a valid URL.',
     'uuid' => 'The :attribute must be a valid UUID.',
@@ -167,6 +167,32 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        // global
+
+        'email' => 'E-Mail Adresse',
+        'comment' => 'Kommentar',
+
+        // User
+
+        'name' => 'Name',
+        'username' => 'Benutzername',
+        'password' => 'Passwort',
+
+        // Customer
+
+        'pass_number' => 'Ausweisnummer',
+        'name1' => 'Name',
+        'name2' => 'Name 2',
+        'birth_date' => 'Geburtsdatum',
+        'birth_city' => 'Geburtsstadt',
+        'plz' => 'Postleitzahl',
+        'city' => 'Stadt',
+        'street' => 'Straße und Hausnummer',
+        'phone' => 'Telefonnummer',
+        'car_number' => 'Kennzeichen',
+        'driving_license_no' => 'Führerscheinnummer',
+        'driving_license_class' => 'Führerscheinklasse',
+    ],
 
 ];
