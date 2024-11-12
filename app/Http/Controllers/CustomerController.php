@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Resources\CustomerResource;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,7 +35,8 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return response()->json($customer, Response::HTTP_OK);
+        $value = new CustomerResource($customer);
+        return response()->json($value, Response::HTTP_OK);
     }
 
     /**

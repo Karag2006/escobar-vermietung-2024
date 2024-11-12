@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -41,7 +42,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json($user, Response::HTTP_OK);
+        $result = new UserResource($user);
+        return response()->json($result, Response::HTTP_OK);
     }
 
     /**

@@ -23,7 +23,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        
+
         return [
             'name'      =>  'required|string|max:50',
             'username'  =>  ['required','string','max:30',Rule::unique(User::class)->ignore($this->user->id)],

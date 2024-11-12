@@ -1,20 +1,29 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
+import { toast } from "sonner";
+import { parse } from "date-fns";
+
+import { PickerReturn } from "@/types";
 
 import { getTrailerById } from "@/data/trailer";
-import { PickerReturn } from "@/types";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { DecisionButtons } from "@/Components/decision-buttons";
 import { MonthPicker } from "@/Components/datePicker/month-picker";
+
 import { LoadingSizeInput } from "./loading-size-input";
-import { toast } from "sonner";
 
 interface TrailerFormProps {
     currentID: number;
     close: () => void;
 }
+
+export type LoadingSizeErrors = {
+    "loading_size.0"?: string;
+    "loading_size.1"?: string;
+    "loading_size.2"?: string;
+};
 
 export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
     const emptySize: number[] = [];
@@ -38,6 +47,8 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
         loading_size: emptySize,
         comment: "",
     });
+    const [loadingSizeErrors, setLoadingSizeErrors] =
+        useState<LoadingSizeErrors>({});
 
     const handlePickerChange = (result: PickerReturn) => {
         const key = result.id;
@@ -78,6 +89,35 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
         }));
     };
 
+    const handleSizeErrors = () => {
+        // 12.11.2024 - Error Handling for Loading Size
+        if (errors) {
+            Object.keys(errors).forEach((key) => {
+                if (
+                    key === "loading_size.0" ||
+                    key === "loading_size.1" ||
+                    key === "loading_size.2"
+                ) {
+                    setLoadingSizeErrors((loadingSizeErrors) => ({
+                        ...loadingSizeErrors,
+                        // @ts-ignore
+                        [key]: errors[key],
+                    }));
+                }
+            });
+        }
+    };
+
+    const clearLoadingSizeErrors = (key: keyof LoadingSizeErrors) => {
+        setLoadingSizeErrors((loadingSizeErrors) => ({
+            ...loadingSizeErrors,
+            [key]: "",
+        }));
+        // 12.11.2024 - Error Handling for Loading Size
+        // @ts-ignore
+        clearErrors(key);
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!currentID) {
@@ -115,6 +155,24 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
         getCurrentTrailer();
         return;
     }, []);
+
+    // 12.11.2024 - Error Handling for Loading Size
+    useEffect(() => {
+        handleSizeErrors();
+    }, [errors]);
+
+    // 12.11.2024 - Fix Inspection Date Edit
+    useEffect(() => {
+        if (data.tuev) {
+            // Das Datum wird auf den 2. des Monats gesetzt, da es sonst zu Problemen mit dem Datum kommen kann
+            // z.B. 30.11.2024 statt 01.12.2024 (timzone unterschiede zwischen client und server)
+            const date = parse(data.tuev + "/02", "MM/yy/dd", new Date());
+            setData((data) => ({
+                ...data,
+                inspection_at: date,
+            }));
+        }
+    }, [data.tuev]);
 
     return (
         <div className="p-4">
@@ -185,6 +243,9 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
                         <LoadingSizeInput
                             value={data.loading_size}
                             handleChangeSize={handleChangeSize}
+                            errors={loadingSizeErrors}
+                            // 12.11.2024 - Error Handling for Loading Size
+                            clearErrors={clearLoadingSizeErrors}
                             processing={processing}
                         />
                     </div>

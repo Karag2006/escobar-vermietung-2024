@@ -20,7 +20,7 @@ export const InputTP24 = React.forwardRef<HTMLInputElement, InputProps>(
             label,
             error,
             id,
-            value,
+            value = "",
             disabled,
             suffix,
             suffixClasses,

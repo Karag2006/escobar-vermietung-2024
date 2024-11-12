@@ -11,7 +11,7 @@ export interface TextareaProps
 export const TextareaTP24 = React.forwardRef<
     HTMLTextAreaElement,
     TextareaProps
->(({ className, label, error, id, value, ...props }, ref) => {
+>(({ className, label, error, id, value = "", ...props }, ref) => {
     return (
         <div className={cn("group relative", className)}>
             {label && label !== "" && (
