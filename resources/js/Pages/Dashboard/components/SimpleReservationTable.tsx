@@ -90,11 +90,12 @@ export const SimpleReservationTable = ({
             <Table className="border border-neutral-300 mt-4 rounded-md">
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Reservation Number</TableHead>
+                        <TableHead>Reservierung Nr.</TableHead>
+                        <TableHead>Anhänger</TableHead>
                         <TableHead>Kunde</TableHead>
                         <TableHead>Abholung</TableHead>
-                        <TableHead>Abholstation</TableHead>
                         <TableHead>Rückgabe</TableHead>
+                        <TableHead>Abholstation</TableHead>
                         <TableHead className="text-end">Aktionen</TableHead>
                     </TableRow>
                 </TableHeader>
