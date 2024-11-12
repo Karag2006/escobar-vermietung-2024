@@ -170,12 +170,12 @@ return [
     'attributes' => [
         // global
 
+        'name' => 'Name',
         'email' => 'E-Mail Adresse',
         'comment' => 'Kommentar',
 
         // User
 
-        'name' => 'Name',
         'username' => 'Benutzername',
         'password' => 'Passwort',
 
@@ -193,6 +193,13 @@ return [
         'car_number' => 'Kennzeichen',
         'driving_license_no' => 'Führerscheinnummer',
         'driving_license_class' => 'Führerscheinklasse',
+
+
+        // Equipment
+
+        'details'       => 'Details',
+        'defaultNumber' => 'standard Anzahl',
+
     ],
 
 ];

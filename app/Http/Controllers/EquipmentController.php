@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
+use App\Http\Resources\EquipmentResource;
 use App\Models\Equipment;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,8 @@ class EquipmentController extends Controller
      */
     public function show(Equipment $equipment)
     {
-        return response()->json($equipment, Response::HTTP_OK);
+        $result = new EquipmentResource($equipment);
+        return response()->json($result, Response::HTTP_OK);
     }
 
 
