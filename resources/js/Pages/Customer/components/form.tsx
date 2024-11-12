@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
+import { toast } from "sonner";
+
+import { PickerReturn } from "@/types";
 
 import { getCustomerById } from "@/data/customer";
-import { PickerReturn } from "@/types";
+import { getLicenseClasses } from "@/data/settings";
 
 import { InputTP24 } from "@/Components/ui/input-tp24";
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 import { Combobox } from "@/Components/combobox";
 import { DatePicker } from "@/Components/datePicker";
 import { DecisionButtons } from "@/Components/decision-buttons";
-import { toast } from "sonner";
-import { getLicenseClasses } from "@/data/settings";
 
 interface CustomerFormProps {
     currentID: number;
@@ -18,32 +19,24 @@ interface CustomerFormProps {
 }
 
 export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
-    const {
-        data,
-        setData,
-        post,
-        patch,
-        processing,
-        errors,
-        reset,
-        clearErrors,
-    } = useForm({
-        id: currentID,
-        pass_number: "",
-        name1: "",
-        name2: "",
-        birth_date: "",
-        birth_city: "",
-        street: "",
-        plz: "",
-        city: "",
-        phone: "",
-        email: "",
-        driving_license_no: "",
-        driving_license_class: "",
-        car_number: "",
-        comment: "",
-    });
+    const { data, setData, post, patch, processing, errors, clearErrors } =
+        useForm({
+            id: currentID,
+            pass_number: "",
+            name1: "",
+            name2: "",
+            birth_date: "",
+            birth_city: "",
+            street: "",
+            plz: "",
+            city: "",
+            phone: "",
+            email: "",
+            driving_license_no: "",
+            driving_license_class: "",
+            car_number: "",
+            comment: "",
+        });
 
     const [drivingLicenseClasses, setDrivingLicenseClasses] = useState<
         string[]
@@ -109,7 +102,6 @@ export const CustomerForm = ({ currentID, close }: CustomerFormProps) => {
         getCurrentCustomer();
         getLicenseClasses().then((data) => {
             setDrivingLicenseClasses(data);
-            console.log(drivingLicenseClasses);
         });
     }, []);
 

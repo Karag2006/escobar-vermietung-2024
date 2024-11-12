@@ -60,7 +60,7 @@ return [
         'array' => 'The :attribute must have :value items or more.',
     ],
     'image' => 'The :attribute must be an image.',
-    'in' => 'The selected :attribute is invalid.',
+    'in' => 'Die ausgewählte :attribute ist ungültig.',
     'in_array' => 'The :attribute field does not exist in :other.',
     'integer' => 'Nur Zahlen erlaubt',
     'ip' => 'The :attribute must be a valid IP address.',
