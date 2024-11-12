@@ -24,7 +24,8 @@ class UpdateEquipmentRequest extends FormRequest
         return [
             'name'                  =>  'required|string|min:5|max:50',
             'details'               =>  'nullable|string|min:10|max:600',
-            'defaultNumber'         =>  'nullable|digits_between:1,2'
+            // 12.11.2024 - Error Handling : defaultNumber sollte nur ganze zahlen zwischen 1 und 99 enthalten
+            'defaultNumber'         =>  'nullable|integer|min:1|max:99'
         ];
     }
 }

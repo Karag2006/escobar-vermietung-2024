@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTrailerRequest;
 use App\Http\Requests\UpdateTrailerRequest;
+use App\Http\Resources\TrailerResource;
 use App\Models\Trailer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -47,7 +48,8 @@ class TrailerController extends Controller
      */
     public function show(Trailer $trailer)
     {
-        return response()->json($trailer, Response::HTTP_OK);
+        $result = new TrailerResource($trailer);
+        return response()->json($result, Response::HTTP_OK);
     }
 
 

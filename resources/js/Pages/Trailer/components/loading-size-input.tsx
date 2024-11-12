@@ -1,16 +1,13 @@
-import { InputTP24 } from "@/Components/ui/input-tp24";
-import { TrailerField } from "@/types/trailer";
 import { useEffect, useState } from "react";
 
+import { LoadingSizeErrors } from "./form";
+
+import { InputTP24 } from "@/Components/ui/input-tp24";
 interface LoadingSizeInputProps {
     value: string[] | number[];
-    errors?: {
-        "loading_size.0"?: string;
-        "loading_size.1"?: string;
-        "loading_size.2"?: string;
-    };
+    errors?: LoadingSizeErrors;
     processing?: boolean;
-    clearErrors?: (key: TrailerField) => void;
+    clearErrors?: (key: keyof LoadingSizeErrors) => void;
     handleChangeSize: (size: {
         length: string;
         width: string;
@@ -30,20 +27,9 @@ export const LoadingSizeInput = ({
         width: "",
         height: "",
     });
-    const [localErrors, setLocalErrors] = useState({
-        length: "",
-        width: "",
-        height: "",
-    });
 
-    const clearE = (key: TrailerField) => {
+    const clearE = (key: keyof LoadingSizeErrors) => {
         clearErrors && clearErrors(key);
-        if (key === "loading_size.0")
-            setLocalErrors({ ...localErrors, length: "" });
-        if (key === "loading_size.1")
-            setLocalErrors({ ...localErrors, width: "" });
-        if (key === "loading_size.2")
-            setLocalErrors({ ...localErrors, height: "" });
     };
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -65,22 +51,6 @@ export const LoadingSizeInput = ({
                 height: value[2] ? value[2] + "" : "",
             });
         }
-        if (
-            errors &&
-            (errors["loading_size.0"] ||
-                errors["loading_size.1"] ||
-                errors["loading_size.2"])
-        ) {
-            setLocalErrors({
-                length: errors["loading_size.0"]
-                    ? errors["loading_size.0"]
-                    : "",
-                width: errors["loading_size.1"] ? errors["loading_size.1"] : "",
-                height: errors["loading_size.2"]
-                    ? errors["loading_size.2"]
-                    : "",
-            });
-        }
     }, [value, errors]);
 
     return (
@@ -91,7 +61,7 @@ export const LoadingSizeInput = ({
                     label="Länge *"
                     id="length"
                     value={localValue.length}
-                    error={localErrors.length}
+                    error={errors?.["loading_size.0"]}
                     onInput={handleChange}
                     onFocus={() => clearE("loading_size.0")}
                     disabled={processing}
@@ -100,7 +70,7 @@ export const LoadingSizeInput = ({
                     label="Breite *"
                     id="width"
                     value={localValue.width}
-                    error={localErrors.width}
+                    error={errors?.["loading_size.1"]}
                     onInput={handleChange}
                     onFocus={() => clearE("loading_size.1")}
                     disabled={processing}
@@ -109,7 +79,7 @@ export const LoadingSizeInput = ({
                     label="Höhe"
                     id="height"
                     value={localValue.height}
-                    error={localErrors.height}
+                    error={errors?.["loading_size.2"]}
                     onInput={handleChange}
                     onFocus={() => clearE("loading_size.2")}
                     disabled={processing}
