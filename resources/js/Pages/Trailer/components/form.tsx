@@ -10,6 +10,7 @@ import { DecisionButtons } from "@/Components/decision-buttons";
 import { MonthPicker } from "@/Components/datePicker/month-picker";
 import { LoadingSizeInput } from "./loading-size-input";
 import { toast } from "sonner";
+import { parse, set } from "date-fns";
 
 interface TrailerFormProps {
     currentID: number;
@@ -115,6 +116,20 @@ export const TrailerForm = ({ currentID, close }: TrailerFormProps) => {
         getCurrentTrailer();
         return;
     }, []);
+
+    useEffect(() => {
+        if (data.tuev) {
+            // 12.11.2024 - Fix Inspection Date Edit:
+            // Das Datum wird auf den 2. des Monats gesetzt, da es sonst zu Problemen mit dem Datum kommen kann
+            // z.B. 30.11.2024 statt 01.12.2024 (timzone unterschiede zwischen client und server)
+            const date = parse(data.tuev + "/02", "MM/yy/dd", new Date());
+            console.log(date);
+            setData((data) => ({
+                ...data,
+                inspection_at: date,
+            }));
+        }
+    }, [data.tuev]);
 
     return (
         <div className="p-4">
