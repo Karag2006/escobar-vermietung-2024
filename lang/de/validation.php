@@ -200,6 +200,19 @@ return [
         'details'       => 'Details',
         'defaultNumber' => 'standard Anzahl',
 
+        // Trailer
+
+        'title' => 'Bezeichnung',
+        'plateNumber' => 'Kennzeichen',
+        'chassisNumber' => 'Fahrgestellnummer',
+        'tuev' => 'TÜV',
+        'inspection_at' => 'Nächster TÜV Termin',
+        'totalWeight' => 'zulässiges Gesamtgewicht',
+        'usableWeight' => 'Nutzlast',
+        'loading_size' => 'Lademaße',
+        'loading_size.0' => 'Länge',
+        'loading_size.1' => 'Breite',
+        'loading_size.2' => 'Höhe',
     ],
 
 ];
