@@ -1,7 +1,8 @@
+@use "sass:meta";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import "./constants.scss";
-@import "./settings";
-@import "./utility";
+@include meta.load-css("constants.scss");
+@include meta.load-css("settings");
+@include meta.load-css("utility");
