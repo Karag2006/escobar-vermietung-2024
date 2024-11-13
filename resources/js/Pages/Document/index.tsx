@@ -338,6 +338,8 @@ export default function index({
                 className="xl:max-w-[1600px]"
                 modalOpen={modalOpen}
                 openChange={setModalOpen}
+                title="Dokumenten Formular"
+                description="Formular zum Anlegen oder Bearbeiten eines Dokuments"
             >
                 <ModalCardWrapper
                     header={

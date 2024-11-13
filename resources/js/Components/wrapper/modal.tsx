@@ -1,10 +1,17 @@
-import { Dialog, DialogContent } from "@/Components/ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogTitle,
+} from "@/Components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 interface ModalProps {
     children: React.ReactNode;
     modalOpen: boolean;
     className?: string;
+    title?: string;
+    description?: string;
     openChange: (open: boolean) => void;
 }
 
@@ -12,6 +19,8 @@ export const Modal = ({
     children,
     modalOpen,
     className,
+    title,
+    description,
     openChange,
 }: ModalProps) => {
     return (
@@ -22,6 +31,12 @@ export const Modal = ({
                     className
                 )}
             >
+                <DialogTitle>
+                    <span className="sr-only">{title}</span>
+                </DialogTitle>
+                <DialogDescription>
+                    <span className="sr-only">{description}</span>
+                </DialogDescription>
                 {children}
             </DialogContent>
         </Dialog>

@@ -9,6 +9,12 @@ interface CurrencyInputProps {
     className?: string;
     disabled?: boolean;
     error?: string;
+    // 13.11.2024 Error handling
+    // Currency Inputs benötigen eine removError Funktion
+    // sowie ein fieldname Attribut
+    removeError?: (key: string) => void;
+    fieldname?: string;
+
     onValueChange: (e: React.FormEvent<HTMLInputElement>) => void;
     onFinishedValueChange: (e: React.FormEvent<HTMLInputElement>) => void;
 }
@@ -20,6 +26,8 @@ export const CurrencyInput = ({
     className,
     disabled,
     error,
+    fieldname,
+    removeError,
     onValueChange,
     onFinishedValueChange,
 }: CurrencyInputProps) => {
@@ -28,6 +36,9 @@ export const CurrencyInput = ({
             value={value}
             onChange={onValueChange}
             onBlur={onFinishedValueChange}
+            onFocus={() =>
+                removeError && removeError(fieldname ? fieldname : id)
+            }
             className={cn("w-full max-h-[33px]", className)}
             label={label}
             id={id}
