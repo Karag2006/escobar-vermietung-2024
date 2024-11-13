@@ -19,9 +19,9 @@ interface TrailerFormProps {
     type: "trailer";
     documentType: documentType;
     trailer: documentTrailerForm;
-    trailerErrors: TrailerErrors;
+    trailerErrors?: TrailerErrors;
     tuevCompareDate?: string;
-    clearTrailerError: (key: TrailerField) => void;
+    clearSubformError: (key: string, subform: string) => void;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentTrailerForm
@@ -32,7 +32,7 @@ export const TrailerForm = ({
     type,
     tuevCompareDate,
     trailerErrors,
-    clearTrailerError,
+    clearSubformError,
     trailer,
     handleChangeInSubForm,
 }: TrailerFormProps) => {
@@ -119,7 +119,7 @@ export const TrailerForm = ({
     };
 
     const handleClearError = (key: TrailerField) => {
-        clearTrailerError(key);
+        clearSubformError(key, "trailer");
     };
 
     useEffect(() => {
@@ -167,7 +167,7 @@ export const TrailerForm = ({
                         label="Anhängerbezeichnung *"
                         id="title"
                         value={data.title}
-                        error={errors.title || trailerErrors.title}
+                        error={errors.title || trailerErrors?.title}
                         onChange={handleChange}
                         onFocus={() => handleClearError("title")}
                         disabled={processing}
@@ -176,7 +176,7 @@ export const TrailerForm = ({
                         label="Kennzeichen *"
                         id="plateNumber"
                         value={data.plateNumber}
-                        error={errors.plateNumber || trailerErrors.plateNumber}
+                        error={errors.plateNumber || trailerErrors?.plateNumber}
                         onChange={handleChange}
                         onFocus={() => handleClearError("plateNumber")}
                         disabled={processing}
@@ -190,7 +190,7 @@ export const TrailerForm = ({
                             id="totalWeight"
                             value={data.totalWeight}
                             error={
-                                errors.totalWeight || trailerErrors.totalWeight
+                                errors.totalWeight || trailerErrors?.totalWeight
                             }
                             onChange={handleChange}
                             onFocus={() => handleClearError("totalWeight")}
@@ -203,7 +203,7 @@ export const TrailerForm = ({
                             value={data.usableWeight}
                             error={
                                 errors.usableWeight ||
-                                trailerErrors.usableWeight
+                                trailerErrors?.usableWeight
                             }
                             onFocus={() => handleClearError("usableWeight")}
                             onChange={handleChange}
@@ -213,9 +213,9 @@ export const TrailerForm = ({
                     <LoadingSizeInput
                         value={data.loading_size}
                         errors={{
-                            "loading_size.0": trailerErrors["loading_size.0"],
-                            "loading_size.1": trailerErrors["loading_size.1"],
-                            "loading_size.2": trailerErrors["loading_size.2"],
+                            "loading_size.0": trailerErrors?.["loading_size.0"],
+                            "loading_size.1": trailerErrors?.["loading_size.1"],
+                            "loading_size.2": trailerErrors?.["loading_size.2"],
                         }}
                         clearErrors={handleClearError}
                         handleChangeSize={handleChangeSize}
@@ -229,7 +229,7 @@ export const TrailerForm = ({
                     label="Kommentar"
                     id="comment"
                     value={data.comment}
-                    error={errors.comment || trailerErrors.comment}
+                    error={errors.comment || trailerErrors?.comment}
                     onChange={handleChange}
                     onFocus={() => handleClearError("comment")}
                     disabled={processing}

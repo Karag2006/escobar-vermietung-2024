@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
-
-import { DecisionButtons } from "@/Components/decision-buttons";
+import { parse } from "date-fns";
 import { toast } from "sonner";
+
+import {
+    collisionData,
+    customerType,
+    DataField,
+    documentType,
+} from "@/types/document";
+import { CustomerField } from "@/types/customer";
+import { TrailerField } from "@/types/trailer";
+
 import {
     getOfferById,
     getReservationById,
     getContractById,
     collisionCheck,
 } from "@/data/document";
+import { getSettings } from "@/data/settings";
 import {
     blankForm,
     documentCustomerForm,
@@ -16,34 +26,38 @@ import {
     documentSettingsForm,
     documentTrailerForm,
 } from "@/lib/document-form";
+import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
+
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from "@/Components/ui/tabs-tp24";
+
+import { DecisionButtons } from "@/Components/decision-buttons";
+
 import { CustomerForm } from "./sub-forms/customer";
-import {
-    collisionData,
-    customerType,
-    DataField,
-    documentType,
-} from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
-import { getSettings } from "@/data/settings";
-import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
 import { CollisionDialog } from "./collision-dialog";
-import { CustomerField } from "@/types/customer";
-import { TrailerField } from "@/types/trailer";
-import { parse } from "date-fns";
 
 interface DocumentFormProps {
     documentType: documentType;
     currentID: number;
     close: () => void;
 }
+
+// 13.11.2024 - Error handling
+// Types für die Fehlermeldungen
+export type SubformErrors = {
+    [key: string]: string;
+};
+
+export type SubformErrorBag = {
+    [key: string]: SubformErrors;
+};
 
 export const DocumentForm = ({
     documentType,
@@ -54,14 +68,13 @@ export const DocumentForm = ({
 
     const [collisionDialog, setCollisionDialog] = useState(false);
     const [collision, setCollision] = useState<collisionData | null>(null);
-    const [dataErrors, setDataErrors] = useState({
-        customer: {},
-        driver: {},
-        trailer: {},
-        data: {},
-    });
 
-    const { data, setData, post, patch, processing } = useForm(blankForm);
+    // 13.11.2024 - Error handling
+    // state für die Fehlermeldungen
+    const [errorsBySubform, setErrorsBySubform] = useState<SubformErrorBag>({});
+
+    const { data, setData, errors, clearErrors, post, patch, processing } =
+        useForm(blankForm);
 
     const handleChangeInSubForm = (
         subFormKey: string,
@@ -171,6 +184,32 @@ export const DocumentForm = ({
         else storeNewDocument();
     };
 
+    // 13.11.2024 - Error handling
+    // Funktion zum aufteilen der Fehlermeldungen in die jeweiligen Subforms
+    const handleErrors = () => {
+        let localErrorsBySubform: SubformErrorBag = {};
+
+        Object.keys(errors).forEach((key) => {
+            const subform = key.substring(0, key.indexOf("."));
+            const field = key.substring(key.indexOf(".") + 1);
+            if (!localErrorsBySubform[subform])
+                localErrorsBySubform[subform] = {};
+            // @ts-ignore
+            localErrorsBySubform[subform][field] = errors[key];
+        });
+        setErrorsBySubform(localErrorsBySubform);
+    };
+
+    // 13.11.2024 - Error handling
+    // Funktion um Fehler in einer Subform zu löschen
+    const clearErrorInSubform = (key: string, subform: string) => {
+        // der Type von errors kennt die felder der form `${subform}.${key}` nicht
+        // daher frage ich zur sicherheit nochmal ab ob das feld existiert bevor ich es lösche
+        // Der entstehende TS Fehler wird ignoriert.
+        // @ts-ignore
+        if (errors[`${subform}.${key}`]) clearErrors(`${subform}.${key}`);
+    };
+
     const storeNewDocument = () => {
         post(`/${documentType}`, {
             only: [`${documentType}List`, "errors"],
@@ -178,49 +217,7 @@ export const DocumentForm = ({
                 toast.success(`${germanDocumentType} erfolgreich angelegt`);
                 close();
             },
-            onError: (error) => {
-                const article = documentType === "reservation" ? "der" : "des";
-                toast.error(
-                    `Fehler beim anlegen ${article} ${germanDocumentType}`
-                );
-
-                if (error) {
-                    let customerEntries: string[][] = [];
-                    let driverEntries: string[][] = [];
-                    let trailerEntries: string[][] = [];
-                    let dataEntries: string[][] = [];
-                    Object.entries(error).forEach((err) => {
-                        const dotIndex = err[0].indexOf(".");
-                        const bagName = err[0].substring(0, dotIndex);
-                        const fieldName = err[0].substring(dotIndex + 1);
-                        const message = err[1];
-                        if (bagName === "customer")
-                            customerEntries.push([fieldName, message]);
-                        if (bagName === "driver")
-                            driverEntries.push([fieldName, message]);
-                        if (bagName === "trailer")
-                            trailerEntries.push([fieldName, message]);
-                        if (bagName === "data")
-                            dataEntries.push([fieldName, message]);
-                    });
-
-                    console.log(
-                        isObjectEmpty(Object.fromEntries(driverEntries))
-                    );
-
-                    setDataErrors({
-                        customer: Object.fromEntries(customerEntries),
-                        driver: Object.fromEntries(driverEntries),
-                        trailer: Object.fromEntries(trailerEntries),
-                        data: Object.fromEntries(dataEntries),
-                    });
-
-                    // setError("customer", Object.fromEntries(customerEntries));
-                    // setError("driver", Object.fromEntries(driverEntries));
-                    // setError("trailer", Object.fromEntries(trailerEntries));
-                    // setError("data", Object.fromEntries(dataEntries));
-                }
-            },
+            onError: (error) => {},
         });
     };
 
@@ -245,15 +242,21 @@ export const DocumentForm = ({
     const handleClearError = (
         subForm: "customer" | "trailer" | "driver" | "data",
         field: CustomerField | TrailerField | DataField
-    ) => {
-        setDataErrors((errors) => ({
-            ...errors,
-            [subForm]: {
-                ...errors[subForm],
-                [field]: undefined,
-            },
-        }));
-    };
+    ) => {};
+
+    // 13.11.2024 - Error handling
+    // Benutze die inertia eigenen error handling Funktionen aus useForm
+    useEffect(() => {
+        if (errors && !isObjectEmpty(errors)) {
+            // errors enthält alle Informationen zu den Fehlern im Formular:
+            // error keys haben die form: 'subform.field.subfield'
+            // => wir können aus den keys die subform und das field extrahieren
+            // Idee: Fehlermeldungen in ein neues Objekt errorsBySubform schreiben
+            // und dieses dann an die jeweiligen subforms weitergeben
+
+            handleErrors();
+        }
+    }, [errors]);
 
     useEffect(() => {
         const getCurrentDocument = () => {
@@ -290,8 +293,10 @@ export const DocumentForm = ({
                         <TabsList>
                             <TabsTrigger
                                 value="customer"
+                                // 13.11.2024 - Error handling
                                 data-error={
-                                    !isObjectEmpty(dataErrors?.customer)
+                                    errorsBySubform?.customer &&
+                                    !isObjectEmpty(errorsBySubform?.customer)
                                         ? "active"
                                         : ""
                                 }
@@ -300,8 +305,10 @@ export const DocumentForm = ({
                             </TabsTrigger>
                             <TabsTrigger
                                 value="driver"
+                                // 13.11.2024 - Error handling
                                 data-error={
-                                    !isObjectEmpty(dataErrors?.driver)
+                                    errorsBySubform?.driver &&
+                                    !isObjectEmpty(errorsBySubform?.driver)
                                         ? "active"
                                         : ""
                                 }
@@ -310,8 +317,10 @@ export const DocumentForm = ({
                             </TabsTrigger>
                             <TabsTrigger
                                 value="trailer"
+                                // 13.11.2024 - Error handling
                                 data-error={
-                                    !isObjectEmpty(dataErrors?.trailer)
+                                    errorsBySubform?.trailer &&
+                                    !isObjectEmpty(errorsBySubform?.trailer)
                                         ? "active"
                                         : ""
                                 }
@@ -320,8 +329,10 @@ export const DocumentForm = ({
                             </TabsTrigger>
                             <TabsTrigger
                                 value="data"
+                                // 13.11.2024 - Error handling
                                 data-error={
-                                    !isObjectEmpty(dataErrors?.data)
+                                    errorsBySubform?.data &&
+                                    !isObjectEmpty(errorsBySubform?.data)
                                         ? "active"
                                         : ""
                                 }
@@ -345,10 +356,8 @@ export const DocumentForm = ({
                             type={customerType.CUSTOMER}
                             documentType={documentType}
                             customer={data.customer}
-                            customerErrors={dataErrors?.customer}
-                            clearCustomerError={(field: CustomerField) =>
-                                handleClearError("customer", field)
-                            }
+                            customerErrors={errorsBySubform?.customer}
+                            clearSubformError={clearErrorInSubform}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -356,11 +365,9 @@ export const DocumentForm = ({
                         <CustomerForm
                             type={customerType.DRIVER}
                             documentType={documentType}
-                            clearCustomerError={(field: CustomerField) =>
-                                handleClearError("driver", field)
-                            }
+                            clearSubformError={clearErrorInSubform}
                             customer={data.driver}
-                            customerErrors={dataErrors?.driver}
+                            customerErrors={errorsBySubform?.driver}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -369,10 +376,8 @@ export const DocumentForm = ({
                             type="trailer"
                             documentType={documentType}
                             trailer={data.trailer}
-                            trailerErrors={dataErrors?.trailer}
-                            clearTrailerError={(field: TrailerField) =>
-                                handleClearError("trailer", field)
-                            }
+                            trailerErrors={errorsBySubform?.trailer}
+                            clearSubformError={clearErrorInSubform}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -381,10 +386,8 @@ export const DocumentForm = ({
                             type="data"
                             documentType={documentType}
                             document={data}
-                            dataErrors={dataErrors?.data}
-                            clearDataError={(field: DataField) =>
-                                handleClearError("data", field)
-                            }
+                            dataErrors={errorsBySubform?.data}
+                            clearSubformError={clearErrorInSubform}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
