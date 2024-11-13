@@ -27,7 +27,7 @@ interface DataFormProps {
     type: "data";
     documentType: documentType;
     document: documentForm;
-    dataErrors: DataErrors;
+    dataErrors?: DataErrors;
     clearDataError: (key: DataField) => void;
     handleChangeInSubForm: (
         subFormKey: string,
@@ -267,7 +267,7 @@ export const DataForm = ({
                 <div className="flex gap-6 flex-col lg:flex-row lg:justify-between">
                     <DatePicker
                         value={data.collect_date}
-                        error={errors.collect_date || dataErrors.collect_date}
+                        error={errors.collect_date || dataErrors?.collect_date}
                         id="collect_date"
                         label="Abholung - Datum *"
                         fieldName="collect_date"
@@ -278,7 +278,7 @@ export const DataForm = ({
                         value={data.collect_time}
                         id="collect_time"
                         label="Abholung - Uhrzeit *"
-                        error={errors.collect_time || dataErrors.collect_time}
+                        error={errors.collect_time || dataErrors?.collect_time}
                         fieldName="collect_time"
                         removeError={() => handleClearError("collect_time")}
                         onUpdateValue={handlePickerChange}
@@ -286,7 +286,7 @@ export const DataForm = ({
                     <DatePicker
                         value={data.return_date}
                         id="return_date"
-                        error={errors.return_date || dataErrors.return_date}
+                        error={errors.return_date || dataErrors?.return_date}
                         label="Rückgabe - Datum *"
                         fieldName="return_date"
                         removeError={() => handleClearError("return_date")}
@@ -295,7 +295,7 @@ export const DataForm = ({
                     <TimePicker
                         value={data.return_time}
                         id="return_time"
-                        error={errors.return_time || dataErrors.return_time}
+                        error={errors.return_time || dataErrors?.return_time}
                         label="Rückgabe - Uhrzeit *"
                         fieldName="return_time"
                         removeError={() => handleClearError("return_time")}
@@ -311,7 +311,7 @@ export const DataForm = ({
                         value={data.collect_address_id}
                         error={
                             errors.collect_address_id ||
-                            dataErrors.collect_address_id
+                            dataErrors?.collect_address_id
                         }
                         removeError={() =>
                             handleClearError("collect_address_id")
@@ -326,7 +326,7 @@ export const DataForm = ({
                     <CurrencyInput
                         id="total_price"
                         value={currencyFields.total_price}
-                        error={errors.total_price || dataErrors.total_price}
+                        error={errors.total_price || dataErrors?.total_price}
                         label="Preis (Brutto) *"
                         onValueChange={handleCurrencyInput}
                         onFinishedValueChange={handleCurrencyValueChanged}
@@ -355,7 +355,7 @@ export const DataForm = ({
                         label="Anzahlung"
                         error={
                             errors.reservation_deposit_value ||
-                            dataErrors.reservation_deposit_value
+                            dataErrors?.reservation_deposit_value
                         }
                         onValueChange={handleCurrencyInput}
                         onFinishedValueChange={handleCurrencyValueChanged}
@@ -365,7 +365,7 @@ export const DataForm = ({
                         value={data.reservation_deposit_date}
                         error={
                             errors.reservation_deposit_date ||
-                            dataErrors.reservation_deposit_date
+                            dataErrors?.reservation_deposit_date
                         }
                         id="reservation_deposit_date"
                         fieldName="reservation_deposit_date"
@@ -380,7 +380,7 @@ export const DataForm = ({
                         items={paymentTypes}
                         error={
                             errors.reservation_deposit_type ||
-                            dataErrors.reservation_deposit_type
+                            dataErrors?.reservation_deposit_type
                         }
                         label="Zahlungsart Anzahlung"
                         id="reservation_deposit_type"
@@ -396,7 +396,7 @@ export const DataForm = ({
                         checked={data.reservation_deposit_recieved}
                         error={
                             errors.reservation_deposit_recieved ||
-                            dataErrors.reservation_deposit_recieved
+                            dataErrors?.reservation_deposit_recieved
                         }
                         label="Anzahlung eingegangen"
                         onCheckedChange={handleCheckboxChange}
@@ -410,7 +410,7 @@ export const DataForm = ({
                                 value={currencyFields.final_payment_value}
                                 error={
                                     errors.final_payment_value ||
-                                    dataErrors.final_payment_value
+                                    dataErrors?.final_payment_value
                                 }
                                 label="Restzahlung"
                                 onValueChange={handleCurrencyInput}
@@ -423,7 +423,7 @@ export const DataForm = ({
                                 value={data.final_payment_date}
                                 error={
                                     errors.final_payment_date ||
-                                    dataErrors.final_payment_date
+                                    dataErrors?.final_payment_date
                                 }
                                 id="final_payment_date"
                                 fieldName="final_payment_date"
@@ -441,7 +441,7 @@ export const DataForm = ({
                                 value={data.final_payment_type}
                                 error={
                                     errors.final_payment_type ||
-                                    dataErrors.final_payment_type
+                                    dataErrors?.final_payment_type
                                 }
                                 removeError={() =>
                                     handleClearError("final_payment_type")
@@ -454,7 +454,7 @@ export const DataForm = ({
                                 checked={data.final_payment_recieved}
                                 error={
                                     errors.final_payment_recieved ||
-                                    dataErrors.final_payment_recieved
+                                    dataErrors?.final_payment_recieved
                                 }
                                 label="Restzahlung eingegangen"
                                 onCheckedChange={handleCheckboxChange}
@@ -467,7 +467,7 @@ export const DataForm = ({
                             value={currencyFields.final_payment_value}
                             error={
                                 errors.final_payment_value ||
-                                dataErrors.final_payment_value
+                                dataErrors?.final_payment_value
                             }
                             label="Restzahlung"
                             onValueChange={handleCurrencyInput}
@@ -481,7 +481,8 @@ export const DataForm = ({
                             id="contract_bail"
                             value={currencyFields.contract_bail}
                             error={
-                                errors.contract_bail || dataErrors.contract_bail
+                                errors.contract_bail ||
+                                dataErrors?.contract_bail
                             }
                             label="Kaution"
                             onValueChange={handleCurrencyInput}
@@ -492,7 +493,7 @@ export const DataForm = ({
                             value={data.contract_bail_date}
                             error={
                                 errors.contract_bail_date ||
-                                dataErrors.contract_bail_date
+                                dataErrors?.contract_bail_date
                             }
                             id="contract_bail_date"
                             fieldName="contract_bail_date"
@@ -511,7 +512,7 @@ export const DataForm = ({
                                 value={data.contract_bail_type}
                                 error={
                                     errors.contract_bail_type ||
-                                    dataErrors.contract_bail_type
+                                    dataErrors?.contract_bail_type
                                 }
                                 removeError={() =>
                                     handleClearError("contract_bail_type")
@@ -524,7 +525,7 @@ export const DataForm = ({
                                 checked={data.contract_bail_recieved}
                                 error={
                                     errors.contract_bail_recieved ||
-                                    dataErrors.contract_bail_recieved
+                                    dataErrors?.contract_bail_recieved
                                 }
                                 label="Kaution erhalten"
                                 onCheckedChange={handleCheckboxChange}
@@ -539,7 +540,7 @@ export const DataForm = ({
                                 value={data.contract_bail_return_type}
                                 error={
                                     errors.contract_bail_return_type ||
-                                    dataErrors.contract_bail_return_type
+                                    dataErrors?.contract_bail_return_type
                                 }
                                 removeError={() =>
                                     handleClearError(
@@ -554,7 +555,7 @@ export const DataForm = ({
                                 checked={data.contract_bail_returned}
                                 error={
                                     errors.contract_bail_returned ||
-                                    dataErrors.contract_bail_returned
+                                    dataErrors?.contract_bail_returned
                                 }
                                 label="Kaution erstattet"
                                 onCheckedChange={handleCheckboxChange}
@@ -574,7 +575,7 @@ export const DataForm = ({
                         label="Kommentar"
                         id="comment"
                         value={data.comment}
-                        error={errors.comment || dataErrors.comment}
+                        error={errors.comment || dataErrors?.comment}
                         onChange={handleChange}
                         onFocus={() => handleClearError("comment")}
                         disabled={processing}
