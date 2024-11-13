@@ -21,7 +21,7 @@ interface TrailerFormProps {
     trailer: documentTrailerForm;
     trailerErrors?: TrailerErrors;
     tuevCompareDate?: string;
-    clearTrailerError: (key: TrailerField) => void;
+    clearSubformError: (key: string, subform: string) => void;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentTrailerForm
@@ -32,7 +32,7 @@ export const TrailerForm = ({
     type,
     tuevCompareDate,
     trailerErrors,
-    clearTrailerError,
+    clearSubformError,
     trailer,
     handleChangeInSubForm,
 }: TrailerFormProps) => {
@@ -119,7 +119,7 @@ export const TrailerForm = ({
     };
 
     const handleClearError = (key: TrailerField) => {
-        clearTrailerError(key);
+        clearSubformError(key, "trailer");
     };
 
     useEffect(() => {

@@ -28,7 +28,7 @@ interface DataFormProps {
     documentType: documentType;
     document: documentForm;
     dataErrors?: DataErrors;
-    clearDataError: (key: DataField) => void;
+    clearSubformError: (key: string, subform: string) => void;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentDataForm
@@ -41,7 +41,7 @@ export const DataForm = ({
     documentType,
     dataErrors,
     handleChangeInSubForm,
-    clearDataError,
+    clearSubformError,
 }: DataFormProps) => {
     const floatToString = (floatValue: number) => {
         if (floatValue) return floatValue.toFixed(2).replace(".", ",");
@@ -249,7 +249,8 @@ export const DataForm = ({
 
     const handleClearError = (key: DataField) => {
         clearErrors(key);
-        clearDataError(key);
+        clearSubformError(key, "data");
+        console.log("clearing error", dataErrors);
     };
 
     useEffect(() => {
@@ -328,6 +329,7 @@ export const DataForm = ({
                         value={currencyFields.total_price}
                         error={errors.total_price || dataErrors?.total_price}
                         label="Preis (Brutto) *"
+                        removeError={() => handleClearError("total_price")}
                         onValueChange={handleCurrencyInput}
                         onFinishedValueChange={handleCurrencyValueChanged}
                     />
@@ -356,6 +358,9 @@ export const DataForm = ({
                         error={
                             errors.reservation_deposit_value ||
                             dataErrors?.reservation_deposit_value
+                        }
+                        removeError={() =>
+                            handleClearError("reservation_deposit_value")
                         }
                         onValueChange={handleCurrencyInput}
                         onFinishedValueChange={handleCurrencyValueChanged}
@@ -411,6 +416,9 @@ export const DataForm = ({
                                 error={
                                     errors.final_payment_value ||
                                     dataErrors?.final_payment_value
+                                }
+                                removeError={() =>
+                                    handleClearError("final_payment_value")
                                 }
                                 label="Restzahlung"
                                 onValueChange={handleCurrencyInput}
@@ -469,6 +477,9 @@ export const DataForm = ({
                                 errors.final_payment_value ||
                                 dataErrors?.final_payment_value
                             }
+                            removeError={() =>
+                                handleClearError("final_payment_value")
+                            }
                             label="Restzahlung"
                             onValueChange={handleCurrencyInput}
                             onFinishedValueChange={handleCurrencyValueChanged}
@@ -483,6 +494,9 @@ export const DataForm = ({
                             error={
                                 errors.contract_bail ||
                                 dataErrors?.contract_bail
+                            }
+                            removeError={() =>
+                                handleClearError("contract_bail")
                             }
                             label="Kaution"
                             onValueChange={handleCurrencyInput}

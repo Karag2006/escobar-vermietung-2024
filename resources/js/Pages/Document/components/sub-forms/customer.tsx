@@ -22,7 +22,7 @@ interface CustomerFormProps {
     type: customerType;
     documentType: documentType;
     customer: documentCustomerForm;
-    clearCustomerError: (key: CustomerField) => void;
+    clearSubformError: (key: string, subform: string) => void;
     handleChangeInSubForm: (
         subFormKey: string,
         subFormData: documentCustomerForm
@@ -35,7 +35,7 @@ export const CustomerForm = ({
     customerErrors,
     customer,
     handleChangeInSubForm,
-    clearCustomerError,
+    clearSubformError,
 }: CustomerFormProps) => {
     const [customerList, setCustomerList] = useState<SelectorItem[]>([]);
     const [drivingLicenseClasses, setDrivingLicenseClasses] = useState<
@@ -100,7 +100,7 @@ export const CustomerForm = ({
 
     const handleClearError = (key: CustomerField) => {
         clearErrors(key);
-        clearCustomerError(key);
+        clearSubformError(key, type);
     };
 
     useEffect(() => {

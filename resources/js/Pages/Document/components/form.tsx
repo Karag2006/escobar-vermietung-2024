@@ -196,6 +196,16 @@ export const DocumentForm = ({
         setErrorsBySubform(localErrorsBySubform);
     };
 
+    // 13.11.2024 - Error handling
+    // Funktion um Fehler in einer Subform zu löschen
+    const clearErrorInSubform = (key: string, subform: string) => {
+        // der Type von errors kennt die felder der form `${subform}.${key}` nicht
+        // daher frage ich zur sicherheit nochmal ab ob das feld existiert bevor ich es lösche
+        // Der entstehende TS Fehler wird ignoriert.
+        // @ts-ignore
+        if (errors[`${subform}.${key}`]) clearErrors(`${subform}.${key}`);
+    };
+
     const storeNewDocument = () => {
         post(`/${documentType}`, {
             only: [`${documentType}List`, "errors"],
@@ -239,7 +249,6 @@ export const DocumentForm = ({
             // => wir können aus den keys die subform und das field extrahieren
             // Idee: Fehlermeldungen in ein neues Objekt errorsBySubform schreiben
             // und dieses dann an die jeweiligen subforms weitergeben
-            // bis auf 'data' können sie subforms dann die selbe Fehler logik verwenden wie die entsprechenden Haupt Formulare.
 
             handleErrors();
         }
@@ -340,9 +349,7 @@ export const DocumentForm = ({
                             documentType={documentType}
                             customer={data.customer}
                             customerErrors={errorsBySubform?.customer}
-                            clearCustomerError={(field: CustomerField) =>
-                                handleClearError("customer", field)
-                            }
+                            clearSubformError={clearErrorInSubform}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -350,9 +357,7 @@ export const DocumentForm = ({
                         <CustomerForm
                             type={customerType.DRIVER}
                             documentType={documentType}
-                            clearCustomerError={(field: CustomerField) =>
-                                handleClearError("driver", field)
-                            }
+                            clearSubformError={clearErrorInSubform}
                             customer={data.driver}
                             customerErrors={errorsBySubform?.driver}
                             handleChangeInSubForm={handleChangeInSubForm}
@@ -364,9 +369,7 @@ export const DocumentForm = ({
                             documentType={documentType}
                             trailer={data.trailer}
                             trailerErrors={errorsBySubform?.trailer}
-                            clearTrailerError={(field: TrailerField) =>
-                                handleClearError("trailer", field)
-                            }
+                            clearSubformError={clearErrorInSubform}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
@@ -376,9 +379,7 @@ export const DocumentForm = ({
                             documentType={documentType}
                             document={data}
                             dataErrors={errorsBySubform?.data}
-                            clearDataError={(field: DataField) =>
-                                handleClearError("data", field)
-                            }
+                            clearSubformError={clearErrorInSubform}
                             handleChangeInSubForm={handleChangeInSubForm}
                         />
                     </TabsContent>
