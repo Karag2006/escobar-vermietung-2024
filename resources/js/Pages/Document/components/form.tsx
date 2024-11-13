@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
-
-import { DecisionButtons } from "@/Components/decision-buttons";
+import { parse } from "date-fns";
 import { toast } from "sonner";
+
+import {
+    collisionData,
+    customerType,
+    DataField,
+    documentType,
+} from "@/types/document";
+import { CustomerField } from "@/types/customer";
+import { TrailerField } from "@/types/trailer";
+
 import {
     getOfferById,
     getReservationById,
     getContractById,
     collisionCheck,
 } from "@/data/document";
+import { getSettings } from "@/data/settings";
 import {
     blankForm,
     documentCustomerForm,
@@ -16,28 +26,22 @@ import {
     documentSettingsForm,
     documentTrailerForm,
 } from "@/lib/document-form";
+import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
+
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from "@/Components/ui/tabs-tp24";
+
+import { DecisionButtons } from "@/Components/decision-buttons";
+
 import { CustomerForm } from "./sub-forms/customer";
-import {
-    collisionData,
-    customerType,
-    DataField,
-    documentType,
-} from "@/types/document";
 import { TrailerForm } from "./sub-forms/trailer";
 import { DataForm } from "./sub-forms/data";
 import { SettingsForm } from "./sub-forms/settings";
-import { getSettings } from "@/data/settings";
-import { getDocumentTypeTranslation, isObjectEmpty } from "@/lib/utils";
 import { CollisionDialog } from "./collision-dialog";
-import { CustomerField } from "@/types/customer";
-import { TrailerField } from "@/types/trailer";
-import { parse, set } from "date-fns";
 
 interface DocumentFormProps {
     documentType: documentType;
@@ -291,6 +295,7 @@ export const DocumentForm = ({
                                 value="customer"
                                 // 13.11.2024 - Error handling
                                 data-error={
+                                    errorsBySubform?.customer &&
                                     !isObjectEmpty(errorsBySubform?.customer)
                                         ? "active"
                                         : ""
@@ -302,6 +307,7 @@ export const DocumentForm = ({
                                 value="driver"
                                 // 13.11.2024 - Error handling
                                 data-error={
+                                    errorsBySubform?.driver &&
                                     !isObjectEmpty(errorsBySubform?.driver)
                                         ? "active"
                                         : ""
@@ -313,6 +319,7 @@ export const DocumentForm = ({
                                 value="trailer"
                                 // 13.11.2024 - Error handling
                                 data-error={
+                                    errorsBySubform?.trailer &&
                                     !isObjectEmpty(errorsBySubform?.trailer)
                                         ? "active"
                                         : ""
@@ -324,6 +331,7 @@ export const DocumentForm = ({
                                 value="data"
                                 // 13.11.2024 - Error handling
                                 data-error={
+                                    errorsBySubform?.data &&
                                     !isObjectEmpty(errorsBySubform?.data)
                                         ? "active"
                                         : ""
