@@ -15,6 +15,8 @@ class NavSeeder extends Seeder
      */
     public function run()
     {
+        Nav::truncate();
+
         $navs = [
             [
                 'id'                => 1,

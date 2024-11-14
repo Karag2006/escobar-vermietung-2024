@@ -110,4 +110,27 @@ class TrailerController extends Controller
         $selectors = Trailer::select('id', 'plateNumber', 'title')->orderBy('plateNumber')->get();
         return response()->json($selectors, Response::HTTP_OK);
     }
+
+    public static function updateTrailers()
+    {
+        // 14.11.2024 Feature: Add Update functionality
+        // für das Update von version 2022 auf 2024 müssen für Trailer
+        // Daten ergänzt werden.
+        // Ist status:
+        // - tuev enthält monat und jahr der nächsten Tüv-Prüfung
+
+        // Soll status:
+        // - inspection_at enthält das Datum der nächsten Tüv-Prüfung
+
+
+        $trailers = Trailer::all();
+
+        foreach ($trailers as $trailer) {
+            $inspectionDate = Carbon::createFromFormat(config('custom.tuev_format'), $trailer->tuev, 'Europe/Berlin');
+            $inspectionDate->startOfMonth();
+            $trailer->update([
+                'inspection_at' => $inspectionDate,
+            ]);
+        }
+    }
 }

@@ -49,7 +49,7 @@ export const TrailerRow = ({
     return (
         <div className="2xl:flex border-black border pl-2">
             <div className="w-[17rem] flex">
-                <div className="w-[10rem] text-ellipsis">{trailer.title}</div>
+                <div className="w-[10rem] truncate">{trailer.title}</div>
                 <div className="w-[7rem] text-ellipsis">
                     {trailer.plateNumber}
                 </div>
