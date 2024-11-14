@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\TrailerController;
+use App\Models\Trailer;
 use Illuminate\Console\Command;
 
 class Update2024 extends Command
@@ -44,7 +46,11 @@ class Update2024 extends Command
 
         $this->info('Documents updated successfully.');
 
+        $this->info('Updating the Trailers...');
+        TrailerController::updateTrailers();
+        $this->info('Trailers updated successfully.');
 
+        $this->info('Database update completed.');
 
     }
 }
