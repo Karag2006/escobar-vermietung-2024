@@ -37,7 +37,7 @@ class ReservationTableController extends Controller
         ->get();
 
         // get List of Trailers
-        $trailers = Trailer::select('id', 'plateNumber', 'title')
+        $trailers = Trailer::select('id', 'plateNumber', 'title', 'inspection_at')
         ->orderBy('title', 'ASC')
         ->get();
 

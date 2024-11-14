@@ -13,6 +13,7 @@ import { CalendarDay } from "./CalendarDay";
 
 import { TrailerItem } from "@/types/trailer";
 import { Document, DocumentFunctions } from "@/types/document";
+import { TrailerRowHead } from "./TrailerRowHead";
 
 interface RowProps {
     date: Date;
@@ -47,13 +48,9 @@ export const TrailerRow = ({
     });
 
     return (
-        <div className="2xl:flex border-black border pl-2">
-            <div className="w-[17rem] flex">
-                <div className="w-[10rem] truncate">{trailer.title}</div>
-                <div className="w-[7rem] text-ellipsis">
-                    {trailer.plateNumber}
-                </div>
-            </div>
+        <div className="2xl:flex border-black border">
+            <TrailerRowHead trailer={trailer} />
+
             <div className="flex">
                 {listOfDays.map((day) => {
                     let documentsForDay: Document[] = [];
