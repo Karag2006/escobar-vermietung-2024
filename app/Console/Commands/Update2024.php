@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\DocumentController;
 use Illuminate\Console\Command;
 
 class Update2024 extends Command
@@ -35,6 +36,15 @@ class Update2024 extends Command
             '--class' => 'Update2024Seeder',
         ]);
 
-        $this->info('Database updated successfully.');
+        $this->info('Database structure updated successfully.');
+
+
+        $this->info('Updating the Documents...');
+        DocumentController::updateDocuments();
+
+        $this->info('Documents updated successfully.');
+
+
+
     }
 }

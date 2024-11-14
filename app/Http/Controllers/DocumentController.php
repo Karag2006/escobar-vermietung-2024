@@ -366,4 +366,32 @@ class DocumentController extends Controller
         }
 
     }
+
+    public static function updateDocuments()
+    {
+        // 14.11.2024 Feature: Add Update functionality
+        // für das Update von version 2022 auf 2024 müssen für Dokumente
+        // Daten ergänzt werden.
+        // Ist status:
+        // - Abholinformationen sind auf collect_date und collect_time aufgeteilt
+        // - Rückgabeinformationen sind auf return_date und return_time aufgeteilt
+
+        // Soll status:
+        // - Abholinformationen sind in collect_at zusammengefasst als DateTime Object
+        // - Rückgabeinformationen sind in return_at zusammengefasst als DateTime Object
+
+
+        $documents = Document::all();
+
+        foreach ($documents as $document) {
+            $collectDateTime = Carbon::createFromFormat(config('custom.date_format'). ' ' . config('custom.time_format'), $document->collect_date . ' ' . $document->collect_time, 'Europe/Berlin');
+            $returnDateTime = Carbon::createFromFormat(config('custom.date_format'). ' ' . config('custom.time_format'), $document->return_date . ' ' . $document->return_time,  'Europe/Berlin');
+            $document->update([
+                'collect_at' => $collectDateTime,
+                'return_at' => $returnDateTime
+            ]);
+        }
+
+    }
+
 }
