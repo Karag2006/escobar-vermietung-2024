@@ -46,6 +46,16 @@ class Update2024 extends Command
 
         $this->info('Documents updated successfully.');
 
+
+
+        $this->info('Database structure updated successfully.');
+
+
+        $this->info('Updating the Documents...');
+        DocumentController::updateDocuments();
+
+        $this->info('Documents updated successfully.');
+
         $this->info('Updating the Trailers...');
         TrailerController::updateTrailers();
         $this->info('Trailers updated successfully.');
