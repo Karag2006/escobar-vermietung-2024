@@ -359,6 +359,10 @@ class DocumentController extends Controller
                 $query->where('current_state', 'reservation')
                     ->where('collect_at', '<', $today);
             })
+            ->orWhere(function ($query) use($today) {
+                $query->where('current_state', 'offer')
+                    ->where('collect_at', '<', $today);
+            })
             ->get();
         // dd('ArchiveDocuments function called : ', $documents);
         foreach ($documents as $document) {
