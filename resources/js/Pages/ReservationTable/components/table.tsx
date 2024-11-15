@@ -1,4 +1,5 @@
-import { getDaysInMonth, parse } from "date-fns";
+import { getDaysInMonth, parse, parseISO, parseJSON } from "date-fns";
+import { UTCDate } from "@date-fns/utc";
 
 import { TrailerRow } from "./trailerRow";
 
@@ -19,16 +20,8 @@ export const Table = ({
     documentFunctions,
 }: TableProps) => {
     const documentList = reservationList.map((doc) => {
-        doc.collectTimestamp = parse(
-            doc.collect_date + " " + doc.collect_time,
-            "dd.MM.yyyy HH:mm",
-            new Date()
-        );
-        doc.returnTimestamp = parse(
-            doc.return_date + " " + doc.return_time,
-            "dd.MM.yyyy HH:mm",
-            new Date()
-        );
+        doc.collectTimestamp = new Date(doc.collect_at ? doc.collect_at : "");
+        doc.returnTimestamp = new Date(doc.return_at ? doc.return_at : "");
         return doc;
     });
 
