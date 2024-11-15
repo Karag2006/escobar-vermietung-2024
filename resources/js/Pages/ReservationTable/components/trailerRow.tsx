@@ -3,9 +3,9 @@ import {
     format,
     isAfter,
     isBefore,
+    isFirstDayOfMonth,
     isSameDay,
     lastDayOfMonth,
-    parse,
     startOfMonth,
 } from "date-fns";
 
@@ -13,6 +13,9 @@ import { CalendarDay } from "./CalendarDay";
 
 import { TrailerItem } from "@/types/trailer";
 import { Document, DocumentFunctions } from "@/types/document";
+import { TrailerRowHead } from "./TrailerRowHead";
+import { useEffect, useState } from "react";
+import { is } from "date-fns/locale";
 
 interface RowProps {
     date: Date;
@@ -21,17 +24,23 @@ interface RowProps {
     documentFunctions: DocumentFunctions;
 }
 
+export type Day = {
+    date: Date;
+    documents: Document[];
+    trailerId: number;
+};
+
 export const TrailerRow = ({
     date,
     trailer,
     documents,
     documentFunctions,
 }: RowProps) => {
-    let offerColors = ["bg-yellow-400/40", "bg-yellow-600/40"];
+    let offerColors = ["bg-yellow-400/40", "bg-yellow-800/40"];
     let offerColorIndex = 0;
-    let reservationColors = ["bg-green-400/40", "bg-green-600/40"];
+    let reservationColors = ["bg-green-400/40", "bg-green-800/40"];
     let reservationColorIndex = 0;
-    let contractColors = ["bg-blue-400/40", "bg-blue-600/40"];
+    let contractColors = ["bg-blue-400/40", "bg-blue-800/50"];
     let contractColorIndex = 0;
 
     let listOfDays = eachDayOfInterval({
@@ -40,211 +49,124 @@ export const TrailerRow = ({
     });
 
     let sortedDocuments = documents?.sort((a, b) => {
-        return parse(a.collect_date, "dd.MM.yyyy", new Date()) <
-            parse(b.collect_date, "dd.MM.yyyy", new Date())
-            ? -1
-            : 1;
+        if (!a.collectTimestamp || !b.collectTimestamp) {
+            return 0;
+        }
+        return a.collectTimestamp < b.collectTimestamp ? -1 : 1;
     });
 
+    const [days, setDays] = useState<Day[]>([]);
+
+    const selectDocumentColor = (document: Document) => {
+        if (document.current_state === "offer") {
+            offerColorIndex++;
+            return offerColors[offerColorIndex % offerColors.length];
+        }
+        if (document.current_state === "reservation") {
+            reservationColorIndex++;
+            return reservationColors[
+                reservationColorIndex % reservationColors.length
+            ];
+        }
+        if (document.current_state === "contract") {
+            contractColorIndex++;
+            return contractColors[contractColorIndex % contractColors.length];
+        }
+        return "";
+    };
+
+    const getDaysData = () => {
+        let localDays: Day[] = [];
+
+        listOfDays.forEach((day) => {
+            localDays.push({
+                date: day,
+                documents: [],
+                trailerId: trailer.id ? trailer.id : 0,
+            });
+        });
+
+        if (!sortedDocuments || sortedDocuments.length === 0) {
+            setDays(localDays);
+            return;
+        }
+
+        let localSortedDocuments = [...sortedDocuments];
+        // Wann muss ein Dokument in die Lsite des Tages eingefügt werden?
+        // - Das Dokument beginnt an diesem Tag.
+        // - Das Dokument endet an diesem Tag.
+        // - Das Dokument beginnt vor diesem Tag und endet nach diesem Tag.
+
+        localDays.forEach((dayObject) => {
+            localSortedDocuments.forEach((document) => {
+                if (
+                    isSameDay(
+                        dayObject.date,
+                        document.collectTimestamp
+                            ? document.collectTimestamp
+                            : new Date()
+                    ) ||
+                    isSameDay(
+                        dayObject.date,
+                        document.returnTimestamp
+                            ? document.returnTimestamp
+                            : new Date()
+                    ) ||
+                    (isAfter(
+                        dayObject.date,
+                        document.collectTimestamp
+                            ? document.collectTimestamp
+                            : new Date()
+                    ) &&
+                        isBefore(
+                            dayObject.date,
+                            document.returnTimestamp
+                                ? document.returnTimestamp
+                                : new Date()
+                        ))
+                ) {
+                    if (
+                        isSameDay(
+                            dayObject.date,
+                            document.collectTimestamp
+                                ? document.collectTimestamp
+                                : new Date()
+                        ) ||
+                        isFirstDayOfMonth(dayObject.date)
+                    )
+                        document.colorClass = selectDocumentColor(document);
+
+                    dayObject.documents.push(document);
+                }
+            });
+        });
+        setDays(localDays);
+        return;
+    };
+
+    useEffect(() => {
+        getDaysData();
+    }, []);
     return (
-        <div className="2xl:flex border-black border pl-2">
-            <div className="w-[17rem] flex">
-                <div className="w-[10rem] truncate">{trailer.title}</div>
-                <div className="w-[7rem] text-ellipsis">
-                    {trailer.plateNumber}
-                </div>
-            </div>
+        <div className="2xl:flex border-black border">
+            <TrailerRowHead trailer={trailer} />
+
             <div className="flex">
-                {listOfDays.map((day) => {
-                    let documentsForDay: Document[] = [];
-                    if (!sortedDocuments || sortedDocuments.length === 0)
-                        // If there is no documents for this trailer every day can be generated without a document List
-                        return (
-                            <CalendarDay
-                                key={
-                                    "trailer-" +
-                                    trailer.id +
-                                    "_day-" +
-                                    format(day, "d")
-                                }
-                                day={day}
-                                trailerId={trailer.id}
-                            />
-                        );
-                    // In all other cases, its possible that there are multiple documents for one day.
-                    let dayFinished = false;
-                    while (!dayFinished && sortedDocuments.length > 0) {
-                        // A day is finished if there are no more documents or the current document finishes after this day.
-
-                        if (
-                            isBefore(
-                                day,
-                                parse(
-                                    sortedDocuments[0].collect_date,
-                                    "dd.MM.yyyy",
-                                    new Date()
-                                )
-                            )
-                        )
-                            // If the first document is after the current day, no document is added to the current day
-                            return (
-                                <CalendarDay
-                                    key={
-                                        "trailer-" +
-                                        trailer.id +
-                                        "_day-" +
-                                        format(day, "d")
-                                    }
-                                    day={day}
-                                    trailerId={trailer.id}
-                                />
-                            );
-
-                        if (
-                            isSameDay(
-                                day,
-                                parse(
-                                    sortedDocuments[0].collect_date,
-                                    "dd.MM.yyyy",
-                                    new Date()
-                                )
-                            )
-                        ) {
-                            // If the document starts on this day, it is added to the list of documents for this day
-
-                            // 04.11.2024 Feature: Month List
-                            // Color for document Markers is now based on the current state of the document
-                            // List of colors for each document type are defined above.
-                            sortedDocuments[0].added = true;
-                            if (sortedDocuments[0].current_state === "offer") {
-                                sortedDocuments[0].colorClass =
-                                    offerColors[
-                                        offerColorIndex % offerColors.length
-                                    ];
-                                offerColorIndex++;
+                {days.map((day) => {
+                    return (
+                        <CalendarDay
+                            key={
+                                "trailer-" +
+                                trailer.id +
+                                "_day-" +
+                                format(day.date, "d")
                             }
-
-                            if (
-                                sortedDocuments[0].current_state ===
-                                "reservation"
-                            ) {
-                                sortedDocuments[0].colorClass =
-                                    reservationColors[
-                                        reservationColorIndex %
-                                            reservationColors.length
-                                    ];
-                                reservationColorIndex++;
-                            }
-                            if (
-                                sortedDocuments[0].current_state === "contract"
-                            ) {
-                                sortedDocuments[0].colorClass =
-                                    contractColors[
-                                        contractColorIndex %
-                                            contractColors.length
-                                    ];
-                                contractColorIndex++;
-                            }
-
-                            documentsForDay.push(sortedDocuments[0]);
-                            if (
-                                isSameDay(
-                                    day,
-                                    parse(
-                                        sortedDocuments[0].return_date,
-                                        "dd.MM.yyyy",
-                                        new Date()
-                                    )
-                                )
-                            ) {
-                                // If the document ends on this day, it is removed from the list of documents
-                                sortedDocuments.shift();
-                            } else {
-                                // If the document does not end on this day, the day is finished
-                                dayFinished = true;
-                            }
-                        } else if (
-                            isAfter(
-                                day,
-                                parse(
-                                    sortedDocuments[0].collect_date,
-                                    "dd.MM.yyyy",
-                                    new Date()
-                                )
-                            )
-                        ) {
-                            // If the document starts before this day, and was not removed from the list yet, it is added to the list of documents for this day
-                            documentsForDay.push(sortedDocuments[0]);
-                            if (!sortedDocuments[0].colorClass) {
-                                // 04.11.2024 Feature: Month List
-                                // Color for document Markers is now based on the current state of the document
-                                // List of colors for each document type are defined above.
-                                if (
-                                    sortedDocuments[0].current_state === "offer"
-                                ) {
-                                    sortedDocuments[0].colorClass =
-                                        offerColors[
-                                            offerColorIndex % offerColors.length
-                                        ];
-                                    offerColorIndex++;
-                                }
-
-                                if (
-                                    sortedDocuments[0].current_state ===
-                                    "reservation"
-                                ) {
-                                    sortedDocuments[0].colorClass =
-                                        reservationColors[
-                                            reservationColorIndex %
-                                                reservationColors.length
-                                        ];
-                                    reservationColorIndex++;
-                                }
-                                if (
-                                    sortedDocuments[0].current_state ===
-                                    "contract"
-                                ) {
-                                    sortedDocuments[0].colorClass =
-                                        contractColors[
-                                            contractColorIndex %
-                                                contractColors.length
-                                        ];
-                                    contractColorIndex++;
-                                }
-                            }
-
-                            if (
-                                isSameDay(
-                                    day,
-                                    parse(
-                                        sortedDocuments[0].return_date,
-                                        "dd.MM.yyyy",
-                                        new Date()
-                                    )
-                                )
-                            ) {
-                                // If the document ends on this day, it is removed from the list of documents
-                                sortedDocuments.shift();
-                            } else {
-                                // If the document does not end on this day, the day is finished
-                                dayFinished = true;
-                            }
-                        }
-                        return (
-                            <CalendarDay
-                                key={
-                                    "trailer-" +
-                                    trailer.id +
-                                    "_day-" +
-                                    format(day, "d")
-                                }
-                                day={day}
-                                trailerId={trailer.id}
-                                documents={documentsForDay}
-                                documentFunctions={documentFunctions}
-                            />
-                        );
-                    }
+                            day={day.date}
+                            trailerId={day.trailerId}
+                            documents={day.documents}
+                            documentFunctions={documentFunctions}
+                        />
+                    );
                 })}
             </div>
         </div>
