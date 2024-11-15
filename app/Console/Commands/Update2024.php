@@ -28,12 +28,22 @@ class Update2024 extends Command
     {
         $this->info('Updating the Database from 2022 version to 2024 version...');
 
+        $this->info('Updating the Database structure...');
+
+        $this->info('Dropping all tables...');
+
+        $this->call('db:wipe', [
+            '--force' => true,
+        ]);
+
         $this->call('migrate', [
             '--path' => 'database/migrations/update_2024',
+            '--force' => true,
         ]);
 
         $this->call('db:seed', [
             '--class' => 'Update2024Seeder',
+            '--force' => true,
         ]);
 
         $this->info('Database structure updated successfully.');
