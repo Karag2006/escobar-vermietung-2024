@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import dynamicIconImports from "lucide-react/dynamicIconImports";
-import { CircleGauge, KeyRound, List, Power } from "lucide-react";
+import { CircleGauge, KeyRound, List, Power, Text } from "lucide-react";
 import { FaChartLine } from "react-icons/fa";
 
 import { useApi } from "@/hooks/use-api";
@@ -80,6 +80,14 @@ export const NavMenu = ({ className }: NavMenuProps) => {
                     >
                         <FaChartLine className="h-6 w-6" />
                         <span className="inline-block">Auswertung</span>
+                    </NavLink>
+                    <Separator className="w-full" />
+                    <NavLink
+                        href={route("json")}
+                        active={route().current("json")}
+                    >
+                        <Text className="h-6 w-6" />
+                        <span className="inline-block">Rechnungstext</span>
                     </NavLink>
                     <Separator className="w-full" />
                     <NavLink
