@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { TextareaTP24 } from "@/Components/ui/textarea-tp24";
 
+import { JsonResult } from "./JsonResult";
+
 export type JSONRechnungskauf = {
     accountHolder: string;
     iban: string;
@@ -15,6 +17,11 @@ export type JSONRechnungskauf = {
 export const JSONForm = () => {
     const [jsonText, setJsonText] = useState("");
     const [resultText, setResultText] = useState("");
+
+    const clearInput = () => {
+        setJsonText("");
+        setResultText("");
+    };
 
     const formatCurrency = (price?: number) => {
         if (!price) return 0;
@@ -65,10 +72,10 @@ export const JSONForm = () => {
     };
 
     return (
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4 sm:max-w-[35rem]">
             <h3 className="font-bold">Eingabe:</h3>
             <TextareaTP24
-                clearText={() => setJsonText("")}
+                clearText={() => clearInput()}
                 rows={7}
                 value={jsonText}
                 onChange={handleJsonTextChange}
@@ -76,8 +83,7 @@ export const JSONForm = () => {
             />
 
             <div className="h-[300px]">
-                <h3 className="font-bold mb-4">Ausgabe:</h3>
-                <span dangerouslySetInnerHTML={{ __html: resultText }}></span>
+                <JsonResult result={resultText} />
             </div>
         </form>
     );
