@@ -1,17 +1,22 @@
 import * as React from "react";
+import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+
+import { Button } from "./button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 export interface TextareaProps
     extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
     label?: string;
     error?: string;
+    clearText?: () => void;
 }
 
 export const TextareaTP24 = React.forwardRef<
     HTMLTextAreaElement,
     TextareaProps
->(({ className, label, error, id, value = "", ...props }, ref) => {
+>(({ className, label, error, clearText, id, value = "", ...props }, ref) => {
     return (
         <div className={cn("group relative", className)}>
             {label && label !== "" && (
@@ -38,6 +43,23 @@ export const TextareaTP24 = React.forwardRef<
             />
             {error && error !== "" && (
                 <p className="text-sm text-destructive mt-2">{error}</p>
+            )}
+            {clearText && value && value !== "" && (
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            aria-label="Eingabe löschen"
+                            variant="icon"
+                            size="icon"
+                            type="button"
+                            onClick={clearText}
+                            className="absolute -top-4 right-4 text-neutral-400 group-hover:text-blue-400 group-focus-within:text-neutral-500 transition-all group-hover:cursor-pointer"
+                        >
+                            <X className="size-6" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Eingabe löschen</TooltipContent>
+                </Tooltip>
             )}
         </div>
     );
