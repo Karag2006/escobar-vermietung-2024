@@ -62,4 +62,8 @@ class DashboardController extends Controller
             'queryParams' => request()->query() ?: null,
         ]);
     }
+
+    public function jsonConverter() {
+        return Inertia::render('Json/index');
+    }
 }
