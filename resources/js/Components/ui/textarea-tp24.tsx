@@ -1,17 +1,20 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { Button } from "./button";
+import { X } from "lucide-react";
 
 export interface TextareaProps
     extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
     label?: string;
     error?: string;
+    clearText?: () => void;
 }
 
 export const TextareaTP24 = React.forwardRef<
     HTMLTextAreaElement,
     TextareaProps
->(({ className, label, error, id, value = "", ...props }, ref) => {
+>(({ className, label, error, clearText, id, value = "", ...props }, ref) => {
     return (
         <div className={cn("group relative", className)}>
             {label && label !== "" && (
@@ -38,6 +41,17 @@ export const TextareaTP24 = React.forwardRef<
             />
             {error && error !== "" && (
                 <p className="text-sm text-destructive mt-2">{error}</p>
+            )}
+            {clearText && value && value !== "" && (
+                <Button
+                    variant="icon"
+                    size="icon"
+                    type="button"
+                    onClick={clearText}
+                    className="absolute top-1 right-0 text-neutral-400 group-hover:text-blue-400 group-focus-within:text-neutral-500 group-focus-within:text-xs transition-all group-hover:cursor-pointer"
+                >
+                    <X className="size-6" />
+                </Button>
             )}
         </div>
     );

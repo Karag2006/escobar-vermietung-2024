@@ -68,6 +68,8 @@ export const JSONForm = () => {
         <form className="flex flex-col gap-4">
             <h3 className="font-bold">Eingabe:</h3>
             <TextareaTP24
+                clearText={() => setJsonText("")}
+                rows={7}
                 value={jsonText}
                 onChange={handleJsonTextChange}
                 placeholder="Rechnungstext aus Speed4Trade hier einfügen"
