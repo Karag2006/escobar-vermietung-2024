@@ -8,6 +8,8 @@ Route::redirect('/', 'dashboard');
 
 require __DIR__.'/auth.php';
 
+Route::get('/json', [DashboardController::class, 'jsonConverter'])->name('json');
+
 // Routes requiring users to be authenticated
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
