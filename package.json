@@ -61,5 +61,8 @@
         "vaul": "^0.9.0",
         "zod": "^3.22.4",
         "zustand": "^4.5.2"
+    },
+    "overrides": {
+        "rollup": "npm:@rollup/wasm-node"
     }
 }
