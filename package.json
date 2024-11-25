@@ -40,6 +40,7 @@
         "@radix-ui/react-tabs": "^1.0.4",
         "@radix-ui/react-toggle": "^1.0.3",
         "@radix-ui/react-tooltip": "^1.0.7",
+        "@rollup/rollup-linux-arm64-gnu": "^4.27.4",
         "@tanstack/react-table": "^8.16.0",
         "@tiptap/extension-link": "^2.4.0",
         "@tiptap/extension-underline": "^2.4.0",
