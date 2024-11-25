@@ -162,29 +162,25 @@ class DocumentController extends Controller
         //     - Document is not this document itself
         //     - Document rental period is not already in the past.
         //     - Document deals with the same Trailer
+        //     - Document is not Archived
         //     - Document's collect Date happens before this documents return Date
         //      && Document's return Date happens after this documents collect Date.
         $collisionDocument = Document::where('id', "!=", $request['id'])
             ->where('return_at', '>=', $currentDate)
             ->where('vehicle_id', $request['vehicle_id'])
+            ->where('is_archived', false)
             ->where(function ($query) use($collectDate, $returnDate){
                 $query->where('collect_at', '<', $returnDate)
                 ->where('return_at', '>', $collectDate);
             })->first();
 
-            // $collisionDocument = Document::whereNot('id', $request['id'])
-            // ->whereNot('return_date', '<', $currentDate)
-            // ->where('vehicle_id', $request['vehicle_id'])
-            // ->where(function ($query) use($collectDate, $returnDate){
-            //     $query->where('collect_date', '<=', $returnDate)
-            //     ->where('return_date', '>=', $collectDate);
-            // })->first();
 
         if(!$collisionDocument) return response()->json(['collision' => 'no'], Response::HTTP_OK);
 
         // Collecting Data about the conflicting Document to give the User enough information to decide to ignore the Conflict or do something about it.
         $data = [
             'collision' => 'yes',
+            // 'collisionData' => new DocumentResource($collisionDocument)
             'collisionData' => [
                 'documentType' => $collisionDocument['current_state'],
                 'documentNumber' => $collisionDocument[$collisionDocument['current_state'].'_number'],
