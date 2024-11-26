@@ -8,8 +8,8 @@ cmds = [
     "cp /assets/supervisord.conf /etc/supervisord.conf",
     "chmod +x /assets/start.sh",
 
-    chown -R www-data:www-data /app/storage/
-    chown -R www-data:www-data /app/bootstrap/cache/
+    "chown -R www-data:www-data /app/storage/",
+    "chown -R www-data:www-data /app/bootstrap/cache/"
     "..."
 ]
 
