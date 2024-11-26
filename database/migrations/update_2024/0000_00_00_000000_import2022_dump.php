@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $sql = File::get(database_path('vermietung.sql'));
+        $sql = File::get(storage_path('imports/vermietung.sql'));
         DB::connection()->getPdo()->exec($sql);
     }
 
